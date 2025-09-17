@@ -1,0 +1,341 @@
+{
+  "name": "Workflow formattedN8nSendBulkMessages",
+  "nodes": [
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.Respuesta }}{{ $('Sin_Historial_Format').item.json.text }}",
+        "options": {}
+      },
+      "id": "5e403421-e947-43f9-939f-d8ba8c56fe00",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        -20,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "formattedN8nSendBulkMessages",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "dc18db91-412a-425b-8221-03abf52af485",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1280,
+        340
+      ],
+      "webhookId": "06f97b06-c284-427c-876d-d142dcc0271a"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "9fcba381-c719-4803-81ee-2be4145c6eec",
+      "name": "Groq Chat Model2",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -780,
+        380
+      ],
+      "credentials": {
+        "groqApi": {
+          "id": "Lw0fiG2F5dpOKgXc",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "5ea25968-485e-423e-b39c-f4ad8f7b7ff4",
+              "leftValue": "={{ $json.body.data._chatHistory }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1060,
+        340
+      ],
+      "id": "afb5d404-6c7e-45dd-b096-14cd769892ef",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash-exp",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -740,
+        760
+      ],
+      "id": "ec011b58-a336-44fc-b576-009c9142f34e",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "EtzYI9puf5hWVyrc",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f2c5d186-2144-4e63-a662-a45f8c8fca6e",
+              "name": "Respuesta",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -360,
+        580
+      ],
+      "id": "aef89330-e003-46ae-8515-64db74681997",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres un asistente especializado de Ceridono que ayuda a los clientes en WhatsApp. Te comunicas directamente con el cliente, tu objetivo es ofrecer de manera natural en 3 lineas y contextualizada el producto, curso o promocion.\n\n## Contexto de la Conversación\n```\n{{ $json.body.data._chatHistory }}\n```\n\n## Producto/Curso/promocion a Ofrecer\n```\n{{ $json.body.data._body }}\n```\n\n## Directrices para la Respuesta\n\n### Tono y Estilo\n- Mantén un tono conversacional y natural, como si fueras un amigo que recomienda algo útil\n- Usa el lenguaje coloquial apropiado para WhatsApp (emojis moderados, expresiones naturales)\n- Evita sonar como un vendedor agresivo o robótico\n- Adapta el nivel de formalidad según el tono que ha establecido el cliente\n\n### Contextualización\n- Analiza el historial de la conversación para entender:\n  - Las necesidades específicas que ha expresado el cliente\n  - Su nivel de interés y en qué fase del proceso de compra se encuentra\n  - Sus preocupaciones o dudas previas\n  - El tono y estilo de comunicación que prefiere\n\n### Estructura de la Oferta\n1. **Conexión contextual**: Conecta la oferta con algo mencionado en la conversación previa\n2. **Presentación natural**: Introduce el producto/curso como una solución a sus necesidades\n3. **Beneficios específicos**: Destaca 2-3 beneficios que sean relevantes para su situación particular\n4. **Llamada a la acción suave**: Invita a conocer más sin presionar\n\n### Personalización\n- Si el cliente ha mencionado objetivos específicos, relaciona el producto/curso con esos objetivos\n- Si ha expresado limitaciones (tiempo, presupuesto), aborda cómo el producto las resuelve\n- Usa referencias del contexto previo para hacer la recomendación más relevante\n\n## Ejemplo de Respuesta\n\nPerfecto, por lo que me comentas sobre [referencia a algo mencionado en el chat], creo que te puede interesar mucho nuestro [nombre del producto/curso]. \n\nEstá diseñado justo para [necesidad específica del cliente] y te ayudaría con [beneficio 1 relevante] y [beneficio 2 relevante]. \n\nLo que más me gusta es que [característica específica que resuelve algo mencionado por el cliente] 😊\n\n¿Te gustaría que te comparta más detalles? Puedo enviarte toda la info o incluso coordinar una llamada rápida si prefieres.\n\n## Notas Importantes\n- NO uses frases genéricas como \"tengo el producto perfecto para ti\"\n- SÍ usa referencias específicas de la conversación previa\n- 3-5 líneas para no saturar\n- Incluye máximo 1-2 emojis relevantes\n- Termina siempre con una pregunta abierta o invitación a continuar"
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        -780,
+        200
+      ],
+      "id": "b82f190e-b2dc-4f07-9f31-ad7119c853d9",
+      "name": "ConHistorial_Format"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres un asistente especializado de Ceridono que ayuda a los clientes en WhatsApp. Te comunicas directamente con el cliente, tu objetivo es ofrecer de manera natural en 3 lineas y contextualizada el producto, curso o promocion.\n\n\n## Producto/Curso/promocion a Ofrecer\n```\n{{ $json.body.data._body }}\n```\n\n## Directrices para la Respuesta\n\n### Tono y Estilo\n- Mantén un tono conversacional y natural, como si fueras un amigo que recomienda algo útil\n- Usa el lenguaje coloquial apropiado para WhatsApp (emojis moderados, expresiones naturales)\n- Evita sonar como un vendedor agresivo o robótico\n\n\n### Estructura de la Oferta\n2. **Presentación natural**: Introduce el producto/curso como una solución a sus necesidades\n3. **Beneficios específicos**: Destaca 2-3 beneficios que sean relevantes para su situación particular\n4. **Llamada a la acción suave**: Invita a conocer más sin presionar\n\n\n## Notas Importantes\n- NO uses frases genéricas como \"tengo el producto perfecto para ti\"\n- 3-5 líneas para no saturar\n- Incluye máximo 1-2 emojis relevantes\n- Termina siempre con una pregunta abierta o invitación a continuar"
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        -760,
+        580
+      ],
+      "id": "24fc9e70-7763-490e-a9c5-eae83ce35aad",
+      "name": "Sin_Historial_Format"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cf7fe49b-d4ce-458a-a632-e931d9a42446",
+              "name": "Respuesta",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -360,
+        260
+      ],
+      "id": "5ea94c40-e622-4d6d-8f1d-8b9c649ed20b",
+      "name": "Edit Fields1"
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "accept": "application/json, text/plain, */*",
+            "content-type": "application/json",
+            "authorization": "Bearer Agentesceridonon8n",
+            "user-agent": "axios/1.8.2",
+            "content-length": "953",
+            "accept-encoding": "gzip, compress, deflate, br",
+            "host": "localhost:5678",
+            "connection": "keep-alive"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "data": {
+              "_from": 5493877585763,
+              "_role": "BulkMessage",
+              "_body": "🛡️ Curso con certificación y contenidos actualizados\r\n💨 Introducción al uso del refrigerante R33\r\n📍 Modalidad presencial | Cupos limitados\r\n📩 Escribinos para info y reserva.\r\n\r\n\r\n\r\n",
+              "_date": "2025-07-28",
+              "_time": "16:41:49",
+              "_messageId": "",
+              "_pushName": "Sequeira Rodolfo Mario",
+              "_botName": "BotRamiro()",
+              "_etapaEmbudo": "",
+              "_interesCliente": "",
+              "_mediaType": null,
+              "_mediaUrl": null,
+              "_mediaBuffer": null,
+              "_aiResponses": [],
+              "_mediaFilePath": null,
+              "_chatHistory": "123"
+            },
+            "timestamp": "2025-07-28T16:41:49.212Z"
+          },
+          "webhookUrl": "http://localhost:5678/webhook/formattedN8nSendBulkMessages",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "ConHistorial_Format",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "ConHistorial_Format",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Sin_Historial_Format",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Sin_Historial_Format",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        []
+      ]
+    },
+    "ConHistorial_Format": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sin_Historial_Format": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "2ed58983-448a-4825-9440-2bdd538c4aeb",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7a45e564a0c11046766a7c454204e7a510bf179e50bcfa14a7978e4f07dcf653"
+  },
+  "id": "zgKydcGB7EUEvBLy",
+  "tags": []
+}

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="1.0">
+  <head>
+    <title>Workflow de Transformación de Documentos</title>
+  </head>
+  <body>
+    <outline text="Objetivo del Workflow: Transformar un documento de entrada en un documento final formateado según un estilo específico, tono deseado, emulando opcionalmente un autor y generando el resultado en un formato concreto">
+      <outline text="Agentes Involucrados">
+        <outline text="Gestor de Proyecto (Project Manager)">
+          <outline text="Rol: Orquestador central del workflow">
+            <outline text="Tareas">
+              <outline text="Recibir el documento de entrada y los parámetros del usuario"/>
+              <outline text="Coordina la comunicación y el paso de tareas entre los demás agentes"/>
+              <outline text="Valida las entradas y los parámetros"/>
+              <outline text="Entrega el documento final formateado al usuario"/>
+            </outline>
+          </outline>
+        </outline>
+        <outline text="Analista de Contenido (Content Analyst)">
+          <outline text="Rol: Entender la estructura y el contenido del documento original">
+            <outline text="Tareas">
+              <outline text="Lee y procesa el documento de entrada"/>
+              <outline text="Identifica la estructura lógica principal"/>
+              <outline text="Extrae los elementos semánticos importantes"/>
+              <outline text="Prepara un resumen estructurado del contenido para los siguientes agentes"/>
+              <outline text="Adaptador de Estilo (Style Adapter)">
+                <outline text="Rol: Reestructurar y adaptar el contenido al estilo general solicitado">
+                  <outline text="Tareas">
+                    <outline text="Recibe el análisis del Analista de Contenido y el parámetro de estilo"/>
+                    <outline text="Si el estilo es 'Curso': Organiza el contenido en módulos, lecciones, objetivos de aprendizaje, actividades sugeridas, resúmenes por módulo. Adapta el lenguaje para ser más didáctico"/>
+                    <outline text="Si el estilo es 'Libro': Organiza el contenido en capítulos, secciones, prefacios, conclusiones, bibliografía (si aplica). Mantiene una estructura narrativa o expositiva coherente"/>
+                    <outline text="Define la jerarquía de títulos y subtítulos apropiada para el estilo"/>
+                  </outline>
+                </outline>
+              </outline>
+            </outline>
+          </outline>
+        </outline>
+        <outline text="Editor de Tono y Voz (Tone and Voice Editor)">
+          <outline text="Rol: Ajustar el lenguaje del texto para que coincida con el tono y/o el autor especificado">
+            <outline text="Tareas">
+              <outline text="Recibe el contenido estructurado por el Adaptador de Estilo y los parámetros de tono y autor"/>
+              <outline text="Revisa y reescribe partes del texto para ajustarse al tono requerido (formal, informal, inspirador, técnico, humorístico, etc.)"/>
+              <outline text="Si se especifica un autor: Intenta emular el estilo de escritura característico de ese autor (vocabulario, longitud de frases, estructuras sintácticas, uso de figuras retóricas), basándose en modelos entrenados o análisis de textos previos de dicho autor"/>
+              <outline text="Asegura la coherencia del tono y la voz en todo el documento"/>
+            </outline>
+          </outline>
+        </outline>
+        <outline text="Formateador y Generador de Salida (Formatter and Output Generator)">
+          <outline text="Rol: Aplicar el formato final específico y generar el archivo en el formato deseado">
+            <outline text="Tareas">
+              <outline text="Recibe el contenido final editado y estructurado, junto con el parámetro de formato"/>
+              <outline text="Si el formato es 'Word (DOCX)': Aplica estilos de Word (encabezados, cuerpo de texto, listas), inserta saltos de página, genera una tabla de contenido si es aplicable, ajusta márgenes y fuentes básicas"/>
+              <outline text="Si el formato es 'Notion': Convierte el contenido a un formato compatible con Notion (Markdown con extensiones de Notion o usando la API de Notion si está disponible). Estructura el contenido usando bloques de Notion (encabezados, texto, listas, callouts, toggles, etc.). Puede crear una página principal con subpáginas si la estructura lo requiere (ej. para un curso)"/>
+              <outline text="Si el formato es 'PowerPoint (PPTX)': Divide el contenido en diapositivas. Selecciona títulos y puntos clave para cada diapositiva. Aplica una plantilla de diseño básica (o una especificada). Puede intentar generar notas del orador. Resume el contenido para que sea adecuado para una presentación visual"/>
+              <outline text="Genera el archivo final en el formato solicitado"/>
+            </outline>
+          </outline>
+        </outline>
+      </outline>
+    </outline>
+    <outline text="Workflow Paso a Paso">
+      <outline text="Inicio: El usuario proporciona al Gestor de Proyecto el documento original y los parámetros">
+        <outline text="Estilo: 'Curso' o 'Libro'"/>
+        <outline text="Tono: Ej. 'Formal', 'Conversacional', 'Académico', 'Inspirador'"/>
+        <outline text="Autor (Opcional): Nombre del autor a emular"/>
+        <outline text="Formato: 'Word', 'Notion', 'PowerPoint'"/>
+      </outline>
+      <outline text="Análisis: El Gestor de Proyecto envía el documento al Analista de Contenido. Este devuelve un análisis estructurado del contenido">
+        <outline text="Adaptación de Estilo: El Gestor de Proyecto envía el análisis y el parámetro estilo al Adaptador de Estilo. Este devuelve el contenido reorganizado según el estilo (curso/libro)">
+          <outline text="Edición de Tono/Voz: El Gestor de Proyecto envía el contenido adaptado y los parámetros tono/autor al Editor de Tono y Voz. Este devuelve el texto refinado lingüísticamente">
+            <outline text="Formateo y Generación: El Gestor de Proyecto envía el contenido final editado y el parámetro formato al Formateador y Generador de Salida. Este genera el archivo final"/>
+          </outline>
+        </outline>
+      </outline>
+      <outline text="Entrega: El Gestor de Proyecto entrega el archivo formateado (.docx, enlace a Notion, .pptx) al usuario"/>
+    </outline>
+    <outline text="Consideraciones Adicionales">
+      <outline text="Complejidad de Emulación de Autor: Emular un autor específico es complejo y depende de la disponibilidad de datos y la capacidad del modelo del Editor de Tono y Voz"/>
+      <outline text="Formato PowerPoint: Generar una buena presentación requiere una simplificación significativa del contenido y decisiones de diseño visual que pueden necesitar supervisión humana o agentes más especializados en diseño gráfico"/>
+      <outline text="Formato Notion: La calidad de la salida puede depender de si se usa Markdown o la API de Notion (que ofrece más control)"/>
+      <outline text="Iteración y Feedback: Un workflow más avanzado podría incluir puntos de revisión donde el usuario pueda dar feedback antes de la generación final"/>
+    </outline>
+  </body>
+</opml>
+```

@@ -1,0 +1,78 @@
+version: '3.8'
+
+services:
+  mariadono3:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=production
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ASSISTANT_ID=${ASSISTANT_ID}
+      - ASSISTANT_ID_2=${ASSISTANT_ID_2:-}
+      - NOTION_API_KEY=${NOTION_API_KEY:-}
+      - N8N_WEBHOOK_TOKEN=${N8N_WEBHOOK_TOKEN:-}
+      - N8N_WEBHOOK_USERNAME=${N8N_WEBHOOK_USERNAME:-}
+      - N8N_WEBHOOK_PASSWORD=${N8N_WEBHOOK_PASSWORD:-}
+      - ANYTHINGLLM_API_KEY=${ANYTHINGLLM_API_KEY:-}
+      - SQLITE_DB_PATH=/app/db.json
+      - DB_HOST=${DB_HOST:-}
+      - DB_PORT=${DB_PORT:-5432}
+      - DB_NAME=${DB_NAME:-}
+      - DB_USER=${DB_USER:-}
+      - DB_PASSWORD=${DB_PASSWORD:-}
+      - DB_SSL=${DB_SSL:-false}
+    ports:
+      # Main bot portal
+      - "3000:3000"
+      # Dashboard
+      - "4152:4152"
+      # Multiple bot portals
+      - "6001:6001"
+      - "6002:6002"
+      - "6003:6003"
+      - "6004:6004"
+      - "6005:6005"
+      - "6006:6006"
+      - "6007:6007"
+      - "6008:6008"
+      - "6009:6009"
+    volumes:
+      # Persist bot sessions and data
+      - bot_sessions:/app/bot_sessions
+      - bot_admin_sessions:/app/BotAdministracionSalta_sessions
+      - bot_augusto_sessions:/app/BotAugustoTucuman_sessions
+      - bot_consultas_sessions:/app/BotConsultasWeb_sessions
+      - bot_consultas_tuc_sessions:/app/BotConsultasWebTucuman_sessions
+      - bot_cursos_sessions:/app/BotCursosSalta_sessions
+      - bot_jujuy_sessions:/app/BotJujuy_sessions
+      - bot_ofertas_sessions:/app/BotOfertasSalta_sessions
+      - bot_ofertas_tuc_sessions:/app/BotOfertasTucuman_sessions
+      - bot_ramiro_sessions:/app/BotRamiro\(\)_sessions
+      - bd_clientes:/app/BD_Clientes
+      - logs:/app/Logs
+      - tmp:/app/tmp
+      - db_data:/app
+    restart: unless-stopped
+    networks:
+      - mariadono_network
+
+volumes:
+  bot_sessions:
+  bot_admin_sessions:
+  bot_augusto_sessions:
+  bot_consultas_sessions:
+  bot_consultas_tuc_sessions:
+  bot_cursos_sessions:
+  bot_jujuy_sessions:
+  bot_ofertas_sessions:
+  bot_ofertas_tuc_sessions:
+  bot_ramiro_sessions:
+  bd_clientes:
+  logs:
+  tmp:
+  db_data:
+
+networks:
+  mariadono_network:
+    driver: bridge

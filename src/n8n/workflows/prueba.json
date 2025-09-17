@@ -1,0 +1,26 @@
+{
+  "parameters": {
+    "url": "https://TU_DOMINIO/wp-json/wc/v3/products",
+    "method": "GET",
+    "authentication": "basicAuth",
+    "sendQuery": true,
+    "options": {},
+    "queryParametersUi": {
+      "parameter": []
+    }
+  },
+  "id": "woocommerce-products",
+  "name": "WooCommerce Get Products",
+  "type": "n8n-nodes-base.httpRequest",
+  "typeVersion": 2,
+  "position": [
+    400,
+    900
+  ],
+  "credentials": {
+    "httpBasicAuth": {
+      "id": "TU_ID_CREDENCIAL",
+      "name": "WooCommerce API"
+    }
+  }
+}

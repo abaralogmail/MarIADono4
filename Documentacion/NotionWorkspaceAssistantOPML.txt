@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="1.0">
+  <head>
+    <title>NotionWorkspaceAssistant.js Mental Schema</title>
+  </head>
+  <body>
+    <outline text="NotionWorkspaceAssistant">
+      <outline text="Constructor">
+        <outline text="Initialize with Notion API key and database ID"/>
+        <outline text="Set up Notion API base URL and headers"/>
+      </outline>
+      <outline text="Methods">
+        <outline text="queryNotion(query)">
+          <outline text="Send POST request to Notion API"/>
+          <outline text="Handle response and errors"/>
+        </outline>
+        <outline text="getCourseData()">
+          <outline text="Define query for 'Sin empezar' courses"/>
+          <outline text="Call queryNotion with the defined query"/>
+          <outline text="Map response to structured course data"/>
+        </outline>
+        <outline text="listCourses()">
+          <outline text="Get course data"/>
+          <outline text="Return list of course descriptions"/>
+        </outline>
+        <outline text="getCourseSchedule(courseId)">
+          <outline text="Find course by ID"/>
+          <outline text="Return course schedule or 'not found' message"/>
+        </outline>
+        <outline text="getCoursePrice(courseId)">
+          <outline text="Find course by ID"/>
+          <outline text="Return price and discount price or 'not found' message"/>
+        </outline>
+        <outline text="getCourseRequirements(courseId)">
+          <outline text="Find course by ID"/>
+          <outline text="Return course requirements or 'not found' message"/>
+        </outline>
+        <outline text="answerQuestion(question)">
+          <outline text="Interpret question"/>
+          <outline text="Call appropriate method based on question content"/>
+          <outline text="Return relevant information or default message"/>
+        </outline>
+      </outline>
+    </outline>
+  </body>
+</opml>

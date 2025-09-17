@@ -1,0 +1,1033 @@
+{
+  "name": "Webhook workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.text }}{{ $json.varSinRespuesta }}",
+        "options": {}
+      },
+      "id": "dc202927-c0bc-4e89-9c35-239202f9a81f",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1160,
+        -300
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "Webhook",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "55ef3880-973e-4645-961d-49beecde9445",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -2280,
+        120
+      ],
+      "webhookId": "87eec5d3-23b6-4439-bbce-a30256e984ab"
+    },
+    {
+      "parameters": {
+        "model": "qwen-2.5-32b",
+        "options": {}
+      },
+      "id": "fdfcdc76-16b5-40aa-902d-e7bed95da388",
+      "name": "Groq Chat Model2",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        100,
+        320
+      ],
+      "credentials": {
+        "groqApi": {
+          "id": "Lw0fiG2F5dpOKgXc",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -2000,
+        960
+      ],
+      "id": "b6c5f563-214c-4a36-b9a4-677ebd2f8ce9",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "ITcoQ5kvhH8jzKCQ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "assistant",
+        "assistantId": {
+          "__rl": true,
+          "value": "asst_148L6lQT9lDFQLMtBHaoFohz",
+          "mode": "list",
+          "cachedResultName": "Classify MarIADono Assistant"
+        },
+        "prompt": "define",
+        "text": "=Teniendo en cuenta la conversación y basandote en los documentos proporcionados clasifica si el nuevo mensaje se refiere las siguientes categorias: cursos, productos, sucursal, pagos, consultas internas, otros.\n\nConversación: {{ $('Webhook').item.json.body.data._chatHistory }}\nnuevo mensaje: {{ $('Webhook').item.json.body.data._body }}\nSugerencia: {{ $json.text }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.7,
+      "position": [
+        -1540,
+        760
+      ],
+      "id": "7a92a20f-6ab3-439c-81b3-58aef48c5b0b",
+      "name": "Classify MariaDono Assistant",
+      "credentials": {
+        "openAiApi": {
+          "id": "ITcoQ5kvhH8jzKCQ",
+          "name": "OpenAi account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "resource": "assistant",
+        "assistantId": {
+          "__rl": true,
+          "value": "asst_buCZtkM9xQVwtPZYBtVzTFJD",
+          "mode": "list",
+          "cachedResultName": "Sucursal MarIADono Assistant"
+        },
+        "prompt": "define",
+        "text": "=userChatHistory:{{ $('Webhook').item.json.body.data._chatHistory }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.7,
+      "position": [
+        -700,
+        280
+      ],
+      "id": "a714c81c-fbaa-42f3-b168-723180a52d13",
+      "name": "Sucursal MariaDono Assistant",
+      "credentials": {
+        "openAiApi": {
+          "id": "ITcoQ5kvhH8jzKCQ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash-exp",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -1140,
+        0
+      ],
+      "id": "cad1c741-56b6-40e3-961e-7ac28a506881",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "EtzYI9puf5hWVyrc",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "assistant",
+        "assistantId": {
+          "__rl": true,
+          "value": "asst_lC1SN7zl6vOZSBF361QR6V23",
+          "mode": "list",
+          "cachedResultName": "Cursos MarIADono Assistant"
+        },
+        "prompt": "define",
+        "text": "=Responde a consultas correspondientes de cada curso de Ceridono Refrigeración según los documentos proporcionados, incluir el link de registro en todas las respuestas.\n\nconversación: {{ $('Webhook').item.json.body.data._chatHistory }}\nconsulta reformulada: {{ $json.output['Consulta reformulada'] }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.7,
+      "position": [
+        -720,
+        -100
+      ],
+      "id": "0aa86f2d-27af-4be7-833a-a2dd1a8eb0ab",
+      "name": "Cursos MariaDono Assistant",
+      "credentials": {
+        "openAiApi": {
+          "id": "ITcoQ5kvhH8jzKCQ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "=",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEmpty",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "3b73d102-2a9e-4cea-9dea-0ad244670a48",
+                    "leftValue": "={{ $json.text }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEmpty",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        460,
+        -80
+      ],
+      "id": "5e7fd6be-9012-4b4f-a4dc-85b282b16d84",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5d50d8d4-5cb5-4d46-a1b2-3a8f1efda08b",
+              "name": "=varSinRespuesta",
+              "value": "SinRespuesta",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        660,
+        -240
+      ],
+      "id": "0ca7b290-2ac1-4a1a-a8b6-a751e9b80bfc",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Instrucción:\nEres un chatbot diseñado para responder en WhatsApp de manera concisa y con un tono acorde al historial de la conversación.\n\nEntrada:\n\nHistorial de conversación del usuario: {{ $('Webhook').item.json.body.data._chatHistory }}\n\nSalida sugerida(solo si no fue enviada anteriormente):\n{{ $json.output }}\n\nAjusta el tono de la respuesta según el historial de la conversación (amistoso, formal, profesional, casual, etc.).\nResume la respuesta sin perder información clave.\nMantén el mensaje claro y directo, optimizado para WhatsApp.",
+        "hasOutputParser": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        100,
+        120
+      ],
+      "id": "748776cc-7ea0-427a-8968-b662b88fa278",
+      "name": "Basic LLM Respuesta Final"
+    },
+    {
+      "parameters": {
+        "inputText": "=conversación:{{ $('Webhook').item.json.body.data._chatHistory }}\nAssistant suggestion: {{ $json.text }}\nconsulta interpretada: {{ $json.output['Consulta reformulada'] }} con Confianza:{{ $json.output.Confianza }}",
+        "categories": {
+          "categories": [
+            {
+              "category": "cursos",
+              "description": "Consultas relacionadas con capacitaciones, programas educativos, seminarios o talleres.  Ejemplos:  \"Quiero información sobre los cursos de refrigeración\" \"¿Cuándo inicia el próximo?\""
+            },
+            {
+              "category": "Productos",
+              "description": "Consultas sobre artículos, repuestos o servicios en venta.  Ejemplos:  \"¿Qué productos tienen disponibles?\" \"Quiero comprar un gas\""
+            },
+            {
+              "category": "sucursal",
+              "description": "Preguntas sobre ubicaciones, direcciones o información de locales físicos.  Ejemplos:  \"¿Dónde está su sucursal más cercana?\" \"Horarios de atención en oficinas\""
+            },
+            {
+              "category": "pagos",
+              "description": "Consultas relacionadas con métodos de pago, facturas o transacciones.  Ejemplos:  \"¿Aceptan pagos con tarjeta de crédito?\" \"Necesito información sobre mi factura\""
+            },
+            {
+              "category": "procedimientos",
+              "description": "Consultas relacionadas con procedimiento, protocolo, ejecutivo, trámite, ruta o funcionalidad."
+            },
+            {
+              "category": "Saludos",
+              "description": "Mensajes relacionados con agradecimientos, despedida y cierres de conversación"
+            }
+          ]
+        },
+        "options": {
+          "multiClass": true,
+          "fallback": "other"
+        }
+      },
+      "id": "21339b2a-cd9e-45bd-928d-8b70e0f1db49",
+      "name": "Selector de Agentes",
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "typeVersion": 1,
+      "position": [
+        -1160,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Teniendo en cuenta el contexto y basandote en los documentos proporcionados clasifica la ultima consulta del usuario dentro de las siguientes categorias; cursos, productos, sucursal, pagos, consultas internas, otros y preguntar (para el caso de que corresponda mas de una opción).\nContexto: {{ $json.body.data._chatHistory }}\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -1940,
+        740
+      ],
+      "id": "cf387d14-ee60-4ded-9cb1-b2b2c38333c8",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "name": "Sub_Workflow_Sucursal",
+        "description": "Llama a esta herramienta si deseas saber si la consulta es de sucursal. El input debe ser la conversación completa.",
+        "workflowId": {
+          "__rl": true,
+          "value": "QcTr8tQUaeiUxgU8",
+          "mode": "list",
+          "cachedResultName": "Sub-Workflow-Sucursal"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "contexto": "={{ $json.body.data._chatHistory }}",
+            "consulta": "={{ $json.body.data._body }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "contexto",
+              "displayName": "contexto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "consulta",
+              "displayName": "consulta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2,
+      "position": [
+        -1760,
+        980
+      ],
+      "id": "494ce300-4cd6-44cf-a562-85d260c4527d",
+      "name": "Call n8n Workflow Tool"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "91f52837-f9a6-4c1a-87b4-2e882b1e251d",
+              "name": "=body.data._interesCliente",
+              "value": "Cursos",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -160,
+        -140
+      ],
+      "id": "ab8a65d3-f93a-432d-8fd6-e6e8063e33e5",
+      "name": "Edit interesCliente"
+    },
+    {
+      "parameters": {
+        "model": "qwen-2.5-32b",
+        "options": {}
+      },
+      "id": "28b1b182-5ad1-4af2-8adf-9dd45a5e9926",
+      "name": "Groq Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -1580,
+        500
+      ],
+      "credentials": {
+        "groqApi": {
+          "id": "Lw0fiG2F5dpOKgXc",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2,
+      "position": [
+        -1880,
+        1000
+      ],
+      "id": "97a32d79-dadc-4829-aa38-cd9c2a140d07",
+      "name": "Call n8n Workflow Tool1"
+    },
+    {
+      "parameters": {
+        "resource": "assistant",
+        "assistantId": {
+          "__rl": true,
+          "value": "asst_NQia2tH5WB0sAMxKzbteSf1b",
+          "mode": "list",
+          "cachedResultName": "Procedimientos MariaDono Assistant"
+        },
+        "prompt": "define",
+        "text": "=Responde a consultas correspondientes de cada procedimiento de ceridono según los documentos proporcionados.\n\nconversación: {{ $('Webhook').item.json.body.data._chatHistory }}\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.7,
+      "position": [
+        -480,
+        140
+      ],
+      "id": "3fa2f8fa-4044-4986-8966-863425338fe7",
+      "name": "Procedimientos MariaDono Assistant",
+      "credentials": {
+        "openAiApi": {
+          "id": "ITcoQ5kvhH8jzKCQ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres un asistente virtual especializado en comprender y completar consultas incompletas o ambiguas de clientes. Tu tarea es analizar el contexto de la conversación, identificar la intención del usuario y sugerir la consulta completa más probable.\n\n## Contexto\n- Trabajas como capa de procesamiento para un chatbot de servicio al cliente.\n- Recibirás fragmentos de consultas que pueden ser incompletas, ambiguas o interrumpidas.\n- Debes determinar la intención más probable del usuario basándote en el contexto previo.\n\n## Instrucciones\n1. Analiza el historial de conversación reciente para establecer contexto.\n2. Identifica palabras clave y temas en la consulta parcial del usuario.\n3. Detecta si la consulta es una continuación de la conversación anterior.\n4. Formula una versión completa y clara de la consulta original.\n5. Incluye cualquier parámetro o especificación relevante que pueda estar implícita.\n6. En caso de múltiples interpretaciones posibles, proporciona la más probable primero, seguida de alternativas si es necesario.\n7. Mantén el estilo y tono del usuario en tu reformulación.\n\n## Formato de salida\n- Consulta original: [texto incompleto o ambiguo del usuario]\n- Consulta reformulada: [versión completa y clara]\n- Confianza: [alta/media/baja]\n- Interpretaciones alternativas: [si aplica]\n\n## Ejemplos\n- Original: \"Cuándo llega mi...\"\n  Reformulada: \"¿Cuándo llega mi pedido con número de referencia mencionado anteriormente?\"\n\n- Original: \"No puedo acceder\"\n  Reformulada: \"No puedo acceder a mi cuenta de usuario. ¿Cómo puedo restablecer mi contraseña?\"\n\n- Original: \"El mismo pero en rojo\"\n  Reformulada: \"Quiero el mismo producto que acabo de consultar pero en color rojo.\"\n\nRecuerda mantener la naturalidad del lenguaje y evitar sobreinterpretar la consulta cuando la intención no sea clara.\n\nconversación: {{ $json.body.data._chatHistory }}\nnueva consulta: {{ $json.body.data._body }}",
+        "hasOutputParser": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        -1860,
+        260
+      ],
+      "id": "001da009-ac12-48dc-81bd-d1755efe4e5b",
+      "name": "Consulta Sugerida LLM"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres un experto en atención al cliente diseñado para analizar la conversación y determinar de manera concisa cual es el interes del cliente en el nuevo mensaje: \n\nconversación: {{ $json.body.data._chatHistory }}\nnuevo mensaje: {{ $json.body.data._body }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        -1880,
+        80
+      ],
+      "id": "5204bf10-e2d6-4d23-ac9a-b71d6c6807ca",
+      "name": "Basic LLM Interes Sugerido"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"Consulta reformulada\":\"Una Consulta\",\n\t\"Confianza\": \"Alta\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        -1820,
+        480
+      ],
+      "id": "333ab2e3-cd61-4396-9ec9-f84c13e12706",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.Confianza }}",
+                    "rightValue": "alta",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "c5386dde-3a68-4e41-8dee-7f244162fb65",
+                    "leftValue": "={{ $json.output.Confianza }}",
+                    "rightValue": "media",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "34c19d8a-5174-4ad4-a7c3-59013da9fa99",
+                    "leftValue": "={{ $json.output.Confianza }}",
+                    "rightValue": "baja",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -1440,
+        240
+      ],
+      "id": "68648575-966a-410f-85d2-8e04614eb708",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.text }}{{ $json.varSinRespuesta }}",
+        "options": {}
+      },
+      "id": "78242390-d580-4d4c-84e3-77f9df0b3f61",
+      "name": "Respond to Webhook1",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        -2300,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.text }}{{ $json.varSinRespuesta }}",
+        "options": {}
+      },
+      "id": "7cf2d406-db05-45ca-a603-f42736668638",
+      "name": "Respond to Webhook2",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        -700,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5d50d8d4-5cb5-4d46-a1b2-3a8f1efda08b",
+              "name": "=varSinRespuesta",
+              "value": "SinRespuesta",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -940,
+        440
+      ],
+      "id": "03deda7e-e371-41ba-8eef-d7be98fd1331",
+      "name": "Sin Respuesta1"
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "accept": "application/json, text/plain, */*",
+            "content-type": "application/json",
+            "authorization": "Bearer Agentesceridonon8n",
+            "user-agent": "axios/1.7.9",
+            "content-length": "2901",
+            "accept-encoding": "gzip, compress, deflate, br",
+            "host": "localhost:5678",
+            "connection": "keep-alive"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "data": {
+              "_from": "5493874868825",
+              "_role": "Outgoing",
+              "_body": "Gracias",
+              "_date": "2025-03-29",
+              "_time": "11:17:00",
+              "_pushName": "Assistant",
+              "_botName": "bot",
+              "_etapaEmbudo": "",
+              "_interesCliente": "",
+              "_mediaType": null,
+              "_mediaUrl": null,
+              "_mediaBuffer": null,
+              "_aiResponses": [],
+              "_mediaFilePath": null,
+              "_chatHistory": "2025-02-07|10:13:28|incoming|Hola Juli como estás ?\n2025-02-07|10:14:19|incoming|Sabes que no puedo ingresar con la contraseña que es mi número de documento\n2025-02-24|18:28:20|incoming|_event_voice_note__818276b1-de01-464f-af4f-6883f4afdc73\n2025-02-25|08:59:59|incoming|_event_voice_note__260793a4-72ef-4036-a835-1027a3d49e85\n2025-02-25|09:05:50|incoming|Si eso tenía que hacer 🤷🏻‍♂️\n2025-02-25|09:44:26|incoming|Todo bien\n2025-03-29|11:16:05|incoming|La imagen muestra un componente electrónico, probablemente un motor o un compresor, fabricado por Embraco y Nidec. El dispositivo tiene una etiqueta en un fondo blanco, que incluye varios textos y números importantes. \n\n**Elementos principales:**\n\n1. **Nombre del fabricante:** Aparece el logotipo de \"Embraco\" y \"Nidec\" en la parte superior de la etiqueta.\n2. **Modelo y número de serie:** Indica \"CF02F01 M.0.0 AB F 00\" y \"5194020209\", que son probablemente el modelo y el número de serie del dispositivo.\n3. **Especificaciones eléctricas:**\n   - **Entrada:** 220-240V, 50/60Hz, 2.0A, 1/3hp, 1ph, Tmax. 80°C.\n   - **Salida:** 230V, 90-315H, 2.17A, 3ph.\n4. **Código de barras:** Hay un código de barras en la parte inferior de la etiqueta.\n5. **Certificaciones:** Incluye varios símbolos de certificación, como VDE, UKCA y REG FQ28.\n6. **Fecha de manufactura:** \"Fact. QD, China 23/06/15\" y el número \"757324\".\n\n**Composición general:**\nLa etiqueta está en un fondo blanco, con texto negro y símbolos, posicionados de manera que sean fácilmente legibles. El área alrededor de la etiqueta parece un poco sucia, lo que sugiere que el dispositivo pudo haber sido utilizado previamente. La parte derecha de la imagen muestra el borde del dispositivo, que tiene algún tipo de conexión o componente adicional.\n\n Caption:Buen día tendrían ese repuesto ,es una plaqueta de un freezer gafa modelo FGHI400B-XL\n2025-03-29|11:17:00|incoming|Gracias",
+              "_ctx": {
+                "key": {
+                  "remoteJid": "5493874868825@s.whatsapp.net",
+                  "fromMe": false,
+                  "id": "DF2D5BFC0676740FBBD975B99EAB9D80"
+                },
+                "messageTimestamp": 1743257819,
+                "pushName": "Isaac Silisque",
+                "broadcast": false,
+                "message": {
+                  "conversation": "Gracias",
+                  "messageContextInfo": {
+                    "deviceListMetadata": {
+                      "senderKeyHash": "WgfWAdb04Dugmg==",
+                      "senderTimestamp": "1743076360",
+                      "recipientKeyHash": "k9vDcpNU5LZonw==",
+                      "recipientTimestamp": "1743163952"
+                    },
+                    "deviceListMetadataVersion": 2,
+                    "messageSecret": "KJsUmRbKEZ7gU7HVgZybBl3hN79GfiJ5HWK+K5248aQ="
+                  }
+                },
+                "body": "Gracias",
+                "from": "5493874868825"
+              }
+            },
+            "timestamp": "2025-03-29T14:17:01.197Z"
+          },
+          "webhookUrl": "http://localhost:5678/webhook/Webhook",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Consulta Sugerida LLM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Respuesta Final",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classify MariaDono Assistant": {
+      "main": [
+        []
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Selector de Agentes",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sucursal MariaDono Assistant": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Respuesta Final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cursos MariaDono Assistant": {
+      "main": [
+        [
+          {
+            "node": "Edit interesCliente",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Basic LLM Respuesta Final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Respuesta Final": {
+      "main": [
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Selector de Agentes": {
+      "main": [
+        [
+          {
+            "node": "Cursos MariaDono Assistant",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Sucursal MariaDono Assistant",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Procedimientos MariaDono Assistant",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Sin Respuesta1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Sin Respuesta1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call n8n Workflow Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        []
+      ]
+    },
+    "Edit interesCliente": {
+      "main": [
+        []
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Consulta Sugerida LLM",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Basic LLM Interes Sugerido",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call n8n Workflow Tool1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Procedimientos MariaDono Assistant": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Respuesta Final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consulta Sugerida LLM": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Interes Sugerido": {
+      "main": [
+        []
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Consulta Sugerida LLM",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Selector de Agentes",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Sin Respuesta1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Sin Respuesta1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sin Respuesta1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "528d0a28-1c0e-46cf-ae5f-b9db92460302",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7a45e564a0c11046766a7c454204e7a510bf179e50bcfa14a7978e4f07dcf653"
+  },
+  "id": "qFHxEzw7MRMPXeEm",
+  "tags": [
+    {
+      "createdAt": "2025-02-20T13:08:15.091Z",
+      "updatedAt": "2025-02-20T13:08:15.091Z",
+      "id": "qFyKRnMUFXwr6CC1",
+      "name": "Media Processing"
+    }
+  ]
+}

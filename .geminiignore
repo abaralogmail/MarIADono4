@@ -1,0 +1,27 @@
+# Ignorar logs y sesiones
+Logs/
+*sessions/
+userThreads.json
+db.json
+*.log
+
+# Ignorar credenciales y tokens
+.env
+*Baileys_store.json
+
+# Ignorar backups
+backups/
+
+# Ignorar documentos con datos de clientes y ofertas específicas
+Documentos/Clientes*
+Documentos/Ofertas/Ofertas-Actuales.xlsx
+Documentos/Ofertas/Ofertas.xlsx
+mensajes/Cursos.xlsx
+mensajes/conversations_log.xlsx
+
+# Ignorar archivos de configuración sensibles
+config/config.json
+
+# Ignorar archivos específicos de logs de conversaciones
+**/conversations_log.json
+**/conversations_log.csv

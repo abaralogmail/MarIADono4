@@ -1,0 +1,42 @@
+# Dependencies
+/node_modules
+
+# Logs
+*.log
+/Logs/
+/logs/
+
+# Temp
+/tmp/
+
+# Sessions
+/bot_sessions/
+/*_sessions/
+/Bot*sessions/
+
+# Archives
+*.rar
+*.zip
+
+# OS / Editor specific
+.DS_Store
+.vscode/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Other
+pnpm-lock.yaml
+/BD_Clientes/*
+*.qr.png
+
+# Ignored sensitive files
+src/Google/client_secret_2_927253338640-cjaclen73d2jujppo53r6j5qgq92orsv.apps.googleusercontent.com (1).json
+
+# Ignored temporary office files
+~$*.xlsx
+~$*.docx
+
+# Ignored large media files
+*.wav
+*.opus

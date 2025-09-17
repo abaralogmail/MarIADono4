@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de Horarios de Bots</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; }
+        .container { max-width: 1200px; }
+        .card { margin-top: 20px; }
+        .rule-row, .exception-row { display: flex; gap: 10px; margin-bottom: 10px; }
+        .rule-row select, .rule-row input, .exception-row input { flex-grow: 1; }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Gestor de Horarios de Bots</h1>
+
+        <!-- Panel de Selección -->
+        <div id="selectionPanel" class="card">
+            <div class="card-body">
+                <h5 class="card-title">Seleccionar o Crear Horario</h5>
+                <div class="mb-3">
+                    <label for="botId" class="form-label">Cargar Horario por ID de Bot</label>
+                    <input type="number" class="form-control" id="botId" placeholder="Ej: 1 para Bot Principal">
+                </div>
+                <button id="loadBotSchedule" class="btn btn-primary">Cargar</button>
+                <button id="showCreateForm" class="btn btn-success">Crear Nuevo Horario</button>
+            </div>
+        </div>
+
+        <!-- Formulario de Edición de Horario -->
+        <div id="scheduleEditor" class="card" style="display: none;">
+            <div class="card-body">
+                <h5 class="card-title" id="editorTitle">Editor de Horario</h5>
+                <input type="hidden" id="horarioId">
+
+                <div class="mb-3">
+                    <label for="editorBotId" class="form-label">ID del Bot</label>
+                    <input type="number" class="form-control" id="editorBotId" placeholder="ID numérico del bot">
+                </div>
+                
+                <div class="mb-3">
+                    <label for="scheduleName" class="form-label">Nombre del Horario</label>
+                    <input type="text" class="form-control" id="scheduleName" placeholder="Ej: Horario Comercial">
+                </div>
+
+                <div class="mb-3">
+                    <label for="scheduleDescription" class="form-label">Descripción</label>
+                    <textarea class="form-control" id="scheduleDescription" rows="2"></textarea>
+                </div>
+
+                <!-- Pestañas para Reglas y Excepciones -->
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="rules-tab" data-bs-toggle="tab" data-bs-target="#rules-tab-pane" type="button" role="tab">Reglas Semanales</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="exceptions-tab" data-bs-toggle="tab" data-bs-target="#exceptions-tab-pane" type="button" role="tab">Excepciones</button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active p-3 border border-top-0" id="rules-tab-pane" role="tabpanel">
+                        <div id="rulesContainer"></div>
+                        <button id="addRule" class="btn btn-secondary btn-sm mt-2">+ Añadir Regla</button>
+                    </div>
+                    <div class="tab-pane fade p-3 border border-top-0" id="exceptions-tab-pane" role="tabpanel">
+                        <div id="exceptionsContainer"></div>
+                        <button id="addException" class="btn btn-secondary btn-sm mt-2">+ Añadir Excepción</button>
+                    </div>
+                </div>
+
+                <hr>
+                <button id="saveSchedule" class="btn btn-success">Guardar Cambios</button>
+                <button id="deleteSchedule" class="btn btn-danger" style="display: none;">Eliminar Horario</button>
+                <button id="cancelEdit" class="btn btn-secondary float-end">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Template para una fila de regla -->
+    <template id="ruleTemplate">
+        <div class="rule-row align-items-center">
+            <select class="form-select day-of-week">
+                <option value="0">Domingo</option>
+                <option value="1">Lunes</option>
+                <option value="2">Martes</option>
+                <option value="3">Miércoles</option>
+                <option value="4">Jueves</option>
+                <option value="5">Viernes</option>
+                <option value="6">Sábado</option>
+            </select>
+            <input type="time" class="form-control start-time" step="1">
+            <input type="time" class="form-control end-time" step="1">
+            <button class="btn btn-danger btn-sm remove-rule">X</button>
+        </div>
+    </template>
+
+    <!-- Template para una fila de excepción -->
+    <template id="exceptionTemplate">
+         <div class="exception-row align-items-center">
+            <input type="date" class="form-control exception-date">
+            <select class="form-select exception-state">
+                <option value="cerrado">Cerrado todo el día</option>
+                <option value="horario_personalizado">Horario Personalizado</option>
+            </select>
+            <input type="time" class="form-control exception-start-time" step="1" style="display: none;">
+            <input type="time" class="form-control exception-end-time" step="1" style="display: none;">
+            <input type="text" class="form-control exception-description" placeholder="Descripción (Ej: Navidad)">
+            <button class="btn btn-danger btn-sm remove-exception">X</button>
+        </div>
+    </template>
+
+    <script src="/js/schedule-manager.js"></script>
+</body>
+</html>

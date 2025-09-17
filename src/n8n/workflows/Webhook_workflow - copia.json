@@ -1,0 +1,578 @@
+{
+  "name": "Webhook workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.output.etapaFunnel }}",
+        "options": {}
+      },
+      "id": "dc202927-c0bc-4e89-9c35-239202f9a81f",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        220,
+        -300
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 10
+      },
+      "id": "3f95fc51-8d1f-4e6c-83df-d92209376d44",
+      "name": "Wait2",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -2180,
+        0
+      ],
+      "webhookId": "999b60ca-43ee-4c91-8cf2-a89ab0a7163c"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "cb5655fe-90e2-4ea3-8222-21e118726ffc",
+      "name": "Groq Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -1320,
+        -380
+      ],
+      "credentials": {
+        "groqApi": {
+          "id": "Lw0fiG2F5dpOKgXc",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.output }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "etapaFunnel",
+              "description": "1, 2, 3, 4 o 5"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "0aecfabf-4d8c-41c9-aece-5199c90ea134",
+      "name": "Information Extractor",
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1,
+      "position": [
+        -720,
+        -180
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "Webhook",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "55ef3880-973e-4645-961d-49beecde9445",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -2160,
+        -220
+      ],
+      "webhookId": "87eec5d3-23b6-4439-bbce-a30256e984ab"
+    },
+    {
+      "parameters": {
+        "model": "nomic-embed-text:latest"
+      },
+      "id": "caa94168-7087-408d-a9c1-d86910e44ebc",
+      "name": "Embeddings Ollama",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOllama",
+      "typeVersion": 1,
+      "position": [
+        240,
+        -80
+      ],
+      "credentials": {
+        "ollamaApi": {
+          "id": "yUZZvnCs5FcGJ4e3",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputText": "=newQuestion: {{ $('Webhook').item.json.body.data._body }}\nAssistant suggestion: {{ $json.output }}",
+        "categories": {
+          "categories": [
+            {
+              "category": "cursos",
+              "description": "Consultas relacionadas con capacitaciones, programas educativos, seminarios o talleres.  Ejemplos:  \"Quiero información sobre los cursos de refrigeración\" \"¿Cuándo inicia el próximo?\""
+            },
+            {
+              "category": "Productos",
+              "description": "Consultas sobre artículos, repuestos o servicios en venta.  Ejemplos:  \"¿Qué productos tienen disponibles?\" \"Quiero comprar un gas\""
+            },
+            {
+              "category": "sucursal",
+              "description": "Preguntas sobre ubicaciones, direcciones o información de locales físicos.  Ejemplos:  \"¿Dónde está su sucursal más cercana?\" \"Horarios de atención en oficinas\""
+            },
+            {
+              "category": "pagos",
+              "description": "Consultas relacionadas con métodos de pago, facturas o transacciones.  Ejemplos:  \"¿Aceptan pagos con tarjeta de crédito?\" \"Necesito información sobre mi factura\""
+            },
+            {
+              "category": "Preguntar",
+              "description": "preguntar para obtener la información necesaria"
+            },
+            {
+              "category": "Error",
+              "description": "error descripcion"
+            }
+          ]
+        },
+        "options": {
+          "multiClass": false,
+          "fallback": "other"
+        }
+      },
+      "id": "21339b2a-cd9e-45bd-928d-8b70e0f1db49",
+      "name": "Text Classifier1",
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "typeVersion": 1,
+      "position": [
+        -1420,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "b0cd3dcc-45a4-414b-afbf-ce33de1e11b3",
+      "name": "When chat message received",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -2180,
+        160
+      ],
+      "webhookId": "18bc976f-9556-4fe5-8e71-c30fe4f7fb08"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "fdfcdc76-16b5-40aa-902d-e7bed95da388",
+      "name": "Groq Chat Model2",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -460,
+        420
+      ],
+      "credentials": {
+        "groqApi": {
+          "id": "Lw0fiG2F5dpOKgXc",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -720,
+        -420
+      ],
+      "id": "b6c5f563-214c-4a36-b9a4-677ebd2f8ce9",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "ITcoQ5kvhH8jzKCQ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -60,
+        420
+      ],
+      "id": "3bb444f1-da54-47c9-88df-d83cfa481b7e",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "ITcoQ5kvhH8jzKCQ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "assistant",
+        "assistantId": {
+          "__rl": true,
+          "value": "asst_148L6lQT9lDFQLMtBHaoFohz",
+          "mode": "list",
+          "cachedResultName": "Classify MarIADono Assistant"
+        },
+        "prompt": "define",
+        "text": "=Teniendo en cuenta el contexto y basandote en los documentos proporcionados clasifica la ultima consulta del usuario dentro de las siguientes categorias; cursos, productos, sucursal, pagos, consultas internas, otros y preguntar (para el caso de que corresponda mas de una opción).\nContexto: {{ $json.body.data._chatHistory }}\nNewMessage: {{ $json.body.data._body }}\n{{ $json.body.data._mediaBuffer }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.7,
+      "position": [
+        -1840,
+        160
+      ],
+      "id": "7a92a20f-6ab3-439c-81b3-58aef48c5b0b",
+      "name": "Classify MariaDono Assistant",
+      "credentials": {
+        "openAiApi": {
+          "id": "ITcoQ5kvhH8jzKCQ",
+          "name": "OpenAi account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "resource": "assistant",
+        "assistantId": {
+          "__rl": true,
+          "value": "asst_buCZtkM9xQVwtPZYBtVzTFJD",
+          "mode": "list",
+          "cachedResultName": "Sucursal MarIADono Assistant"
+        },
+        "prompt": "define",
+        "text": "=userChatHistory:{{ $('Webhook').item.json.body.data._chatHistory }}\nnewQuestion: {{ $('Webhook').item.json.body.data._body }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.7,
+      "position": [
+        -940,
+        160
+      ],
+      "id": "a714c81c-fbaa-42f3-b168-723180a52d13",
+      "name": "Sucursal MariaDono Assistant",
+      "credentials": {
+        "openAiApi": {
+          "id": "ITcoQ5kvhH8jzKCQ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash-exp",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -1360,
+        360
+      ],
+      "id": "cad1c741-56b6-40e3-961e-7ac28a506881",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "EtzYI9puf5hWVyrc",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=determina el tono de la conversacion y formatea la respuesta concisa para whatsapp:\nuserChatHistory:{{ $('Webhook').item.json.body.data.chatHistory }}\nnewQuestion: {{ $('Webhook').item.json.body.data._body }}\n\nRespuesta:{{ $json.text }}\nRespuesta formateada:"
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        -160,
+        160
+      ],
+      "id": "748776cc-7ea0-427a-8968-b662b88fa278",
+      "name": "Basic LLM Chain1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Resuma el siguiente texto, eliminando cualquier contenido no informativo, no aclares la respuesta:\n{{ $json.output }}\n\nSíntesis concisa:\n\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        -560,
+        160
+      ],
+      "id": "a001cdcd-47da-46e9-82cd-a9595a01fc53",
+      "name": "Basic LLM Chain Resumir"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash-exp",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -520,
+        -380
+      ],
+      "id": "4110e79f-b82a-4674-886a-5131d336c7a0",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "EtzYI9puf5hWVyrc",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "agent": "sqlAgent",
+        "dataSource": "sqlite",
+        "promptType": "define",
+        "text": "=Eres un experto en embudos de ventas. Analiza la siguiente conversación y determina si el cliente esta interesado en algún BulkMessage.\n1. Conciencia: El cliente descubre la existencia del producto, servicio o marca.\n2. Interés: El cliente comienza a investigar y muestra curiosidad sobre lo que ofreces.\n3. Consideración: El cliente evalúa si tu oferta puede resolver su necesidad o problema.\n4. Intención/Evaluación: El cliente está interesado y evalúa concretamente tu oferta.\n5. Compra: El cliente realiza la compra.\n\nContexto: {{ $json.body.data._chatHistory }}\nNewMessage: {{ $json.body.data._body }}\n\nEtapa del embudo de ventas(1-5): ",
+        "options": {}
+      },
+      "id": "f01e89da-0786-4c56-86ae-619df58013d3",
+      "name": "Funnel AI Agent 1-5",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -1200,
+        -540
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres un experto en embudos de ventas. Analiza la siguiente conversación y determina si el cliente esta interesado en algún BulkMessage.\n1. Conciencia: El cliente descubre la existencia del producto, servicio o marca.\n2. Interés: El cliente comienza a investigar y muestra curiosidad sobre lo que ofreces.\n3. Consideración: El cliente evalúa si tu oferta puede resolver su necesidad o problema.\n4. Intención/Evaluación: El cliente está interesado y evalúa concretamente tu oferta.\n5. Compra: El cliente realiza la compra.\n\nContexto: {{ $json.body.data._chatHistory }}\nNewMessage: {{ $json.body.data._body }}\n\nEtapa del embudo de ventas(1-5): ",
+        "options": {}
+      },
+      "id": "b1387047-99f4-4688-a8c9-e9e064bf8e57",
+      "name": "BulkMessage AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -1340,
+        -200
+      ]
+    }
+  ],
+  "pinData": {
+    "Basic LLM Chain Resumir": [
+      {
+        "json": {
+          "text": "Puedes pagar la inscripción en la sucursal de Ceridono en Tucumán, ubicada en Don Bosco esq Lucas Córdoba, San Miguel de Tucumán. Horarios: lunes a viernes 8:00-19:00, sábados 8:30-13:00."
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Wait2": {
+      "main": [
+        []
+      ]
+    },
+    "Information Extractor": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Classify MariaDono Assistant",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "BulkMessage AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text Classifier1": {
+      "main": [
+        [],
+        [],
+        [
+          {
+            "node": "Sucursal MariaDono Assistant",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Classify MariaDono Assistant",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "BulkMessage AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain Resumir",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classify MariaDono Assistant": {
+      "main": [
+        [
+          {
+            "node": "Text Classifier1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Text Classifier1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sucursal MariaDono Assistant": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain Resumir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain Resumir": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "BulkMessage AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "bf2d86bc-3ac7-40b1-ac1b-73791207bd07",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7a45e564a0c11046766a7c454204e7a510bf179e50bcfa14a7978e4f07dcf653"
+  },
+  "id": "qFHxEzw7MRMPXeEm",
+  "tags": []
+}

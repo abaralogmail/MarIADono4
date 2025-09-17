@@ -1,0 +1,32 @@
+**Manual de usuario: Flujo Principal (flowPrincipal.js)**
+
+El flujo principal (`flowPrincipal.js`) es el corazón del bot de WhatsApp. Es el primer punto de contacto entre el usuario y el asistente virtual. A continuación, se describe el proceso que sigue el flujo principal:
+
+### Inicio del flujo
+
+1. El usuario inicia la conversación enviando un mensaje con la palabra clave (`EVENTS.WELCOME`).
+2. El bot verifica si la palabra clave es válida y, si lo es, inicia el flujo principal.
+
+### Procesamiento del mensaje
+
+3. El flujo principal procesa el mensaje del usuario, clasificándolo como "incoming" (ingresando) y estableciendo el rol del usuario como "incoming".
+4. Luego, utiliza la función `classifyCustomer` para categorizar al usuario según su comportamiento.
+5. Registra el mensaje en la base de datos de mensajes (`logMessage`).
+
+### Verificación de horarios restrictivos
+
+6. El flujo principal verifica si el horario actual está dentro del rango restrictivo (lunes a sábado, 8:30 a.m. - 12:30 p.m.). Si es así, desactiva la funcionalidad del asistente virtual durante ese período.
+
+### Conteo de mensajes
+
+7. El flujo principal incrementa el conteo de mensajes del usuario (`handleUserMessageCount`) y actualiza el estado del flujo dinámico.
+
+### Procesamiento de mensaje (en caso de no estar dentro de horarios restrictivos)
+
+8. Si el usuario no está dentro de los horarios restrictivos, el flujo principal procesa el mensaje utilizando la función `processMessage`. Esta función puede incluir la respuesta del asistente virtual y el envío de mensajes adicionales.
+
+### Bloqueo de usuarios
+
+9. El flujo principal verifica si el usuario está bloqueado (`isUserBlocked`) y, si lo está, no permite que el asistente virtual interactúe con él.
+
+En resumen, el flujo principal es el punto de partida para cualquier conversación con el bot de WhatsApp. Procesa los mensajes del usuario, clasifica al mismo, registra la comunicación y maneja horarios restrictivos y conteo de mensajes.

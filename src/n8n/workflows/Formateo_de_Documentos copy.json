@@ -1,0 +1,353 @@
+{
+  "name": "Transformador de Documentos",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "transformar-documento",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "entrada-webhook",
+      "name": "Webhook de Entrada",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -800,
+        300
+      ],
+      "webhookId": "transformador-documento-webhook"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json.documentoFinal }}",
+        "options": {}
+      },
+      "id": "respuesta-webhook",
+      "name": "Responder al Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1200,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Validar parámetros de entrada\nconst entrada = items[0].json;\nconst textoBase = entrada.textoBase;\nconst estilo = entrada.estilo || 'general';\nconst tono = entrada.tono || 'neutral';\nconst formatoSalida = entrada.formatoSalida || 'texto';\nconst autor = entrada.autor || 'anónimo';\n\n// Validar que el texto base exista\nif (!textoBase) {\n  throw new Error('El texto base es obligatorio');\n}\n\n// Validar que el estilo sea válido\nconst estilosValidos = ['curso', 'libro', 'blog', 'articulo', 'general'];\nif (!estilosValidos.includes(estilo)) {\n  throw new Error(`Estilo no válido. Opciones: ${estilosValidos.join(', ')}`);\n}\n\n// Validar que el tono sea válido\nconst tonosValidos = ['formal', 'casual', 'técnico', 'amigable', 'neutral'];\nif (!tonosValidos.includes(tono)) {\n  throw new Error(`Tono no válido. Opciones: ${tonosValidos.join(', ')}`);\n}\n\n// Validar formato de salida\nconst formatosValidos = ['texto', 'html', 'markdown'];\nif (!formatosValidos.includes(formatoSalida)) {\n  throw new Error(`Formato no válido. Opciones: ${formatosValidos.join(', ')}`);\n}\n\n// Devolver los parámetros validados\nreturn [\n  {\n    json: {\n      textoBase,\n      estilo,\n      tono,\n      formatoSalida,\n      autor,\n      timestamp: new Date().toISOString(),\n      id: `doc-${Date.now()}`\n    }\n  }\n];"
+      },
+      "id": "gestor-proyecto",
+      "name": "Gestor de Proyecto",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -600,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres un experto en análisis de contenido. Tu tarea es analizar el siguiente texto y extraer:\n\n1. Tema principal\n2. Subtemas relevantes\n3. Conceptos clave\n4. Público objetivo aparente\n5. Nivel de complejidad (básico, intermedio, avanzado)\n\nTexto a analizar:\n{{ $json.textoBase }}\n\nProporciona un análisis estructurado que pueda ser utilizado por otros agentes para transformar este contenido.",
+        "hasOutputParser": true
+      },
+      "id": "analista-contenido",
+      "name": "Analista de Contenido",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        -400,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"temaPrincipal\": \"string\",\n  \"subtemas\": [\"string\"],\n  \"conceptosClave\": [\"string\"],\n  \"publicoObjetivo\": \"string\",\n  \"nivelComplejidad\": \"string\"\n}"
+      },
+      "id": "parser-analisis",
+      "name": "Parser Análisis",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        -200,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres un experto en transformación de estilos de escritura. Tu tarea es adaptar el texto proporcionado al estilo y tono solicitados.\n\nEstilo: {{ $json.estilo }}\nTono: {{ $json.tono }}\nAutor: {{ $json.autor }}\n\nAnálisis del contenido:\nTema principal: {{ $('analista-contenido').item.json.output.temaPrincipal }}\nSubtemas: {{ $('analista-contenido').item.json.output.subtemas }}\nConceptos clave: {{ $('analista-contenido').item.json.output.conceptosClave }}\nPúblico objetivo: {{ $('analista-contenido').item.json.output.publicoObjetivo }}\nNivel de complejidad: {{ $('analista-contenido').item.json.output.nivelComplejidad }}\n\nTexto original:\n{{ $json.textoBase }}\n\nTransforma el texto manteniendo su contenido esencial pero adaptándolo al estilo y tono solicitados. Si el estilo es 'curso', estructura el contenido como material didáctico. Si es 'libro', dale un enfoque narrativo más elaborado.",
+        "hasOutputParser": false
+      },
+      "id": "transformador-estilo",
+      "name": "Transformador de Estilo",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        0,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {
+          "temperature": 0.7,
+          "maxTokens": 4000
+        }
+      },
+      "id": "modelo-openai",
+      "name": "Modelo OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        500
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "openai-api-key",
+          "name": "OpenAI API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres un editor profesional especializado en revisar y mejorar textos. Tu tarea es revisar el siguiente texto transformado y mejorarlo en términos de:\n\n1. Coherencia y cohesión\n2. Claridad de expresión\n3. Corrección gramatical y ortográfica\n4. Adecuación al estilo ({{ $json.estilo }}) y tono ({{ $json.tono }}) solicitados\n\nTexto a revisar:\n{{ $('transformador-estilo').item.json.text }}\n\nRealiza los ajustes necesarios manteniendo la esencia del contenido original.",
+        "hasOutputParser": false
+      },
+      "id": "editor-revisor",
+      "name": "Editor y Revisor",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        200,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Formatear el documento según el formato de salida solicitado\nconst entrada = items[0].json;\nconst textoRevisado = entrada.text;\nconst formatoSalida = items[0].json.formatoSalida;\nconst estilo = items[0].json.estilo;\nconst tono = items[0].json.tono;\nconst autor = items[0].json.autor;\n\nlet documentoFinal;\n\nswitch (formatoSalida) {\n  case 'html':\n    documentoFinal = `<!DOCTYPE html>\n<html>\n<head>\n  <title>Documento Transformado</title>\n  <meta charset=\"UTF-8\">\n</head>\n<body>\n  <article class=\"${estilo} ${tono}\">\n    <header>\n      <h1>Documento Transformado</h1>\n      <p class=\"autor\">Autor: ${autor}</p>\n      <p class=\"metadata\">Estilo: ${estilo} | Tono: ${tono}</p>\n    </header>\n    <div class=\"contenido\">\n      ${textoRevisado.replace(/\\n/g, '<br>')}\n    </div>\n    <footer>\n      <p>Documento generado el ${new Date().toLocaleString()}</p>\n    </footer>\n  </article>\n</body>\n</html>`;\n    break;\n    \n  case 'markdown':\n    documentoFinal = `# Documento Transformado\n\n**Autor:** ${autor}  \n**Estilo:** ${estilo}  \n**Tono:** ${tono}\n\n---\n\n${textoRevisado}\n\n---\n\n*Documento generado el ${new Date().toLocaleString()}*`;\n    break;\n    \n  case 'texto':\n  default:\n    documentoFinal = `DOCUMENTO TRANSFORMADO\n\nAutor: ${autor}\nEstilo: ${estilo}\nTono: ${tono}\n\n---\n\n${textoRevisado}\n\n---\n\nDocumento generado el ${new Date().toLocaleString()}`;\n    break;\n}\n\nreturn [\n  {\n    json: {\n      documentoFinal,\n      metadatos: {\n        id: items[0].json.id,\n        timestamp: items[0].json.timestamp,\n        estilo,\n        tono,\n        autor,\n        formatoSalida\n      }\n    }\n  }\n];"
+      },
+      "id": "formateador-final",
+      "name": "Formateador Final",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.formatoSalida }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "id": "validacion-final",
+      "name": "Validación Final",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        600,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Generar un log de la transformación\nconst entrada = items[0].json;\n\nconst log = {\n  id: entrada.metadatos.id,\n  timestamp: entrada.metadatos.timestamp,\n  completado: new Date().toISOString(),\n  parametros: {\n    estilo: entrada.metadatos.estilo,\n    tono: entrada.metadatos.tono,\n    autor: entrada.metadatos.autor,\n    formatoSalida: entrada.metadatos.formatoSalida\n  },\n  estadisticas: {\n    longitudOriginal: items[0].json.textoBase ? items[0].json.textoBase.length : 0,\n    longitudFinal: entrada.documentoFinal.length,\n    tiempoProcesamientoMs: new Date().getTime() - new Date(entrada.metadatos.timestamp).getTime()\n  }\n};\n\n// Añadir el log al documento final\nreturn [\n  {\n    json: {\n      ...entrada,\n      log\n    }\n  }\n];"
+      },
+      "id": "generador-log",
+      "name": "Generador de Log",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        800,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Manejar error\nconst error = items[0].json.error || 'Error desconocido en el procesamiento del documento';\n\nreturn [\n  {\n    json: {\n      documentoFinal: {\n        error,\n        timestamp: new Date().toISOString(),\n        status: 'error'\n      }\n    }\n  }\n];"
+      },
+      "id": "manejador-error",
+      "name": "Manejador de Error",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        600,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres un especialista en formato y presentación de documentos. Tu tarea es aplicar el formato final al siguiente texto según el estilo y tono solicitados.\n\nEstilo: {{ $json.estilo }}\nTono: {{ $json.tono }}\nFormato de salida: {{ $json.formatoSalida }}\n\nTexto a formatear:\n{{ $('editor-revisor').item.json.text }}\n\nAplica el formato adecuado, incluyendo:\n1. Títulos y subtítulos apropiados\n2. Estructura de párrafos\n3. Elementos visuales (si aplica)\n4. Formato consistente con el estilo solicitado\n\nDevuelve el texto completamente formateado.",
+        "hasOutputParser": false
+      },
+      "id": "formateador-presentacion",
+      "name": "Formateador de Presentación",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        400,
+        100
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook de Entrada": {
+      "main": [
+        [
+          {
+            "node": "Gestor de Proyecto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gestor de Proyecto": {
+      "main": [
+        [
+          {
+            "node": "Analista de Contenido",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Transformador de Estilo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analista de Contenido": {
+      "main": [
+        [
+          {
+            "node": "Parser Análisis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transformador de Estilo": {
+      "main": [
+        [
+          {
+            "node": "Editor y Revisor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Editor y Revisor": {
+      "main": [
+        [
+          {
+            "node": "Formateador Final",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Formateador de Presentación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formateador Final": {
+      "main": [
+        [
+          {
+            "node": "Validación Final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validación Final": {
+      "main": [
+        [
+          {
+            "node": "Generador de Log",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Manejador de Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generador de Log": {
+      "main": [
+        [
+          {
+            "node": "Responder al Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manejador de Error": {
+      "main": [
+        [
+          {
+            "node": "Responder al Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modelo OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Transformador de Estilo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "transformación",
+      "color": "#ff0000"
+    },
+    {
+      "name": "documentos",
+      "color": "#00ff00"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2023-08-15T12:30:45.000Z",
+  "versionId": "1234abcd-5678-efgh-9012-ijklmnopqrst"
+}
+

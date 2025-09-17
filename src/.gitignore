@@ -1,0 +1,30 @@
+# Logs
+*.log
+**/debug.log
+
+# Database files
+/Data/
+/database/Data/
+
+# Sensitive configuration files
+/config/userConfig.json
+/config/userConfig copy.json
+/config/config.json
+
+# Credentials and secrets
+/Google/
+
+# IDE and editor configuration
+.vscode/
+
+# Operating System generated files
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.local
+.env.*
+
+# Reports and temporary files
+*.csv

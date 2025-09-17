@@ -1,0 +1,9 @@
+# Globs to ignore when listing files.
+# For more information on glob patterns, see: https://www.npmjs.com/package/glob
+ignore:
+  # Directories
+  - "**/node_modules/**"
+  - "**/.git/**"
+
+  # Files
+  - "**/*.log"

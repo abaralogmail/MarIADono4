@@ -1,0 +1,857 @@
+{
+  "name": "Formateo_de_Documentos",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Tu tarea es orquestar el workflow para transformar el documento de entrada en un documento final formateado\nEsto implica:\n1.\nTu tarea es adaptar el texto a:\nLugar: Tucumán, en la casa de Repuestos Ceridono\nEstilo: {{ $json.estilo }}\nforma: {{ $json.forma }}\nAutor: {{ $json.autor }}\nlargo: {{ $json.Longitud }}\n\n2.\nrevisar si cumple con los parametros solicitados\n\nUna vez recibido el texto refinado lingüísticamente, enviarlo junto con el parámetro de formato al Formateador y Generador de Salida.\n3. Iterar hasta que cumpla con todos los parametros\n\nTexto original:\n{{ $json.documento }}\n",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        1780,
+        -380
+      ],
+      "id": "cd504574-9167-422d-8e6e-f108d61d498e",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "transformar-documento",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "eb358aa6-00a1-4e96-bbaf-f1a2e0a3932a",
+      "name": "Webhook de Entrada",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        1480,
+        540
+      ],
+      "webhookId": "transformador-documento-webhook"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json.documentoFinal }}",
+        "options": {}
+      },
+      "id": "87b6392a-9d0f-4a17-bccf-5deda6995fd3",
+      "name": "Responder al Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        3480,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Validar parámetros de entrada\nconst entrada = items[0].json;\nconst textoBase = entrada.textoBase;\nconst estilo = entrada.estilo || 'general';\nconst tono = entrada.tono || 'neutral';\nconst formatoSalida = entrada.formatoSalida || 'texto';\nconst autor = entrada.autor || 'anónimo';\n\n// Validar que el texto base exista\nif (!textoBase) {\n  throw new Error('El texto base es obligatorio');\n}\n\n// Validar que el estilo sea válido\nconst estilosValidos = ['curso', 'libro', 'blog', 'articulo', 'general'];\nif (!estilosValidos.includes(estilo)) {\n  throw new Error(`Estilo no válido. Opciones: ${estilosValidos.join(', ')}`);\n}\n\n// Validar que el tono sea válido\nconst tonosValidos = ['formal', 'casual', 'técnico', 'amigable', 'neutral'];\nif (!tonosValidos.includes(tono)) {\n  throw new Error(`Tono no válido. Opciones: ${tonosValidos.join(', ')}`);\n}\n\n// Validar formato de salida\nconst formatosValidos = ['texto', 'html', 'markdown'];\nif (!formatosValidos.includes(formatoSalida)) {\n  throw new Error(`Formato no válido. Opciones: ${formatosValidos.join(', ')}`);\n}\n\n// Devolver los parámetros validados\nreturn [\n  {\n    json: {\n      textoBase,\n      estilo,\n      tono,\n      formatoSalida,\n      autor,\n      timestamp: new Date().toISOString(),\n      id: `doc-${Date.now()}`\n    }\n  }\n];"
+      },
+      "id": "65118527-05bf-43ab-a256-c1f6bbb2594c",
+      "name": "Gestor de Proyecto",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1720,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres un experto en análisis de contenido. Tu tarea es analizar el siguiente texto y extraer:\n\n1. Tema principal\n2. Subtemas relevantes\n3. Conceptos clave\n4. Público objetivo aparente\n5. Nivel de complejidad (básico, intermedio, avanzado)\n\nTexto a analizar:\n{{ $json.textoBase }}\n\nProporciona un análisis estructurado que pueda ser utilizado por otros agentes para transformar este contenido.",
+        "hasOutputParser": true
+      },
+      "id": "88a36c6f-0775-4066-8e9b-b7c4eefc5bd5",
+      "name": "Analista de Contenido",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        1960,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"Aprovado\": \"string\",\n  \"Justificacion\": \"string\"\n}"
+      },
+      "id": "e2311e48-d439-48d8-8ca8-ebefb47a8269",
+      "name": "Parser Análisis",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        2340,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres un experto en transformación de estilos de escritura. Tu tarea es adaptar el texto a:\n\nEstilo: {{ $json.estilo }}\nforma: {{ $json.forma }}\nAutor: {{ $json.autor }}\nlargo: {{ $json.Longitud }}\n\nTexto original:\n{{ $json.documento }}"
+      },
+      "id": "6a03642c-c7ad-40ca-b557-c17f1953a129",
+      "name": "Transformador de Estilo",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        1840,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4.1",
+        "options": {
+          "maxTokens": 4000,
+          "temperature": 0.7
+        }
+      },
+      "id": "e88dfa6b-01eb-411e-911b-7c111ac2cdf1",
+      "name": "Modelo OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        2020,
+        400
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "ITcoQ5kvhH8jzKCQ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres un editor profesional especializado en revisar y mejorar textos. Tu tarea es revisar el siguiente texto transformado y mejorarlo en términos de:\nEstilo: {{ $json.estilo }}\nTono: {{ $json.tono }}\nAutor: {{ $json.autor }}\nlargo: {{ $json.Longitud }}\n\nTexto original:\n{{ $json.documento }}\n\nTexto a revisar:\n{{ $json.text }}\n"
+      },
+      "id": "70f3ca0c-e92e-47bf-9fe9-7b7c55b95629",
+      "name": "Editor y Revisor",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        2680,
+        740
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Formatear el documento según el formato de salida solicitado\nconst entrada = items[0].json;\nconst textoRevisado = entrada.text;\nconst formatoSalida = items[0].json.formatoSalida;\nconst estilo = items[0].json.estilo;\nconst tono = items[0].json.tono;\nconst autor = items[0].json.autor;\n\nlet documentoFinal;\n\nswitch (formatoSalida) {\n  case 'html':\n    documentoFinal = `<!DOCTYPE html>\n<html>\n<head>\n  <title>Documento Transformado</title>\n  <meta charset=\"UTF-8\">\n</head>\n<body>\n  <article class=\"${estilo} ${tono}\">\n    <header>\n      <h1>Documento Transformado</h1>\n      <p class=\"autor\">Autor: ${autor}</p>\n      <p class=\"metadata\">Estilo: ${estilo} | Tono: ${tono}</p>\n    </header>\n    <div class=\"contenido\">\n      ${textoRevisado.replace(/\\n/g, '<br>')}\n    </div>\n    <footer>\n      <p>Documento generado el ${new Date().toLocaleString()}</p>\n    </footer>\n  </article>\n</body>\n</html>`;\n    break;\n    \n  case 'markdown':\n    documentoFinal = `# Documento Transformado\n\n**Autor:** ${autor}  \n**Estilo:** ${estilo}  \n**Tono:** ${tono}\n\n---\n\n${textoRevisado}\n\n---\n\n*Documento generado el ${new Date().toLocaleString()}*`;\n    break;\n    \n  case 'texto':\n  default:\n    documentoFinal = `DOCUMENTO TRANSFORMADO\n\nAutor: ${autor}\nEstilo: ${estilo}\nTono: ${tono}\n\n---\n\n${textoRevisado}\n\n---\n\nDocumento generado el ${new Date().toLocaleString()}`;\n    break;\n}\n\nreturn [\n  {\n    json: {\n      documentoFinal,\n      metadatos: {\n        id: items[0].json.id,\n        timestamp: items[0].json.timestamp,\n        estilo,\n        tono,\n        autor,\n        formatoSalida\n      }\n    }\n  }\n];"
+      },
+      "id": "23ed7346-8317-44aa-9bfd-4c3b09ba15ec",
+      "name": "Formateador Final",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2780,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.formatoSalida }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "id": "f57aad8b-7455-4265-ab67-a43b292fa7ee",
+      "name": "Validación Final",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        3000,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Generar un log de la transformación\nconst entrada = items[0].json;\n\nconst log = {\n  id: entrada.metadatos.id,\n  timestamp: entrada.metadatos.timestamp,\n  completado: new Date().toISOString(),\n  parametros: {\n    estilo: entrada.metadatos.estilo,\n    tono: entrada.metadatos.tono,\n    autor: entrada.metadatos.autor,\n    formatoSalida: entrada.metadatos.formatoSalida\n  },\n  estadisticas: {\n    longitudOriginal: items[0].json.textoBase ? items[0].json.textoBase.length : 0,\n    longitudFinal: entrada.documentoFinal.length,\n    tiempoProcesamientoMs: new Date().getTime() - new Date(entrada.metadatos.timestamp).getTime()\n  }\n};\n\n// Añadir el log al documento final\nreturn [\n  {\n    json: {\n      ...entrada,\n      log\n    }\n  }\n];"
+      },
+      "id": "1736ee71-2a25-42b0-a50f-8bc1f9646ca5",
+      "name": "Generador de Log",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        3280,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Manejar error\nconst error = items[0].json.error || 'Error desconocido en el procesamiento del documento';\n\nreturn [\n  {\n    json: {\n      documentoFinal: {\n        error,\n        timestamp: new Date().toISOString(),\n        status: 'error'\n      }\n    }\n  }\n];"
+      },
+      "id": "d18b010f-1b81-4138-90eb-7f7ba43477cf",
+      "name": "Manejador de Error",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        3260,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres un especialista en formato y presentación de documentos. Tu tarea es aplicar el formato final al siguiente texto según el estilo y tono solicitados.\n\nEstilo: {{ $json.estilo }}\nTono: {{ $json.tono }}\nFormato de salida: {{ $json.formatoSalida }}\n\nTexto a formatear:\n{{ $('editor-revisor').item.json.text }}\n\nAplica el formato adecuado, incluyendo:\n1. Títulos y subtítulos apropiados\n2. Estructura de párrafos\n3. Elementos visuales (si aplica)\n4. Formato consistente con el estilo solicitado\n\nDevuelve el texto completamente formateado."
+      },
+      "id": "949742ba-e28b-428c-91e7-78b9b5893135",
+      "name": "Formateador de Presentación",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        2920,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notionTool",
+      "typeVersion": 2.2,
+      "position": [
+        2740,
+        -100
+      ],
+      "id": "5351fde5-d918-49dc-9117-2fee14f92d69",
+      "name": "Notion",
+      "credentials": {
+        "notionApi": {
+          "id": "16GzlfKHk69JPOHO",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "path": "7510d90f-8a84-4037-81bd-c9c130762e66",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        1220,
+        -360
+      ],
+      "id": "7cda782d-b36c-44bb-a5e4-3db487c2880c",
+      "name": "Webhook",
+      "webhookId": "7510d90f-8a84-4037-81bd-c9c130762e66"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "07974a21-36bf-4142-9c98-e143ec878555",
+              "name": "documento",
+              "value": "=**Ceridono Cursos Online**\n\n**Curso Instalador de Split Inverter**\n\n# **Componentes del Sistema de Refrigeración**\n\n## **Compresor: función y tipos**\n\nEl compresor es el corazón del sistema de refrigeración, responsable de comprimir el refrigerante en estado gaseoso y elevar su temperatura y presión. Su función principal es garantizar la circulación continua del refrigerante a lo largo del circuito.\n\n### **Tipos de compresores**\n\n- **Compresor alternativo:** Utiliza pistones para comprimir el gas refrigerante.\n- **Compresor rotativo:** Emplea rotores para comprimir el gas, reduciendo vibraciones y ruido.\n- **Compresor scroll:** Utiliza dos espirales para comprimir el refrigerante de manera eficiente y silenciosa.\n- **Compresor inverter:** Modula su velocidad según la demanda, optimizando el consumo energético y proporcionando un control más preciso de la temperatura.\n\n## **Condensador: proceso de condensación**\n\nEl condensador es el componente encargado de disipar el calor absorbido por el refrigerante durante el ciclo de compresión. Se encuentra en la unidad exterior del equipo y permite que el refrigerante pase de estado gaseoso a líquido al liberar el calor al ambiente.\n\n### **Tipos de condensadores**\n\n- **Condensador por aire:** Utiliza ventiladores para disipar el calor. Es el más común en sistemas residenciales.\n- **Condensador por agua:** Utiliza un circuito de agua para enfriar el refrigerante. Más eficiente pero requiere suministro de agua.\n- **Condensador evaporativo:** Combina aire y agua para mejorar la eficiencia de enfriamiento. Ideal para aplicaciones industriales.\n\n## **Válvula de expansión y tubo capilar: regulación del flujo**\n\nEstos componentes regulan la cantidad de refrigerante que ingresa al evaporador, permitiendo la expansión del refrigerante y la reducción de su temperatura y presión.\n\n### **Tipos**\n\n- **Válvula de expansión termostática:** Regula el flujo en función de la temperatura de salida del evaporador.\n- **Tubo capilar:** Un conducto estrecho que restringe el flujo de refrigerante y permite la expansión.\n- **Válvula de expansión electrónica:** Controla con precisión la cantidad de refrigerante mediante sensores y algoritmos.\n\n## **Evaporador: proceso de evaporación**\n\nEl evaporador es el componente donde el refrigerante absorbe el calor del ambiente interior, enfriando el aire que se distribuye en el espacio. En este proceso, el refrigerante se evapora y pasa de líquido a gas.\n\n### **Funciones del evaporador**\n\n- Transferir el calor del aire interior al refrigerante.\n- Permitir la evaporación del refrigerante para continuar el ciclo.\n- Mantener una temperatura adecuada en el espacio climatizado.\n- Deshumidificar el aire del espacio climatizado.\n\n## **Filtro secador, acumulador de succión**\n\n### **Filtro secador**\n\nElimina la humedad y las impurezas del refrigerante, protegiendo los componentes internos.\n\n### **Acumulador de succión**\n\nEvita que el líquido refrigerante entre en el compresor, garantizando su funcionamiento correcto.\n\nAlmacena el refrigerante en estado líquido y regula su flujo hacia la válvula de expansión.\n\nEstos componentes trabajan en conjunto para garantizar el funcionamiento eficiente del sistema de refrigeración del Split Inverter, optimizando el consumo energético y el rendimiento del equipo.",
+              "type": "string"
+            },
+            {
+              "id": "ec9b0073-a7b2-4ba0-b903-50d2da3c91db",
+              "name": "estilo",
+              "value": "Relato",
+              "type": "string"
+            },
+            {
+              "id": "b51eae88-bdda-49d9-907b-4aec44041049",
+              "name": "forma",
+              "value": "dividir los conceptos en capitulos",
+              "type": "string"
+            },
+            {
+              "id": "186b4463-ba1d-4f0b-bfb3-1c8662666f13",
+              "name": "autor",
+              "value": "Vargas Llosa",
+              "type": "string"
+            },
+            {
+              "id": "89ac1595-4d1d-4322-9101-1693c348894d",
+              "name": "Longitud",
+              "value": "400 palabras",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1460,
+        -380
+      ],
+      "id": "d12dd695-cc94-4420-ab09-ed031a089be7",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1680,
+        620
+      ],
+      "id": "017b6544-d2e1-4281-be50-655b7ed71e75",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "EtzYI9puf5hWVyrc",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        -120
+      ],
+      "id": "1771a280-452a-43d8-be35-2695f54d7f72",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "Lw0fiG2F5dpOKgXc",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputSource": "jsonExample",
+        "jsonExample": "{\n  \"textoBase\": \"a string\"\n}"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        2540,
+        -340
+      ],
+      "id": "d34e119b-6adb-4f43-8f5f-e892e72bd569",
+      "name": "Workflow Input Trigger"
+    },
+    {
+      "parameters": {
+        "name": "call_Workflow_Transformador_de_Estilo",
+        "description": "=Llama a esta herramienta para transformar el estilo de escritura. \nEstilo: {{ $json.estilo }}\nTono: {{ $json.tono }}\nAutor: {{ $json.autor }}",
+        "workflowId": {
+          "__rl": true,
+          "value": "FzzKkhmiKSlPWWr3",
+          "mode": "list",
+          "cachedResultName": "Workflow_Analista_de_Contenido"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "textoBase": "={{ $json.documento }}",
+            "textoFormateado": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('textoFormateado', ``, 'string') }}"
+          },
+          "matchingColumns": [
+            "textoBase"
+          ],
+          "schema": [
+            {
+              "id": "textoBase",
+              "displayName": "textoBase",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "textoFormateado",
+              "displayName": "textoFormateado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2,
+      "position": [
+        1740,
+        -100
+      ],
+      "id": "778595d2-9ca4-4629-96d7-4a71da8d796d",
+      "name": "Call_Workflow_Analista_de_Contenido"
+    },
+    {
+      "parameters": {
+        "name": "Call_Adaptador_de_Estilo",
+        "description": "=Usa esta Herramienta para transformar estilo,forma,autor, largo del texto",
+        "workflowId": {
+          "__rl": true,
+          "value": "HH135f3uNM17w1lx",
+          "mode": "id"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "textoBase": "={{ $json.documento }}",
+            "Estilo": "={{ $json.estilo }}",
+            "Tono": "={{ $json.tono }}",
+            "Autor": "={{ $json.autor }}",
+            "Contenido": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Contenido', ``, 'string') }}"
+          },
+          "matchingColumns": [
+            "textoBase"
+          ],
+          "schema": [
+            {
+              "id": "textoBase",
+              "displayName": "textoBase",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "Estilo",
+              "displayName": "Estilo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "Tono",
+              "displayName": "Tono",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "Autor",
+              "displayName": "Autor",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "Contenido",
+              "displayName": "Contenido",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2,
+      "position": [
+        2260,
+        -280
+      ],
+      "id": "687f2d9e-7e38-4795-b01e-ce4c2b8b766b",
+      "name": "Call_Workflow_Transformador_de_Estilo"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres un editor profesional especializado en revisar y mejorar textos. Tu tarea es revisar el siguiente texto transformado y decidir si cumple con los requisitos:\n\nEstilo: {{ $('Edit Fields').item.json.estilo }}\nForma: {{ $('Edit Fields').item.json.forma }}\nAutor: {{ $('Edit Fields').item.json.autor }}\nlargo: {{ $('Edit Fields').item.json.Longitud }}\n\nTexto original:\n{{ $('Edit Fields').item.json.documento }}\n\nTexto a revisar:\n{{ $json.text }}\n\naprobobado: true or false",
+        "hasOutputParser": true
+      },
+      "id": "480e3fb6-ea9a-405b-9dc2-8e083a56775f",
+      "name": "Editor y revisor",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        2240,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n\t\"Aprobado\": \"true\",\n\t\"Justificacion\": \"Texto muy largo\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        2580,
+        380
+      ],
+      "id": "e1d29ea0-a29d-47b7-96af-638e99f83709",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        2780,
+        380
+      ],
+      "id": "872f015a-5946-4b78-859e-a022dd2be582",
+      "name": "Structured Output Parser1"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"Aprobado\": \"true\",\n\t\"Justificacion\": \"Texto muy largo\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        2480,
+        -60
+      ],
+      "id": "3662bd03-1cd5-442e-b9b3-9423f9a3a729",
+      "name": "Structured Output Parser2"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"aprobado\": \"true\",\n  \"cantidad de palabras\":\"Cantidad de palabras\",\n\t\"Justificación\": \"texto muy largo\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        2380,
+        380
+      ],
+      "id": "a40e5470-8390-4951-9eb9-e3a5b132435b",
+      "name": "Structured Output Parser3"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"Documento Formateado\": \"California\",\n  \"Aclaraciones\": \"Aclaraciones\",\n  \"Título\":\"California\",\n  \"Capítulos\":\"[California]\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        2100,
+        -140
+      ],
+      "id": "6559f280-c3f5-4fe8-b51a-38de089d0b83",
+      "name": "Structured Output Parser4"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        1940,
+        -160
+      ],
+      "id": "c27e1891-ae3c-4ec4-bf77-9ae57f9857f8",
+      "name": "Think"
+    }
+  ],
+  "pinData": {
+    "Workflow Input Trigger": [
+      {
+        "json": {
+          "textoBase": "La vida es como un cuento, no dejes pasar los detalles de la historia"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook de Entrada": {
+      "main": [
+        [
+          {
+            "node": "Gestor de Proyecto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gestor de Proyecto": {
+      "main": [
+        [
+          {
+            "node": "Analista de Contenido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transformador de Estilo": {
+      "main": [
+        [
+          {
+            "node": "Editor y revisor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Editor y Revisor": {
+      "main": [
+        [
+          {
+            "node": "Formateador Final",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Formateador de Presentación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formateador Final": {
+      "main": [
+        [
+          {
+            "node": "Validación Final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validación Final": {
+      "main": [
+        [
+          {
+            "node": "Generador de Log",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Manejador de Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generador de Log": {
+      "main": [
+        [
+          {
+            "node": "Responder al Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manejador de Error": {
+      "main": [
+        [
+          {
+            "node": "Responder al Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notion": {
+      "ai_tool": [
+        []
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "Workflow Input Trigger": {
+      "main": [
+        []
+      ]
+    },
+    "Call_Workflow_Analista_de_Contenido": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call_Workflow_Transformador_de_Estilo": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modelo OpenAI": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Transformador de Estilo",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Editor y revisor",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parser Análisis": {
+      "ai_outputParser": [
+        []
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        []
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        []
+      ]
+    },
+    "Structured Output Parser2": {
+      "ai_outputParser": [
+        []
+      ]
+    },
+    "Structured Output Parser3": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Editor y revisor",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser4": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "17b9166f-b34a-498f-9261-c022f4a50d74",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7a45e564a0c11046766a7c454204e7a510bf179e50bcfa14a7978e4f07dcf653"
+  },
+  "id": "EJye5hClIDL0nYN9",
+  "tags": [
+    {
+      "createdAt": "2025-04-08T04:02:45.526Z",
+      "updatedAt": "2025-04-08T04:02:45.526Z",
+      "id": "C363lHzYaoX93dOT",
+      "name": "documentos"
+    },
+    {
+      "createdAt": "2025-04-08T04:02:45.495Z",
+      "updatedAt": "2025-04-08T04:02:45.495Z",
+      "id": "m7MVQ1sQHa2ri3lU",
+      "name": "transformación"
+    }
+  ]
+}

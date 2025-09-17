@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="1.0">
+  <head>
+    <title>Lógica de flowPrincipal</title>
+  </head>
+  <body>
+    <outline text="Lógica de flowPrincipal">
+      <outline text="Inicialización">
+        <outline text="Obtener ID del usuario"/>
+        <outline text="Establecer rol como 'incoming'"/>
+      </outline>
+      <outline text="Clasificación del cliente">
+        <outline text="Crear instancia de OllamaFunnelClassifier"/>
+        <outline text="Clasificar al cliente"/>
+        <outline text="Almacenar etapa del embudo en ctx"/>
+      </outline>
+      <outline text="Registro de mensajes">
+        <outline text="Llamar a logMessage"/>
+      </outline>
+      <outline text="Gestión del historial">
+        <outline text="Obtener historial actual del estado"/>
+        <outline text="Añadir nuevo mensaje al historial"/>
+      </outline>
+      <outline text="Verificación de horario restringido">
+        <outline text="Comprobar si está dentro del horario restringido"/>
+        <outline text="Si es horario restringido, actualizar estado y salir"/>
+      </outline>
+      <outline text="Conteo de mensajes por usuario">
+        <outline text="Incrementar contador de mensajes del usuario"/>
+        <outline text="Si es múltiplo de 8, enviar recordatorio de desactivación"/>
+      </outline>
+      <outline text="Procesamiento de mensajes">
+        <outline text="Verificar si el usuario está bloqueado">
+          <outline text="Si no está bloqueado:">
+            <outline text="Llamar a logicaMensajes"/>
+            <outline text="Establecer rol como 'Outgoing'"/>
+            <outline text="Enviar respuesta en fragmentos"/>
+            <outline text="Actualizar historial con la respuesta"/>
+          </outline>
+        </outline>
+      </outline>
+    </outline>
+  </body>
+</opml>

@@ -1,0 +1,1781 @@
+{
+  "name": "Webhook workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.Ouput }}",
+        "options": {}
+      },
+      "id": "dc202927-c0bc-4e89-9c35-239202f9a81f",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1900,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "Webhook",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "55ef3880-973e-4645-961d-49beecde9445",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -2120,
+        120
+      ],
+      "webhookId": "87eec5d3-23b6-4439-bbce-a30256e984ab"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -1200,
+        200
+      ],
+      "id": "b6c5f563-214c-4a36-b9a4-677ebd2f8ce9",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "ITcoQ5kvhH8jzKCQ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "assistant",
+        "assistantId": {
+          "__rl": true,
+          "value": "asst_buCZtkM9xQVwtPZYBtVzTFJD",
+          "mode": "list",
+          "cachedResultName": "Sucursal MarIADono Assistant"
+        },
+        "prompt": "define",
+        "text": "=Consulta: {{ $('Switch').item.json.output['Consulta reformulada'] }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.7,
+      "position": [
+        -40,
+        280
+      ],
+      "id": "a714c81c-fbaa-42f3-b168-723180a52d13",
+      "name": "Sucursal MariaDono Assistant",
+      "credentials": {
+        "openAiApi": {
+          "id": "ITcoQ5kvhH8jzKCQ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -640,
+        360
+      ],
+      "id": "cad1c741-56b6-40e3-961e-7ac28a506881",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "EtzYI9puf5hWVyrc",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "assistant",
+        "assistantId": {
+          "__rl": true,
+          "value": "asst_lC1SN7zl6vOZSBF361QR6V23",
+          "mode": "list",
+          "cachedResultName": "Cursos MarIADono Assistant"
+        },
+        "prompt": "define",
+        "text": "=Responde a consultas correspondientes de cada curso de Ceridono Refrigeración según los documentos proporcionados, incluir el link de registro en todas las respuestas.\n\nconversación: {{ $('Webhook').item.json.body.data._chatHistory }}\nconsulta reformulada: {{ $('Switch').item.json.output['Consulta reformulada'] }}\n\n{{ $json.output['Consulta reformulada'] }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.7,
+      "position": [
+        -40,
+        -60
+      ],
+      "id": "0aa86f2d-27af-4be7-833a-a2dd1a8eb0ab",
+      "name": "Cursos MariaDono Assistant",
+      "credentials": {
+        "openAiApi": {
+          "id": "ITcoQ5kvhH8jzKCQ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputText": "= {{ $json.output.interesCliente }}",
+        "categories": {
+          "categories": [
+            {
+              "category": "cursos",
+              "description": "Consultas relacionadas con capacitaciones, programas educativos, seminarios o talleres.  Ejemplos:  \"Quiero información sobre los cursos de refrigeración\" \"¿Cuándo inicia el próximo?\""
+            },
+            {
+              "category": "Productos",
+              "description": "Consultas sobre artículos, repuestos o servicios en venta.  Ejemplos:  \"¿Qué productos tienen disponibles?\" \"Quiero comprar un gas\""
+            },
+            {
+              "category": "sucursal",
+              "description": "Preguntas sobre ubicaciones, direcciones o información de locales físicos.  Ejemplos:  \"¿Dónde está su sucursal más cercana?\" \"Horarios de atención en oficinas\""
+            },
+            {
+              "category": "pagos",
+              "description": "Consultas relacionadas con métodos de pago, facturas o transacciones.  Ejemplos:  \"¿Aceptan pagos con tarjeta de crédito?\" \"Necesito información sobre mi factura\""
+            },
+            {
+              "category": "procedimientos",
+              "description": "Consultas relacionadas con procedimiento, protocolo, ejecutivo, trámite, ruta o funcionalidad."
+            },
+            {
+              "category": "notificaciones",
+              "description": "Solicitud con respecto a las notificaciones"
+            },
+            {
+              "category": "Multiples opciones",
+              "description": "Para el caso de que pertenezca a más de una categoría"
+            }
+          ]
+        },
+        "options": {
+          "multiClass": false,
+          "fallback": "other",
+          "enableAutoFixing": true
+        }
+      },
+      "id": "21339b2a-cd9e-45bd-928d-8b70e0f1db49",
+      "name": "Selector de Agentes",
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "typeVersion": 1,
+      "position": [
+        -560,
+        -20
+      ],
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "febbaffb-359f-433e-b56e-454cbbfa8a45",
+              "name": "Ouput",
+              "value": "={{ {\n    \"Respuesta\": $('AI Agent Respuesta Final').item.json.output.Respuesta,\n    \"metricasCliente\": $json.output\n} }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {
+          "dotNotation": false
+        }
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1560,
+        100
+      ],
+      "id": "ab8a65d3-f93a-432d-8fd6-e6e8063e33e5",
+      "name": "Edit interesCliente"
+    },
+    {
+      "parameters": {
+        "model": "qwen-qwq-32b",
+        "options": {}
+      },
+      "id": "28b1b182-5ad1-4af2-8adf-9dd45a5e9926",
+      "name": "Groq Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -1940,
+        400
+      ],
+      "credentials": {
+        "groqApi": {
+          "id": "Lw0fiG2F5dpOKgXc",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "assistant",
+        "assistantId": {
+          "__rl": true,
+          "value": "asst_NQia2tH5WB0sAMxKzbteSf1b",
+          "mode": "list",
+          "cachedResultName": "Procedimientos MariaDono Assistant"
+        },
+        "prompt": "define",
+        "text": "=Responde a consultas correspondientes de cada procedimiento de ceridono según los documentos proporcionados.\n\nconversación: {{ $('Webhook').item.json.body.data._chatHistory }}\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.7,
+      "position": [
+        -40,
+        440
+      ],
+      "id": "3fa2f8fa-4044-4986-8966-863425338fe7",
+      "name": "Procedimientos MariaDono Assistant",
+      "credentials": {
+        "openAiApi": {
+          "id": "ITcoQ5kvhH8jzKCQ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres un asistente virtual especializado en comprender y completar consultas incompletas o ambiguas de clientes. Tu tarea es analizar el contexto de la conversación, identificar la intención del usuario y sugerir la consulta completa más probable.\n\n## Contexto\n- Trabajas como capa de procesamiento para un chatbot de servicio al cliente.\n- Recibirás fragmentos de consultas que pueden ser incompletas, ambiguas o interrumpidas.\n- Debes determinar la intención más probable del usuario basándote en el contexto previo.\n\n## Instrucciones\n1. Analiza el historial de conversación reciente para establecer contexto.\n2. Identifica palabras clave y temas en la consulta parcial del usuario.\n3. Detecta si la consulta es una continuación de la conversación anterior.\n4. Formula una versión completa y clara de la consulta original.\n5. Incluye cualquier parámetro o especificación relevante que pueda estar implícita.\n6. En caso de múltiples interpretaciones posibles, proporciona la más probable primero, seguida de alternativas si es necesario.\n7. Mantén el estilo y tono del usuario en tu reformulación.\n\n## Formato de salida\n- Consulta original: [texto incompleto o ambiguo del usuario]\n- Consulta reformulada: [versión completa y clara]\n- Confianza: [alta/media/baja]\n- Interpretaciones alternativas: [si aplica]\n\n## Ejemplos\n- Original: \"Cuándo llega mi...\"\n  Reformulada: \"¿Cuándo llega mi pedido con número de referencia mencionado anteriormente?\"\n\n- Original: \"No puedo acceder\"\n  Reformulada: \"No puedo acceder a mi cuenta de usuario. ¿Cómo puedo restablecer mi contraseña?\"\n\n- Original: \"El mismo pero en rojo\"\n  Reformulada: \"Quiero el mismo producto que acabo de consultar pero en color rojo.\"\n\nRecuerda mantener la naturalidad del lenguaje y evitar sobreinterpretar la consulta cuando la intención no sea clara.\n\nconversación: {{ $json.body.data._chatHistory }}\nnueva consulta: {{ $json.body.data._body }}",
+        "hasOutputParser": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        -1960,
+        120
+      ],
+      "id": "001da009-ac12-48dc-81bd-d1755efe4e5b",
+      "name": "Consulta Sugerida LLM"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"Consulta reformulada\":\"Una Consulta\",\n\t\"Confianza\": \"Alta\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        -1800,
+        300
+      ],
+      "id": "333ab2e3-cd61-4396-9ec9-f84c13e12706",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.Confianza }}",
+                    "rightValue": "alta",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "c5386dde-3a68-4e41-8dee-7f244162fb65",
+                    "leftValue": "={{ $json.output.Confianza }}",
+                    "rightValue": "media",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "34c19d8a-5174-4ad4-a7c3-59013da9fa99",
+                    "leftValue": "={{ $json.output.Confianza }}",
+                    "rightValue": "baja",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -1420,
+        120
+      ],
+      "id": "68648575-966a-410f-85d2-8e04614eb708",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.text }}{{ $json.varSinRespuesta }}",
+        "options": {}
+      },
+      "id": "7cf2d406-db05-45ca-a603-f42736668638",
+      "name": "Respond to Webhook2",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        20,
+        1120
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5d50d8d4-5cb5-4d46-a1b2-3a8f1efda08b",
+              "name": "=varSinRespuesta",
+              "value": "SinRespuesta",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -180,
+        1120
+      ],
+      "id": "03deda7e-e371-41ba-8eef-d7be98fd1331",
+      "name": "Sin Respuesta1"
+    },
+    {
+      "parameters": {
+        "name": "Sub_Workflow_Sucursal",
+        "description": "Llama a esta herramienta si deseas saber si la consulta es de sucursal.",
+        "workflowId": {
+          "__rl": true,
+          "value": "QcTr8tQUaeiUxgU8",
+          "mode": "list",
+          "cachedResultName": "Sub-Workflow-Sucursal"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "consulta": "={{ $json.output['Consulta reformulada'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "contexto",
+              "displayName": "contexto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "consulta",
+              "displayName": "consulta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2,
+      "position": [
+        -1020,
+        180
+      ],
+      "id": "494ce300-4cd6-44cf-a562-85d260c4527d",
+      "name": "Call_Sub_Workflow_Sucursal"
+    },
+    {
+      "parameters": {
+        "name": "Sub_Workflow_Cursos",
+        "description": "Llama a esta herramienta si deseas saber si la consulta es de cursos.",
+        "workflowId": {
+          "__rl": true,
+          "value": "lP4QKeL3tbwEL2xn",
+          "mode": "list",
+          "cachedResultName": "Sub-Workflow-Cursos"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "consulta": "={{ $json.output['Consulta reformulada'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "contexto",
+              "displayName": "contexto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "consulta",
+              "displayName": "consulta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2,
+      "position": [
+        -920,
+        180
+      ],
+      "id": "27088e50-7faa-4cae-b229-51114ac16495",
+      "name": "Call_Sub_Workflow_Cursos"
+    },
+    {
+      "parameters": {
+        "name": "Sub_Workflow_Productos",
+        "description": "Llama a esta herramienta si deseas saber si la consulta es de productos o repuestos.",
+        "workflowId": {
+          "__rl": true,
+          "value": "Qw9d2CHpMw1aovA7",
+          "mode": "list",
+          "cachedResultName": "Sub-Workflow-Productos"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "consulta": "={{ $json.output['Consulta reformulada'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "contexto",
+              "displayName": "contexto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "consulta",
+              "displayName": "consulta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2,
+      "position": [
+        -820,
+        240
+      ],
+      "id": "465a34a9-b5da-4973-8018-c7256b253432",
+      "name": "Call_Sub_Workflow_Productos"
+    },
+    {
+      "parameters": {
+        "resource": "assistant",
+        "assistantId": {
+          "__rl": true,
+          "value": "asst_pkiZHKIFimCQt2txP1nJGgpu",
+          "mode": "list",
+          "cachedResultName": "Productos_MarIADono_Assistant"
+        },
+        "prompt": "define",
+        "text": "=Responde a consultas de los documentos proporcionados. Constatar siempre marca y modelo.\n\nconversación: {{ $('Switch').item.json.output['Consulta reformulada'] }}\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.7,
+      "position": [
+        -40,
+        120
+      ],
+      "id": "57ec3d48-ebf1-4c97-a679-c252e9d7e7fd",
+      "name": "Productos_MariaDono_Assistant",
+      "credentials": {
+        "openAiApi": {
+          "id": "ITcoQ5kvhH8jzKCQ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Instrucción:\nEres un chatbot diseñado para responder en WhatsApp de manera concisa y con un tono acorde al historial de la conversación.\n\nEntrada:\n\nHistorial de conversación del usuario: {{ $('Webhook').item.json.body.data._chatHistory }}\n\nSalida sugerida:\n{{ $json.output }}\n\nAjusta el tono de la respuesta según el historial de la conversación (amistoso, formal, profesional, casual, etc.).\nResume la respuesta sin perder información clave.\nMantén el mensaje claro y directo, optimizado para WhatsApp. No uses nombres.",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        680,
+        120
+      ],
+      "id": "c3212310-ebd1-4926-ae6c-abd17b26c668",
+      "name": "AI Agent Respuesta Final"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        540,
+        320
+      ],
+      "id": "1b26a774-7e47-43d1-9086-02f5ab38074e",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "ITcoQ5kvhH8jzKCQ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        780,
+        420
+      ],
+      "id": "78387b90-284d-4fdf-8218-d6cb48f025bb",
+      "name": "Think"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        680,
+        360
+      ],
+      "id": "5655a94b-1661-48cf-aa15-003ceee14ef2",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "lP4QKeL3tbwEL2xn",
+          "mode": "list",
+          "cachedResultName": "Sub_Workflow_Cursos"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "consulta": "={{ $('Consulta Sugerida LLM').item.json.output['Consulta reformulada'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "contexto",
+              "displayName": "contexto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "consulta",
+              "displayName": "consulta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        -100,
+        -360
+      ],
+      "id": "771f396b-a090-42cc-9513-ea15a4b8fa5c",
+      "name": "Cursos Workflow"
+    },
+    {
+      "parameters": {
+        "content": "# Clasificador\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+        "height": 780,
+        "width": 980,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1240,
+        -180
+      ],
+      "typeVersion": 1,
+      "id": "7aa9cf86-44a0-4846-89ce-692bbdaa1460",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Revisar en todas las tools y clasifica la consulta del usuario dentro de las siguientes categorias; cursos, productos o repuestos, sucursal, pagos, consultas internas, notificaciones o mensajes promocionales, otros.\nConsulta: {{ $json.output['Consulta reformulada'] }}",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -1100,
+        -40
+      ],
+      "id": "cf387d14-ee60-4ded-9cb1-b2b2c38333c8",
+      "name": "AI Agent Clasificador"
+    },
+    {
+      "parameters": {
+        "content": "# Asistentes de Información",
+        "height": 1140,
+        "width": 540
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -200,
+        -180
+      ],
+      "id": "e9017998-4de8-4a64-87bb-50e2831242df",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "# Respuesta",
+        "height": 800,
+        "width": 800,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        520,
+        -200
+      ],
+      "id": "06ce4850-f1e9-4043-bfae-2ae61e83dc00",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "# Pregunta\n\n",
+        "height": 780,
+        "width": 680,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1980,
+        -180
+      ],
+      "typeVersion": 1,
+      "id": "098cdff6-1656-49da-bd59-40de2fbaf635",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "# Respuesta Nula\n",
+        "height": 260,
+        "width": 500,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -220,
+        1040
+      ],
+      "id": "4ee71279-36de-48f7-bae0-ae064b21f47f",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -580,
+        220
+      ],
+      "id": "faf91af4-5bd3-4764-a385-477c0dc4412c",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "ITcoQ5kvhH8jzKCQ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Maneja las notificaciones",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -40,
+        640
+      ],
+      "id": "ef7784d5-bc17-48d0-922a-10fa1ab76b98",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "operation": "executeTool",
+        "toolName": "json"
+      },
+      "type": "n8n-nodes-mcp.mcpClient",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        940
+      ],
+      "id": "393be436-86d9-4120-8222-1cbc24a0adc1",
+      "name": "MCP Client",
+      "credentials": {
+        "mcpClientApi": {
+          "id": "uGzWJy6UM5y2Tx8h",
+          "name": "MCP Json npx"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sseEndpoint": "http://localhost:5678/mcp/8181947f-ff94-40ca-ad61-de1d4b836d61/sse"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1,
+      "position": [
+        240,
+        820
+      ],
+      "id": "3d846bc3-0519-4952-a160-7875bfa3c2d8",
+      "name": "MCP Client1"
+    },
+    {
+      "parameters": {
+        "path": "8181947f-ff94-40ca-ad61-de1d4b836d61"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        740,
+        760
+      ],
+      "id": "d16511c8-66f4-4d7c-a65f-6a3ba4b42931",
+      "name": "MCP Server Trigger",
+      "webhookId": "8181947f-ff94-40ca-ad61-de1d4b836d61"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        800,
+        940
+      ],
+      "id": "1b0c65e1-a6cb-4bed-846f-4ace7d69a404",
+      "name": "When chat message received",
+      "webhookId": "89a35e39-0cb2-4f6c-baae-65548e5c3758"
+    },
+    {
+      "parameters": {
+        "resource": "database",
+        "databaseId": {
+          "__rl": true,
+          "value": "c57138e0-21dd-478d-8be8-23e453b0dc4d",
+          "mode": "list",
+          "cachedResultName": "CURSOS",
+          "cachedResultUrl": "https://www.notion.so/c57138e021dd478d8be823e453b0dc4d"
+        }
+      },
+      "type": "n8n-nodes-base.notionTool",
+      "typeVersion": 2.2,
+      "position": [
+        560,
+        1040
+      ],
+      "id": "4666067b-634e-4fce-8219-e1a98830b1ec",
+      "name": "Notion",
+      "credentials": {
+        "notionApi": {
+          "id": "16GzlfKHk69JPOHO",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "llama3.2:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        180
+      ],
+      "id": "a5cfd645-e947-4b94-b547-26f7bbeca615",
+      "name": "Ollama Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "yUZZvnCs5FcGJ4e3",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -100,
+        840
+      ],
+      "id": "5f9d0e63-f9de-4c41-91d0-17454e0f10b3",
+      "name": "OpenAI Chat Model3",
+      "credentials": {
+        "openAiApi": {
+          "id": "ITcoQ5kvhH8jzKCQ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "qwen2.5:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -20,
+        840
+      ],
+      "id": "2b6a452f-7c7d-47a8-9a36-a5fd268792b6",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "yUZZvnCs5FcGJ4e3",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "Notificaciones_tool",
+        "description": "Determina si el pedido del cliente es relevante para notificaciones o mensajes promocionales.",
+        "workflowId": {
+          "__rl": true,
+          "value": "WnDF0xdaXG9nZF72",
+          "mode": "list",
+          "cachedResultName": "Notificaciones_SubWorkflow"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "consulta": "={{ $('Switch').item.json.output['Consulta reformulada'] }}",
+            "contexto": "={{ $('Webhook').item.json.body.data._chatHistory }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "contexto",
+              "displayName": "contexto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "consulta",
+              "displayName": "consulta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [
+        -720,
+        160
+      ],
+      "id": "8fcbf359-7628-4469-8079-73355810bc8f",
+      "name": "Call Notificaciones_SubWorkflow"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        1080,
+        360
+      ],
+      "id": "7f50b9d6-b94e-4812-a622-8eac88b00797",
+      "name": "OpenAI Chat Model4",
+      "credentials": {
+        "openAiApi": {
+          "id": "ITcoQ5kvhH8jzKCQ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\"interesCliente\":\"California\",\n\"Tipo de Productos Consultados\":\"California\",\n\"Profundidad de Consulta\":\"California\",\n\"Frecuencia de Consulta\":\"California\",\n\"Tipo de Preguntas\":\"California\",\n\"Historial de Interacción\":\"California\",\n\"Repetición de Consultas\":\"California\",\n\"Urgencia en la Respuesta\":\"California\",\n\"Tiempos de Respuesta\":\"California\",\n\"Segmentación Demográfica\":\"California\",\n\"Preferencias de Producto\":\"California\",\n\"Interacción con el Asistente\":\"California\",\n\"Seguimiento Proactivo\":\"California\",\n\"Segmentación\":\"California\",\n\"Personalización de Respuestas\":\"California\",\n\"Evolucion en el Funnel de Venta\":\"California\",\n  \"Velocidad de respuesta a Bulkmessage\": 5,\n\"etapaEmbudo\":5\n\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        1220,
+        340
+      ],
+      "id": "a0349549-6425-4416-8a52-42f03896edce",
+      "name": "Structured Output Parser1"
+    },
+    {
+      "parameters": {
+        "model": "qwen3:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -1100,
+        200
+      ],
+      "id": "701d117f-8608-491d-8b8e-62dac1f4804b",
+      "name": "Ollama Chat Model1",
+      "credentials": {
+        "ollamaApi": {
+          "id": "yUZZvnCs5FcGJ4e3",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1940,
+        320
+      ],
+      "id": "ac929b63-ea5e-4096-aea5-70027bf8b7ac",
+      "name": "OpenAI Chat Model5",
+      "credentials": {
+        "openAiApi": {
+          "id": "ITcoQ5kvhH8jzKCQ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-mcp.mcpClientTool",
+      "typeVersion": 1,
+      "position": [
+        140,
+        900
+      ],
+      "id": "fc1ea730-224e-461e-b356-2de333cd53d5",
+      "name": "MCP Client2",
+      "credentials": {
+        "mcpClientApi": {
+          "id": "Bl0MaGLX6UUPZMSm",
+          "name": "MCP Inspector"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "llama3.2:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        600,
+        460
+      ],
+      "id": "47a75451-3aa0-4fe2-8cae-f71d4d2bee97",
+      "name": "Ollama Chat Model2",
+      "credentials": {
+        "ollamaApi": {
+          "id": "yUZZvnCs5FcGJ4e3",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"Respuesta\": \"California\",\n    \"Aclaraciones\": \"California\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        880,
+        320
+      ],
+      "id": "2246b92c-88ec-4c32-a809-8c0e6ac39b34",
+      "name": "Structured Output Parser2"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"interesCliente\": \"California\"\n\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        -340,
+        180
+      ],
+      "id": "70fab43a-6707-4b62-a90d-b0ae32f6ba63",
+      "name": "Structured Output Parser3"
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "output.Respuesta",
+              "renameField": true
+            },
+            {
+              "fieldToAggregate": "output.interesCliente",
+              "renameField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        680
+      ],
+      "id": "14d3de81-63fa-4cd2-8e02-6ab48b70e94f",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cf773174-e6e3-4f79-ad89-36c8f9642adb",
+              "name": "RespuestaCompleta",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1700,
+        320
+      ],
+      "id": "567e2d7a-e3ec-431c-957b-b568da90f35e",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Funnel de Venta:(1-5) \nEvolucion en el Funnel de Venta: como a ido evolucionando el interes del cliente, ejemplo: de 1 a 4\nVelocidad de respuesta a Bulkmessage: (1-5)(segundos, minutos, horas, dias, semanas)\n\nchatHistory: {{ $('Webhook').item.json.body.data._chatHistory }}\nnueva consulta: {{ $('Switch').item.json.output['Consulta reformulada'] }}\n\nInteres del Cliente: {{ $('AI Agent Clasificador').item.json.output.interesCliente }}",
+        "hasOutputParser": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        1060,
+        160
+      ],
+      "id": "3e017780-f557-41ea-ba78-fd9929460b48",
+      "name": "etapaEmbudo LLM"
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "accept": "application/json, text/plain, */*",
+            "content-type": "application/json",
+            "authorization": "Bearer Agentesceridonon8n",
+            "user-agent": "axios/1.8.2",
+            "content-length": "3392",
+            "accept-encoding": "gzip, compress, deflate, br",
+            "host": "localhost:5678",
+            "connection": "keep-alive"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "data": {
+              "_from": "5493874794586",
+              "_role": "Outgoing",
+              "_body": "Ah perfecto la inscripción es solo por la web?",
+              "_date": "2025-05-07",
+              "_time": "19:58:48",
+              "_messageId": "F770AB7A54FDEA9E92972A4F5032BEFD",
+              "_pushName": "Assistant",
+              "_botName": "bot",
+              "_etapaEmbudo": "",
+              "_interesCliente": "",
+              "_mediaType": null,
+              "_mediaUrl": null,
+              "_mediaBuffer": null,
+              "_aiResponses": [],
+              "_mediaFilePath": null,
+              "_chatHistory": "2025-05-07|19:40:21|Outgoing|¡Hola! Aquí te dejo info sobre los cursos de Ceridono Refrigeración:\n\n1. **Refrigeración Básica**  \n   - Inicio: 11/03/2025  \n   - Duración: 10 clases presenciales (15 a 19hs)  \n   - Costo: $250.000 (descuento Técnico Amigo: $200.000 tarjeta / $225.000 efectivo)  \n   - Incluye cursado, material, exámenes, coffee break, gorra y cupón.  \n   - Registro: https://www.ceridono.ar/panel/pres/?pr=aGVrbA==  \n\n2. **Instalador de Split Inverter**  \n   - Inicio: 17/04/2025  \n   - Duración: 10 clases presenciales (15 a 19hs)  \n   - Mismo costo y beneficios que el básico.  \n   - Registro: https://www.ceridono.ar/panel/pres/?pr=aGVpcg==  \n\n3. **Refrigeración Comercial**  \n   - Inicio: según cupos  \n   - Duración: 10 clases (Jueves 9 a 13hs)  \n   - Nivel intermedio, mismo costo y beneficios.  \n   - Registro: https://www.ceridono.ar/panel/pres/?pr=aGVqbQ==  \n\nMateriales prácticos no incluidos, a cargo del alumno. ¿Quieres más detalles?\n2025-05-07|19:39:05|incoming|Hola buenas tardes\n2025-05-07|19:40:20|outgoing|Multimedia message\n2025-05-07|19:45:37|outgoing|Hola buenas tardes, cómo estás? soy Julieta  de Ceridono refrigeración.\n2025-05-07|19:45:43|outgoing|Si digame\n2025-05-07|19:45:47|outgoing|Mí horario de atención es de lunes a sábados de 8.30 a 12.30 hs. \nY de lunes a viernes de 16 a 20 hs\nGracias\n2025-05-07|19:45:52|outgoing|Para conversar con Julieta de lunes a sábados de 8.30 a 12.30 hs y dejar de ser asistido por Maria dono. Escribe la palabra \"operadora\"\n2025-05-07|19:56:02|incoming|Quería saber sobre el curso de manipulación de gases ?\n2025-05-07|19:57:07|Outgoing|Hola, te cuento sobre el curso de Manejo Seguro de Gases Refrigerantes Inflamables:\n\n- Nivel avanzado, avalado por ONUDI.  \n- 4 clases presenciales, sábados de 9 a 15 hs.  \n- Comienza el 31/05/2025.  \n- Costo $330.000 (con descuento Técnico Amigo: $247.500 tarjeta / $266.475 efectivo).  \n- Incluye cursado, material, exámenes, coffee break, gorra y cupón.  \n- Materiales prácticos no incluidos.  \n- Registro: https://www.ceridono.ar/panel/pres/?pr=aGVrbQ==  \n- Pagos hasta 6 cuotas sin interés con tarjeta, o efectivo.\n\nSi querés, te paso más info o te ayudo con la inscripción.\n2025-05-07|19:58:48|incoming|Ah perfecto la inscripción es solo por la web?",
+              "_ctx": {
+                "key": {
+                  "remoteJid": "5493874794586@s.whatsapp.net",
+                  "fromMe": false,
+                  "id": "F770AB7A54FDEA9E92972A4F5032BEFD"
+                },
+                "messageTimestamp": 1746658728,
+                "pushName": "Pablo Retambay",
+                "broadcast": false,
+                "message": {
+                  "conversation": "Ah perfecto la inscripción es solo por la web?",
+                  "messageContextInfo": {
+                    "deviceListMetadata": {
+                      "recipientKeyHash": "k9vDcpNU5LZonw==",
+                      "recipientTimestamp": "1746459305"
+                    },
+                    "deviceListMetadataVersion": 2,
+                    "messageSecret": "C0GC+9enw70/2kG6th7rN87VChUycM420GghMFMSbwE="
+                  }
+                },
+                "body": "Ah perfecto la inscripción es solo por la web?",
+                "from": "5493874794586"
+              }
+            },
+            "timestamp": "2025-05-07T22:58:48.821Z"
+          },
+          "webhookUrl": "http://localhost:5678/webhook/Webhook",
+          "executionMode": "production"
+        }
+      }
+    ],
+    "AI Agent Respuesta Final": [
+      {
+        "json": {
+          "output": {
+            "Respuesta": "Los compresores valvulares suelen ser eficientes energéticamente, funcionan de forma silenciosa, permiten controlar su capacidad para ajustarse a la demanda y tienen buena durabilidad si se mantienen bien. Si querés detalles sobre algún modelo específico, avisame y te ayudo.",
+            "Aclaraciones": "La respuesta es una síntesis clara y adaptada para WhatsApp, manteniendo un tono profesional y amigable como en el historial."
+          }
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Consulta Sugerida LLM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent Clasificador",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "Sucursal MariaDono Assistant": {
+      "main": [
+        [
+          {
+            "node": "AI Agent Respuesta Final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cursos MariaDono Assistant": {
+      "main": [
+        [
+          {
+            "node": "AI Agent Respuesta Final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Selector de Agentes": {
+      "main": [
+        [
+          {
+            "node": "Cursos MariaDono Assistant",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Productos_MariaDono_Assistant",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Sucursal MariaDono Assistant",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Sin Respuesta1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Procedimientos MariaDono Assistant",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Edit interesCliente": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "Procedimientos MariaDono Assistant": {
+      "main": [
+        [
+          {
+            "node": "AI Agent Respuesta Final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consulta Sugerida LLM": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Consulta Sugerida LLM",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "AI Agent Clasificador",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Sin Respuesta1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Sin Respuesta1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sin Respuesta1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call_Sub_Workflow_Sucursal": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent Clasificador",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call_Sub_Workflow_Cursos": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent Clasificador",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call_Sub_Workflow_Productos": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent Clasificador",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Productos_MariaDono_Assistant": {
+      "main": [
+        [
+          {
+            "node": "AI Agent Respuesta Final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent Respuesta Final": {
+      "main": [
+        [
+          {
+            "node": "etapaEmbudo LLM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent Respuesta Final",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent Respuesta Final",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        []
+      ]
+    },
+    "AI Agent Clasificador": {
+      "main": [
+        [
+          {
+            "node": "Selector de Agentes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Selector de Agentes",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        []
+      ]
+    },
+    "MCP Client1": {
+      "ai_tool": [
+        []
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "MCP Client",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notion": {
+      "ai_tool": [
+        []
+      ]
+    },
+    "Ollama Model": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "OpenAI Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "Call Notificaciones_SubWorkflow": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent Clasificador",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Client": {
+      "main": [
+        []
+      ]
+    },
+    "OpenAI Chat Model4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "etapaEmbudo LLM",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "etapaEmbudo LLM",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model1": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "OpenAI Chat Model5": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Consulta Sugerida LLM",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Client2": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model2": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "Structured Output Parser2": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent Respuesta Final",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser3": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent Clasificador",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        []
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        []
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        []
+      ]
+    },
+    "etapaEmbudo LLM": {
+      "main": [
+        [
+          {
+            "node": "Edit interesCliente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "43f41b1a-85f7-4664-9f47-bd0e93501938",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7a45e564a0c11046766a7c454204e7a510bf179e50bcfa14a7978e4f07dcf653"
+  },
+  "id": "qFHxEzw7MRMPXeEm",
+  "tags": [
+    {
+      "createdAt": "2025-02-20T13:08:15.091Z",
+      "updatedAt": "2025-02-20T13:08:15.091Z",
+      "id": "qFyKRnMUFXwr6CC1",
+      "name": "Media Processing"
+    }
+  ]
+}

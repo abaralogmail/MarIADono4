@@ -1,0 +1,395 @@
+{
+  "name": "Sub-Workflow-Productos",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "jsonExample",
+        "jsonExample": "{\n  \"contexto\": \"string\",\n  \"consulta\": \"string\"\n}"
+      },
+      "id": "7d0216e2-010e-4b3d-94bc-9e471b1933bf",
+      "typeVersion": 1.1,
+      "name": "Workflow Input Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        16,
+        608
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "b737a62f-408e-4c11-957c-12a6194817b4",
+      "name": "Replace me with your logic",
+      "type": "n8n-nodes-base.noOp",
+      "position": [
+        1568,
+        656
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9be8039f-1223-47ee-9d70-2f615d380e11",
+              "name": "output",
+              "value": "=Pertenece a productos y repuestos",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1296,
+        512
+      ],
+      "id": "44f3a8a8-c7d5-43a9-8bf3-b65d1e896f13",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "inputText": "={{ $json.output }}",
+        "categories": {
+          "categories": [
+            {
+              "category": "La consulta se refiere a productos y repuestos",
+              "description": "Tienes informacion acerca de la consulta"
+            },
+            {
+              "category": "La consulta no se refiere a productos y repuestos",
+              "description": "La consulta no se refiere a productos y repuestos"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "typeVersion": 1,
+      "position": [
+        816,
+        752
+      ],
+      "id": "8fe441a5-79f1-4770-bfb2-ac726a7278f1",
+      "name": "Text Classifier",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "27f96103-da93-4a87-9e2b-451a67791488",
+              "leftValue": "={{ $json.pertenece_a_productos }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        848,
+        480
+      ],
+      "id": "8c0d7a03-4a57-4c47-b972-e682f07b9b0e",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9be8039f-1223-47ee-9d70-2f615d380e11",
+              "name": "output",
+              "value": "=No Pertenece a productos y repuestos",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1264,
+        688
+      ],
+      "id": "79487539-3c31-4c1b-89fd-fa591aa7750e",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "resource": "assistant",
+        "assistantId": {
+          "__rl": true,
+          "value": "asst_pkiZHKIFimCQt2txP1nJGgpu",
+          "mode": "list",
+          "cachedResultName": "Productos_MarIADono_Assistant"
+        },
+        "prompt": "define",
+        "text": "=determina si tienes información acerca de la consulta en los documentos proporcionados, si es asi entoncen indica que pertenece a productos y repuestos\n\nConsulta: {{ $json.consulta }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.7,
+      "position": [
+        224,
+        608
+      ],
+      "id": "002590be-ade2-4ed7-ae17-1348e33647ce",
+      "name": "Productos_MariaDono_Assistant",
+      "credentials": {
+        "openAiApi": {
+          "id": "ITcoQ5kvhH8jzKCQ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "qwen-qwq-32b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        816,
+        944
+      ],
+      "id": "a2f1c9b0-1639-4ad1-9afd-b1f53f510928",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "Lw0fiG2F5dpOKgXc",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "typeVersion": 1,
+      "position": [
+        320,
+        816
+      ],
+      "id": "61c0f09a-e451-4cd4-959f-64be5dff8770",
+      "name": "Calculator"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b017ad8c-a780-499c-84f6-f4c71384b1f3",
+              "name": "pertenece_a_productos",
+              "value": "={{ $json.output.parseJson().pertenece_a_productos }}",
+              "type": "boolean"
+            },
+            {
+              "id": "596470ec-a447-4a18-9962-2258d65ea2cc",
+              "name": "productos",
+              "value": "={{ $json.output.parseJson().productos }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        624,
+        624
+      ],
+      "id": "cc23d640-0714-48c4-8c7d-7974059ed55f",
+      "name": "ToJson",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "productId": "368-XA"
+      },
+      "type": "n8n-nodes-base.wooCommerce",
+      "typeVersion": 1,
+      "position": [
+        352,
+        32
+      ],
+      "id": "0ccd9f31-bb73-4d67-be94-a06079bef113",
+      "name": "WooCommerce",
+      "credentials": {
+        "wooCommerceApi": {
+          "id": "YvGSbwrx09U6nBLb",
+          "name": "WooCommerce account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Workflow Input Trigger": [
+      {
+        "json": {
+          "contexto": null,
+          "consulta": "¿Tenés algún curso que se dicte los días sábado? Me interesan especialmente los de refrigeración o electricidad."
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Workflow Input Trigger": {
+      "main": [
+        [
+          {
+            "node": "Productos_MariaDono_Assistant",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Replace me with your logic": {
+      "main": [
+        []
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Replace me with your logic",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text Classifier": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Replace me with your logic",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Productos_MariaDono_Assistant": {
+      "main": [
+        [
+          {
+            "node": "ToJson",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculator": {
+      "ai_tool": [
+        [
+          {
+            "node": "Productos_MariaDono_Assistant",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ToJson": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Text Classifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "44a5ac72-2214-45fa-87f5-0b7097dedf77",
+  "meta": {
+    "templateId": "VMiAxXa3lCAizGB5f7dVZQSFfg3FtHkdTKvLuupqBls=",
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7a45e564a0c11046766a7c454204e7a510bf179e50bcfa14a7978e4f07dcf653"
+  },
+  "id": "Qw9d2CHpMw1aovA7",
+  "tags": [
+    {
+      "createdAt": "2025-04-10T03:01:42.480Z",
+      "updatedAt": "2025-04-10T03:01:42.480Z",
+      "id": "qVoLw0KSgTR3MgwG",
+      "name": "MarIADono"
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+# Node.js
+node_modules
+BotCursosSalta_sessions
+BotOfertasSalta_sessions
+BotAdministracionSalta_sessions
+BotOfertasTucuman_sessions
+BotAugustoTucuman_sessions
+BotConsultasWebTucuman_sessions
+BotConsultasWeb_sessions
+BotRamiro()_sessions
+BotJujuy_sessions
+
+
+# Environment and configuration
+.env
+bot.qr.png
+BotCursosSalta.qr.png
+BotOfertasSalta.qr.png
+
+# Database and storage
+db.json
+userThreads.json
+mensajes/userThreads.json
+blocked_users.json
+message_log.json
+src\config\userConfig.json
+
+# Bot sessions and logs
+bot_sessions
+queue.class.log
+core.class.log
+
+# Excel and CSV files
+/mensajes/~$Conexion - sendBulkMessages.xlsx
+/mensajes/Conexion - sendBulkMessages.xlsx
+/mensajes/Cursos.xlsx
+mensajes/Cursos.xlsx
+mensajes/~$Cursos.xlsx
+/Logs/conversations_log.xlsx
+/Logs/Conexion-Logs-Powerquery.xlsx
+Logs/FunneldeVentas.xlsx
+Logs/MiniConversations.csv
+
+# Directories
+Documentos/
+Logs/
+mensajes/Historial
+mensajes/Fuentes
+mensajes/Listas
+Documentos/Productos
+backups/
+BD_Clientes
+Documentacion\builder_bot_baileys_examples-master
+Documentacion\builder_bot_baileys_examples-master
+
+# Temporary files
+tmp
+
+# Specific files to ignore
+/Logs/conversations_log.xlsx
+/Logs/Conexion-Logs-Powerquery.xlsx
+/mensajes/Conexion - sendBulkMessages.xlsx
+src/config/userConfig.js
+
+BotAugustoTucuman_sessions/app-state-sync-version-critical_unblock_low.json
+BotAugustoTucuman_sessions/sender-key-status@broadcast--5493812010781--0.json
+src/database/my_duckdb.db
+src/database/my_duckdb.db.wal
+MarIADono - 26-4-2025.zip
+BotConsultasWeb.qr.png
+src/config/userConfig.json
+ecosystem.config.js
+my_duckdb.db
+BotJujuy.qr.png
+Logs\Data
+
+src/config/userConfig.json
+src/utils/messageProcessor.js
+src/database/data/
+
+BotRoly_sessions/
+Logs/
+MarIADono3-02-06-2025.rar
+MarIADono3-14-9-2025.rar
+MarIADono3-16-08-2025.rar
+mensajes\conversations_log.xlsx
+
+# === Reglas añadidas para limpieza ===
+# Ignorar todos los archivos de sesión de forma genérica
+/*sessions/
+
+# Ignorar todos los archivos de archivo comprimido
+*.rar
+*.zip
+*.tar.gz
+
+# Ignorar directorios de logs de forma más robusta
+/Logs/
+/logs/

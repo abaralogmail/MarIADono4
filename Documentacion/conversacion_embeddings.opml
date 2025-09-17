@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="2.0">
+  <head>
+    <title>Conversación sobre embeddings</title>
+    <dateCreated>2024-10-02T01:10:52</dateCreated>
+  </head>
+  <body>
+    <outline text="Embeddings y Word2Vec">
+      <outline text="¿Qué son los vectores de embeddings?" >
+        <outline text="Descripción general">
+          <outline text="Los vectores de embeddings son representaciones numéricas de palabras, frases, imágenes o incluso objetos más abstractos. Capturan las características o relaciones de esos elementos dentro de un espacio vectorial continuo."/>
+        </outline>
+      </outline>
+      <outline text="Modelos para generar embeddings">
+        <outline text="Modelos clásicos">
+          <outline text="Word2Vec: Usa Skip-gram o CBOW para generar vectores que representan palabras en función de su contexto en grandes corpus de texto."/>
+          <outline text="GloVe: Utiliza matrices de co-ocurrencia para generar vectores de palabras basados en la frecuencia de aparición conjunta en un corpus."/>
+          <outline text="FastText: Considera los subcomponentes de las palabras para mejorar la representación de palabras morfológicamente complejas."/>
+        </outline>
+        <outline text="Modelos avanzados (contextualizados)">
+          <outline text="BERT: Genera embeddings contextualizados para palabras basados en su posición dentro de una frase o documento usando Transformers bidireccionales."/>
+          <outline text="GPT: Similar a BERT pero con enfoque autoregresivo, generando palabras en secuencia."/>
+        </outline>
+      </outline>
+      <outline text="Embeddings de imágenes, audio y grafos">
+        <outline text="Embeddings de imágenes">
+          <outline text="Usan redes neuronales convolucionales (CNN) para convertir imágenes en vectores representativos."/>
+        </outline>
+        <outline text="Embeddings de audio">
+          <outline text="Usan redes neuronales recurrentes (RNN) o CNNs adaptadas a series temporales para convertir señales de audio en embeddings."/>
+        </outline>
+        <outline text="Embeddings de grafos">
+          <outline text="Node2Vec y redes convolucionales de grafos (GCNs) son métodos populares para obtener embeddings de nodos en grafos."/>
+        </outline>
+      </outline>
+    </outline>
+    <outline text="Clasificación usando Word2Vec">
+      <outline text="Descripción de Word2Vec">
+        <outline text="No es un modelo de clasificación directo, sino que genera vectores de palabras basados en el contexto. Estos vectores pueden ser usados para entrenar clasificadores supervisados."/>
+        <outline text="Los dos enfoques principales son Skip-gram (predice palabras de contexto a partir de una palabra central) y CBOW (predice la palabra central a partir de palabras de contexto)." />
+      </outline>
+      <outline text="Uso de Word2Vec en clasificación">
+        <outline text="Los embeddings generados por Word2Vec se usan como representaciones numéricas de texto. Estos pueden ser utilizados en modelos supervisados como SVM, redes neuronales, o regresión logística."/>
+      </outline>
+      <outline text="Ejemplo práctico">
+        <outline text="Para clasificar opiniones, los vectores promedio de las palabras de una reseña pueden usarse como entrada a un clasificador de sentimientos."/>
+      </outline>
+    </outline>
+    <outline text="Relaciones semánticas y sintácticas en Word2Vec">
+      <outline text="Relaciones implícitas">
+        <outline text="Word2Vec captura relaciones como género (ej. rey-reina), pluralidad, y relaciones semánticas (ej. animalidad) a través de patrones de uso en los datos."/>
+        <outline text="Relaciones de género y semántica: Las palabras con significados similares están cercanas en el espacio vectorial (ej. 'perro' y 'gato')."/>
+        <outline text="Relaciones sintácticas: Los verbos tienden a agruparse cerca entre sí, mientras que los sustantivos forman otro grupo."/>
+        <outline text="Limitaciones: No contextualiza palabras de manera dinámica y depende fuertemente del corpus de entrenamiento."/>
+      </outline>
+    </outline>
+  </body>
+</opml>
