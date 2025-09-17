@@ -97,3 +97,6 @@ mensajes\conversations_log.xlsx
 # Ignorar directorios de logs de forma más robusta
 /Logs/
 /logs/
+BotOfertasTucuman.qr.png
+BotRoly.qr.png
+.gitignore
