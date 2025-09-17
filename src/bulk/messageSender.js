@@ -44,7 +44,7 @@ class MessageSender {
             
             // Envio de media
             if (mediaUrl) {
-                messageId = await this.provider.sendMedia(`${from}@s.whatsapp.net`, mediaUrl);
+                messageId = await this.provider.sendMedia(`${from}@s.whatsapp.net`, mediaUrl );
                 console.log(`Media URL sent to ${from}@s.whatsapp.net: ${mediaUrl}`);
             }
 
