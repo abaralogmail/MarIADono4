@@ -204,7 +204,7 @@ BotAugustoTucuman() // BotName: BotAugustoTucuman - tel: 381248-8449
 BotConsultasWeb()// BotName: BotConsultasWeb - tel: 381590-8557
 //BotRamiro() // BotName: BotRamiro() - tel: 387225-5083
 //BotJujuy() // BotName: BotJujuy - tel: 388571-2603
-//BotRoly() // BotName: BotRoly - tel: 5493813690061
+BotRoly() // BotName: BotRoly - tel: 5493813690061
 //BotJujuyFranco() // BotName: BotJujuyFranco - tel: 3884406660
 
 
