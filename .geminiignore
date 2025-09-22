@@ -25,3 +25,8 @@ config/config.json
 # Ignorar archivos específicos de logs de conversaciones
 **/conversations_log.json
 **/conversations_log.csv
+
+# Ignorar todos los archivos de archivo comprimido
+*.rar
+*.zip
+*.tar.gz
