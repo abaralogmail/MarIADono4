@@ -1,3 +1,7 @@
+---
+marp: true
+---
+
 # Resumen del Esquema de la Base de Datos
 
 Este documento proporciona un análisis detallado del modelo de datos del proyecto, tal como se define en `SqliteManager.js` utilizando Sequelize.
@@ -58,7 +62,7 @@ El esquema de la base de datos se divide en tres categorías funcionales princip
 
 ## 3. Tablas del Sistema de Horarios
 
-Este es un sistema polimórfico diseñado para gestionar la disponibilidad de los bots.
+Este es un sistema diseñado para gestionar la disponibilidad de los bots.
 
 -   **`horarios`**
     -   **Propósito**: Define un horario general para un bot específico.

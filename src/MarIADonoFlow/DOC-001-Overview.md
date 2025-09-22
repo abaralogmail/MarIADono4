@@ -26,17 +26,18 @@ El Ciclo de Vida del Desarrollo: Las 5 Etapas
 El núcleo del flujo de trabajo es un proceso de cinco etapas bien definidas que guían un "Ítem de Trabajo" desde la idea hasta el software funcional.
 ### Descripción
 
-Etapa 1: Ítem de Trabajo (Definición / PLAN)
+## Etapa 1: Ítem de Trabajo (Definición / PLAN)
 Como usuario del sistema, quiero un resumen general (overview) del proyecto MarIADonoFlow para entender rápidamente su propósito, estructura y componentes principales.
 
 Objetivo: Definir el "Qué" y el "Por qué".
 Campos Clave: Historia de Usuario, Pasos para Reproducir (si es un bug), y los Criterios de Aceptación (el "contrato" de lo que significa "terminado").
-Etapa 2: Diseño (DISENO)
+
+## Etapa 2: Diseño (DISENO)
 ### Criterios de Aceptación
 
 Objetivo: Crear el plano técnico del "Cómo".
 Campos Clave: Solución Técnica Propuesta, Artefactos de Diseño (links a Figma, diagramas), y Análisis de Impacto.
-Etapa 3: Plan de Implementación (IMP)
+## Etapa 3: Plan de Implementación (IMP)
 - [ ] El overview debe describir el propósito principal de MarIADonoFlow.
 - [ ] Debe explicar la filosofía "Markdown-First, Validado por Sistema".
 - [ ] Debe listar y describir las 5 etapas del ciclo de vida del desarrollo.
@@ -63,12 +64,6 @@ Carpetas por Tema: Cada mejora o módulo principal tiene su propia carpeta (ej. 
 Nomenclatura de Archivos: Dentro de cada carpeta, los archivos se nombran con un prefijo de fase y la fecha, asegurando un orden cronológico (ej. PLAN-2025-09-13.md, DISENO-2025-09-15.md).
 Estructura del Documento de Trabajo
 Cada archivo .md está estructurado para ser fácilmente analizado:
-### Artefactos de Diseño
-
-Metadatos Globales (YAML Front Matter): La cabecera del archivo contiene los campos globales en formato YAML, como id, title, status, assignee, priority, etc. Esto permite a los sistemas obtener un resumen rápido del estado del ítem sin procesar todo el documento.
-Cuerpo del Documento (Markdown Estructurado): El resto del archivo utiliza encabezados de Markdown (##, ###) para delimitar claramente la información de cada etapa, y formatos específicos como checklists (- [ ]) para los criterios de aceptación o tablas para las sub-tareas.
-En resumen, MarIADonoFlow es un sistema de flujo de trabajo metódico y bien documentado que equilibra la necesidad de una colaboración humana ágil con los requisitos de integridad de datos y automatización de los sistemas modernos, preparándolo para aplicaciones avanzadas de IA como el análisis predictivo y la búsqueda semántica.
-No se generaron artefactos de diseño formales. La estructura se basó directamente en el análisis de la documentación existente.
 
 ### Análisis de Impacto
 

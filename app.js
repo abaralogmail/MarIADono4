@@ -32,6 +32,9 @@ const main = async () => {
     /*const serviceInitializer = new ServiceInitializer()
     serviceInitializer.initializeWebServer(app)*/
     initializeServices(app)
+
+    const path = require('path');
+    app.use(express.static(path.join(__dirname, 'src', 'public')));
     
     // Start web server
     const PORT = process.env.PORT || 4152; // O el puerto que hayas definido
@@ -41,35 +44,12 @@ const main = async () => {
         console.log(`Dashboard available at http://localhost:${PORT}/dashboard`)
     })
 
-    const adapterDB = new JsonFileAdapter()
-    const adapterFlow = createFlow([
-        flowPrincipal,
-        flowVoice,
-        flowMedia,
-        flowEnviarMensaje,
-        updateVectorStoreFlow,
-        flowAsistente,
-        flowDesactivar,
-        flowActivar,
-        flowTest,
-        flowEnviarDeudas
-    ])
-
-    const adapterProvider = createProvider(BaileysProvider)
-
-    createBot({
-        flow: adapterFlow,
-        provider: adapterProvider,
-        database: adapterDB,
-    })
-
-    QRPortalWeb()
+   
 }
 
 
-
 const BotCursosSalta = async () => {
-    const BotName = 'BotCursosSalta'
+    const BotName = 'bot'
     const adapterDB = new JsonFileAdapter()
     const adapterFlow = createFlow([flowEnviarMensaje, flowTest, flowMedia, flowVoice, flowDesactivar, flowActivar, flowAsistente, updateVectorStoreFlow, flowPrincipal, flowEnviarDeudas])
     const adapterProvider = createProvider(BaileysProvider, { name: BotName })
@@ -198,10 +178,10 @@ const BotRoly = async () => {
 
 //BotCursosSalta()
 main() //BotName: bot - tel: 3875218575
-BotOfertasTucuman() // BotName:BotOfertasTucuman - tablet July - tel: 381363-8101
+//BotOfertasTucuman() // BotName:BotOfertasTucuman - tablet July - tel: 381363-8101
 //BotAdministracionSalta()
 BotAugustoTucuman() // BotName: BotAugustoTucuman - tel: 381248-8449
-BotConsultasWeb()// BotName: BotConsultasWeb - tel: 381590-8557
+//BotConsultasWeb()// BotName: BotConsultasWeb - tel: 381590-8557
 //BotRamiro() // BotName: BotRamiro() - tel: 387225-5083
 //BotJujuy() // BotName: BotJujuy - tel: 388571-2603
 //BotRoly() // BotName: BotRoly - tel: 5493813690061
