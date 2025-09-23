@@ -1,18 +1,19 @@
 const { addKeyword } = require('@bot-whatsapp/bot');
 const HorarioManagerService = require('../services/HorarioManagerService');
 
-/**
- * Configuración completa para un nuevo horario de prueba.
- * Este objeto define el horario, sus reglas semanales y excepciones.
- */
-const configuracionHorario = {
+// Define la constante para el tipo de horario masivo
+const TIPO_HORARIO_BULK = 2; // Asume que el ID 2 corresponde al tipo 'bulk'
+const TIPO_HORARIO_AUTO = 1; // Asume que el ID 1 corresponde al tipo 'Auto'
+
+
+// Configuración completa para un nuevo horario de prueba.
+const configuracionHorarioAuto = {
     nombre: "Horario de atencion automatica",
     descripcion: "Horario de lunes a viernes de 9 a 20h y sábados de 9 a 13h, creado desde flowTest.",
-    tipoHorario_id: 1, // ID para tipo 'bot'
+    tipoHorario_id: TIPO_HORARIO_AUTO, 
     zonaHoraria: "America/Argentina/Buenos_Aires",
     activo: true,
 
-    // Reglas para los días de la semana
     reglas: [
         { diaSemana: 1, horaInicio: "09:00:00", horaFin: "20:00:00", activo: true }, // Lunes
         { diaSemana: 2, horaInicio: "09:00:00", horaFin: "20:00:00", activo: true }, // Martes
@@ -23,7 +24,6 @@ const configuracionHorario = {
         { diaSemana: 0, horaInicio: "00:00:00", horaFin: "00:00:00", activo: false }, // Domingo (inactivo)
     ],
 
-    // Excepciones para fechas específicas
     excepciones: [
         {
             fechaExcepcion: "2025-12-25", // Navidad
@@ -40,36 +40,64 @@ const configuracionHorario = {
     ],
 };
 
+// Configuración para horarios de envío de mensajes masivos
+const configuracionHorarioBulk = {
+    nombre: "Horario de envíos masivos",
+    descripcion: "Horario para envíos masivos de mensajes, creado desde flowTest.",
+    tipoHorario_id: TIPO_HORARIO_BULK,
+    zonaHoraria: "America/Argentina/Buenos_Aires",
+    activo: true,
+
+    reglas: [
+        { diaSemana: 1, horaInicio: "10:00:00", horaFin: "20:00:00", activo: true }, // Lunes
+        { diaSemana: 2, horaInicio: "10:00:00", horaFin: "20:00:00", activo: true }, // Martes
+        { diaSemana: 3, horaInicio: "10:00:00", horaFin: "20:00:00", activo: true }, // Miércoles
+        { diaSemana: 4, horaInicio: "10:00:00", horaFin: "20:00:00", activo: true }, // Jueves
+        { diaSemana: 5, horaInicio: "10:00:00", horaFin: "20:00:00", activo: true }, // Viernes
+        { diaSemana: 6, horaInicio: "10:00:00", horaFin: "18:00:00", activo: true }, // Sábado
+        { diaSemana: 0, horaInicio: "00:00:00", horaFin: "00:00:00", activo: false }, // Domingo (inactivo)
+    ],
+
+    excepciones: [
+        // Puedes agregar excepciones si es necesario
+    ],
+};
+
 /**
- * Este flujo de prueba se activa con la palabra clave 't1' y utiliza
- * el HorarioManagerService para crear un horario completo con sus reglas y excepciones.
- * Es la forma recomendada de interactuar con el módulo de horarios.
+ * Este flujo se activa con la palabra clave 't1' o 't2' y utiliza
+ * el HorarioManagerService para crear los horarios respectivos.
  */
-const flowTest = addKeyword(['t1'])
+const flowTest = addKeyword(['t1', 't2'])
     .addAction(async (ctx, { provider, flowDynamic, endFlow }) => {
         const horarioService = new HorarioManagerService();
-        const botName = provider.globalVendorArgs.name || "BotTest"; // Usar nombre del provider o uno por defecto
+        const botName = provider.globalVendorArgs.name || "BotTest";
+        let configuracionHorario;
 
         try {
-            console.log(`Iniciando creación de horario de Respuestas automaticas para el bot: ${botName}...`);
-            await flowDynamic(` Creando horario de Respuestas automaticas para *${botName}*, por favor espera...`);
+            if (ctx.body === 't1') {
+                configuracionHorario = configuracionHorarioAuto; // Usar configuración automática
+                console.log(`Iniciando creación de horario automático para el bot: ${botName}...`);
+                await flowDynamic(` Creando horario automático para *${botName}*, por favor espera...`);
+            } else if (ctx.body === 't2') {
+                configuracionHorario = configuracionHorarioBulk; // Usar configuración bulk
+                console.log(`Iniciando creación de horario bulk para el bot: ${botName}...`);
+                await flowDynamic(` Creando horario bulk para *${botName}*, por favor espera...`);
+            }
 
-            // Usamos el servicio para crear el horario, pasándole el nombre del bot y la configuración
             const nuevoHorario = await horarioService.crearHorarioBot(
                 botName,
                 configuracionHorario
             );
 
             if (nuevoHorario) {
-                console.log("Horario de Respuestas automaticas creado exitosamente:", nuevoHorario);
-                await flowDynamic("✅ Horario de de Respuestas automaticas creado exitosamente.");
+                console.log("Horario creado exitosamente:", nuevoHorario);
+                await flowDynamic("✅ Horario creado exitosamente.");
             } else {
-                // Esto no debería ocurrir si el servicio funciona como se espera
                 throw new Error("El servicio no devolvió un nuevo horario.");
             }
 
         } catch (error) {
-            console.error("Error al crear el horario de prueba:", error);
+            console.error("Error al crear el horario:", error);
             await flowDynamic(`❌ Ocurrió un error: ${error.message}`);
         } finally {
             return endFlow();

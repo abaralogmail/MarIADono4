@@ -34,6 +34,10 @@ const { voiceMediaManager } = require("../utils/voiceMediaManager");
 const BulkMessageManager = require("../bulk/bulkMessageManager"); // Importar el BulkMessageManager
 const HorarioManagerService = require("../services/HorarioManagerService");
 
+const TIPO_HORARIO_AUTO = 1; // Asume que el ID 1 corresponde al tipo 'Auto'
+const TIPO_HORARIO_BULK = 2; // Asume que el ID 2 corresponde al tipo 'bulk'
+
+
 
 const flowPrincipal = addKeyword(EVENTS.WELCOME).addAction(
   async (ctx, { flowDynamic, provider }) => {
@@ -92,8 +96,12 @@ const flowPrincipal = addKeyword(EVENTS.WELCOME).addAction(
     // Check if bulk messages are enabled and within restricted hours for bulk
     // Note: The original code had a specific check for certain bot names.
     // This is replaced by the config-driven check.
+    const isBulkTime = await horarioService.verificarHorarioBot(TIPO_HORARIO_BULK, botName , new Date());
+    console.log("isBulkTime: ", isBulkTime);
 
-    if (!isWithinRestrictedHours(botName, "bulk")) {
+
+    //if (!isWithinRestrictedHours(botName, "bulk")) {
+      if (isBulkTime) {
       // Get the file path using the new function
       const filePath = getBotFilePath(botName);
       if (filePath) {
@@ -123,7 +131,7 @@ const flowPrincipal = addKeyword(EVENTS.WELCOME).addAction(
      
       // Usamos el nuevo servicio de horarios para las respuestas automáticas
       
-      const isAutoTime = await horarioService.verificarHorarioBot(1, botName , new Date());
+      const isAutoTime = await horarioService.verificarHorarioBot(TIPO_HORARIO_AUTO, botName , new Date());
       console.log("isAutoTime: ", isAutoTime);
 
       

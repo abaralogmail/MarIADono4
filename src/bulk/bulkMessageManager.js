@@ -16,6 +16,13 @@ const { logMessage } = require("../utils/messageLogger"); // Adjust the path as 
 const getMessageHistory = require("../utils/chatHistoryAggregator");
 const N8nWebhookListener = require("../Logica/N8nWebhookListener");
 //const { getOrCreateThread, addContextAssistant } = require('../Assistant'); // Assuming Assistant functions are needed
+const HorarioManagerService = require("../services/HorarioManagerService");
+
+const TIPO_HORARIO_AUTO = 1; // Asume que el ID 1 corresponde al tipo 'Auto'
+const TIPO_HORARIO_BULK = 2; // Asume que el ID 2 corresponde al tipo 'bulk'
+const horarioService = new HorarioManagerService();
+
+
 
 // Map to track active bulk message processes per bot
 const activeBulkMessages = new Map();
@@ -28,6 +35,8 @@ class BulkMessageManager {
     this.botName = provider.globalVendorArgs.name;
     this.configManager = getBotConfigManager();
     this.config = this.configManager.getBotConfig(this.botName);
+    const horarioService = new HorarioManagerService();
+
 
     if (!this.config.excelFilePath) {
       console.error(
@@ -134,7 +143,14 @@ class BulkMessageManager {
         }
 
         // Check time and day restrictions
-        if (!this.configManager.isWithinWorkingHours(this.botName, "bulk")) {
+        //isBulktime
+        const isBulkTime = await horarioService.verificarHorarioBot(TIPO_HORARIO_BULK, this.botName , new Date());
+        console.log("isBulkTime: ", isBulkTime);
+
+
+    if (!isWithinRestrictedHours(botName, "bulk")) {
+    //  if (isBulkTime) {
+     //   if (!this.configManager.isWithinWorkingHours(this.botName, "bulk")) {
           //español
           console.log(
             `Fuera de horario laboral configurado para ${this.botName}. Deteniendo por ahora.`

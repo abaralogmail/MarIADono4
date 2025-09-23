@@ -176,16 +176,18 @@ const BotRoly = async () => {
 }
 
 
-//BotCursosSalta()
-main() //BotName: bot - tel: 3875218575
-//BotOfertasTucuman() // BotName:BotOfertasTucuman - tablet July - tel: 381363-8101
+
+main()
+BotCursosSalta()  //BotName: bot - tel: 3875218575
+BotOfertasTucuman() // BotName:BotOfertasTucuman - tablet July - tel: 381363-8101
 //BotAdministracionSalta()
 BotAugustoTucuman() // BotName: BotAugustoTucuman - tel: 381248-8449
-//BotConsultasWeb()// BotName: BotConsultasWeb - tel: 381590-8557
+BotConsultasWeb()// BotName: BotConsultasWeb - tel: 381590-8557
 //BotRamiro() // BotName: BotRamiro() - tel: 387225-5083
 //BotJujuy() // BotName: BotJujuy - tel: 388571-2603
 BotRoly() // BotName: BotRoly - tel: 5493813690061
-//BotJujuyFranco() // BotName: BotJujuyFranco - tel: 3884406660
+//BotFranco() // BotName: BotFranco - tel: 3884406660
+//BotSaltaMostrador() // BotName: BotSaltaMostrador - tel: 
 
 
 process.on('message', async (msg) => {
