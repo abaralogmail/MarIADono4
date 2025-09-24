@@ -134,14 +134,7 @@ const flowPrincipal = addKeyword(EVENTS.WELCOME).addAction(
       const isAutoTime = await horarioService.verificarHorarioBot(TIPO_HORARIO_AUTO, botName , new Date());
       console.log("isAutoTime: ", isAutoTime);
 
-      
-//      if (isAutoTime) {
-// si son menos de las 8 responder true
-
-      const now = new Date();
-     //if(now.getHours() <= 8 ){
-
-     if(!isAutoTime){
+      if(!isAutoTime){
       
 
       // Process the incoming message using the message processor
