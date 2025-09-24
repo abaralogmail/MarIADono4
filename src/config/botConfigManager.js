@@ -202,7 +202,7 @@ class BotConfigManager {
 
   getBotConfig(botName) {
     if (!this.configs[botName]) {
-      console.warn(
+      console.log(
         `Configuración no encontrada para el bot: ${botName}. Usando valores por defecto.`
       );
       return {
