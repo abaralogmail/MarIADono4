@@ -23,4 +23,4 @@
 - **Error handling**: Use try/catch blocks, log errors to console
 - **File structure**: Modular approach with separate files for flows, services, utils
 - **Comments**: Minimal commenting, code should be self-explanatory
-- **ESLint**: Uses bot-whatsapp plugin with recommended config
+- **ESLint**: Uses bot-whatsapp plugin with recommended  config
