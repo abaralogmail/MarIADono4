@@ -21,8 +21,18 @@
             <h2>Horarios Generales por Día de la Semana</h2>
             <button id="reloadSchedules">Recargar Horarios</button>
             <div id="schedules-container">
-                <!-- Los horarios se cargarán aquí dinámicamente -->
-                <p>Cargando horarios...</p>
+                <table id="daily-schedules-table">
+                    <thead>
+                        <tr>
+                            <th>Día</th>
+                            <th>Horarios</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Schedule rows will be dynamically inserted here by JavaScript -->
+                    </tbody>
+                </table>
             </div>
         </section>
 

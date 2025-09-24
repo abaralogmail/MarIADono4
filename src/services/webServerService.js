@@ -26,11 +26,11 @@ class WebServerService {
 
         // Nueva ruta para el gestor de horarios
         app.get('/horarios', (req, res) => {
-            res.render('schedule-manager');
+            res.render('Gestion_horario_bot');
         });
 
         // Rutas de la API para gestionar horarios
-        app.use('/api/schedules', scheduleRoutes);
+        app.use('/api', scheduleRoutes);
 
         console.log('Web server configuration initialized');
     }
