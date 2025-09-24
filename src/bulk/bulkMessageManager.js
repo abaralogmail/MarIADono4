@@ -148,8 +148,8 @@ class BulkMessageManager {
         console.log("isBulkTime: ", isBulkTime);
 
 
-    if (!isWithinRestrictedHours(botName, "bulk")) {
-    //  if (isBulkTime) {
+    //if (!isWithinRestrictedHours(botName, "bulk")) {
+      if (!isBulkTime) {
      //   if (!this.configManager.isWithinWorkingHours(this.botName, "bulk")) {
           //español
           console.log(

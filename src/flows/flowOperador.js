@@ -16,7 +16,9 @@ const flowDesactivar = addKeyword(['operadora', 'op', 'desactivar', 'pausa', 'pa
         updateUserConfig(userId, { notificationEnabled: false });
         const textResponse = 'El asistente virtual ha sido desactivado 🚫 y no recibirás más notificaciones. Para reactivarlo, escribe "asistente", "chat", "activar" o "reanudar" 🟢.';
         await flowDynamic(textResponse);
-
+        //en español
+        console.log(`Usuario ${userId} ha desactivado el asistente virtual.`);
+        
         messageCount = 0;
         return gotoFlow(flowPrincipal);
     })
