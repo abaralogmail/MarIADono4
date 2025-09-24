@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Horarios de Bots</title>
+    <link rel="stylesheet" href="/css/style.css"> <!-- Asume un archivo CSS global -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .header {
+            background-color: #007bff;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .header img {
+            height: 40px;
+            margin-right: 15px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 1.8em;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            color: #0056b3;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        /* Regular Schedules - Day Tabs */
+        .schedule-tabs-container {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+        .day-tabs {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 10px;
+        }
+        .day-tab {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-bottom: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #007bff;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+            flex-grow: 1;
+            text-align: center;
+            margin-right: 2px; /* Small gap between tabs */
+        }
+        .day-tab:last-child {
+            margin-right: 0;
+        }
+        .day-tab:hover {
+            background-color: #e2e6ea;
+        }
+        .day-tab.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        .day-content {
+            border: 1px solid #dee2e6;
+            padding: 20px;
+            border-radius: 0 0 5px 5px;
+            margin-bottom: 20px;
+        }
+        .time-slot-entry {
+            display: flex;
+            align-items: flex-end; /* Align items to the bottom */
+            gap: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #e0e0e0;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #fdfdfd;
+        }
+        .time-input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .time-input-group label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        .time-input-group input[type="time"] {
+            width: 100px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .add-time-slot-btn-day {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-left: auto; /* Push button to the right */
+        }
+        .remove-time-slot-btn-day {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        .global-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        /* Exception Section */
+        .exception-section {
+            margin-top: 40px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+        .exception-form {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr) 1.5fr 0.5fr; /* Fecha, Hora Inicio, Hora Fin, Descripción, Botón */
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: end;
+        }
+        .exception-form .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .exception-form label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .exception-form input, .exception-form select, .exception-form textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .exception-form textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+        .exception-form .add-btn-wrapper {
+            grid-column: 5 / 6; /* Place button in the last column */
+            display: flex;
+            align-items: flex-end;
+            height: 100%; /* Ensure it takes full height for alignment */
+        }
+        .exception-form .add-btn-wrapper button {
+            width: 100%;
+            padding: 10px 15px;
+            font-size: 1em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        .exception-list table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .exception-list th, .exception-list td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .exception-list th {
+            background-color: #f2f2f2;
+        }
+        .exception-list .actions button {
+            margin-right: 5px;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .exception-list .actions .edit {
+            background-color: #ffc107;
+            color: #333;
+            border: none;
+        }
+        .exception-list .actions .delete {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="/images/logo.png" alt="Logo"> <!-- Placeholder for logo -->
+        <h1>Gestión de Horarios de Bots</h1>
+    </div>
+    <div class="container">
+        <section class="schedule-management">
+            <h2>Horarios Regulares</h2>
+            <div class="schedule-tabs-container">
+                <div class="day-tabs" id="dayTabs">
+                    <!-- Day tabs will be rendered here by JS -->
+                </div>
+                <div class="global-actions">
+                    <button class="btn-primary" id="reloadSchedulesBtn">Recargar Horarios</button>
+                    <button class="btn-success" id="saveAllSchedulesBtn">Guardar</button>
+                </div>
+            </div>
+            <div class="day-content" id="dayContent">
+                <!-- Time slots for the active day will be rendered here by JS -->
+            </div>
+        </section>
+
+        <section class="exception-section">
+            <h2>Excepciones de Horarios</h2>
+            <div class="exception-form">
+                <div class="form-group">
+                    <label for="exceptionDate">Fecha:</label>
+                    <input type="date" id="exceptionDate" placeholder="dd/mm/aaaa">
+                </div>
+                <div class="form-group">
+                    <label for="exceptionStartTime">Hora Inicio:</label>
+                    <input type="time" id="exceptionStartTime" placeholder="--:--">
+                </div>
+                <div class="form-group">
+                    <label for="exceptionEndTime">Hora Fin:</label>
+                    <input type="time" id="exceptionEndTime" placeholder="--:--">
+                </div>
+                <div class="form-group" style="grid-column: 1 / 3;"> <!-- Span 2 columns for Estado -->
+                    <label for="exceptionState">Estado:</label>
+                    <select id="exceptionState">
+                        <option value="cerrado">Cerrado</option>
+                        <option value="horario_personalizado">Horario Personalizado</option>
+                    </select>
+                </div>
+                <div class="form-group" style="grid-column: 3 / 5;"> <!-- Span 2 columns for Descripción -->
+                    <label for="exceptionDescription">Descripción:</label>
+                    <textarea id="exceptionDescription"></textarea>
+                </div>
+                <div class="add-btn-wrapper">
+                    <button class="btn-success" id="addExceptionBtn">
+                        <i class="fas fa-plus"></i> Agregar excepción
+                    </button>
+                </div>
+            </div>
+
+            <div class="exception-list">
+                <h3>Excepciones Existentes</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                            <th>Hora Inicio</th>
+                            <th>Hora Fin</th>
+                            <th>Descripción</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="exceptionsTableBody">
+                        <!-- Las excepciones se cargarán aquí dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <script src="https://kit.fontawesome.com/your-font-awesome-kit.js" crossorigin="anonymous"></script> <!-- Font Awesome for icons -->
+    <script src="/js/schedule-manager.js"></script> <!-- Script para la lógica frontend -->
+</body>
+</html>

@@ -7,7 +7,7 @@ Este documento sirve como la guía de referencia principal para entender y mante
 La arquitectura de la base de datos se sostiene sobre tres pilares fundamentales. Conocerlos es clave para cualquier tarea de mantenimiento, depuración o modificación.
 
 1.  **El Orquestador (`SqliteManager.js`):** El punto de control central que gestiona la conexión y la configuración.
-2.  **Los Planos (`Model/`):** El directorio que define la estructura de cada tabla. Es la "fuente de la verdad".
+2.  **Los Planos (`Models/`):** El directorio que define la estructura de cada tabla. Es la "fuente de la verdad".
 3.  **La Caja Fuerte (`Data/MarIADono3DB.sqlite`):** El archivo físico que contiene todos los datos.
 
 ---
@@ -18,7 +18,7 @@ La arquitectura de la base de datos se sostiene sobre tres pilares fundamentales
 
 *   **Responsabilidades Clave:**
     1.  **Establecer la Conexión:** Configura Sequelize para que utilice el archivo de base de datos ubicado en `Data/MarIADono3DB.sqlite`.
-    2.  **Cargar los Modelos:** Descubre y registra automáticamente todos los archivos de definición de tablas (modelos) que se encuentran en la carpeta `Model/`.
+    2.  **Cargar los Modelos:** Descubre y registra automáticamente todos los archivos de definición de tablas (modelos) que se encuentran en la carpeta `Models/`.
     3.  **Sincronizar el Esquema:** Ejecuta `sequelize.sync()`, el comando que asegura que las tablas definidas en el código existan en el archivo físico de la base de datos.
 
 *   **Relevancia para Mantenimiento:**
@@ -27,7 +27,7 @@ La arquitectura de la base de datos se sostiene sobre tres pilares fundamentales
 
 ---
 
-## 2. Los Planos: El Directorio `Model/`
+## 2. Los Planos: El Directorio `Models/`
 
 *   **Función Principal:** Es la **fuente de la verdad** para la estructura de la base de datos. Cada archivo `.js` dentro de este directorio define una tabla, sus columnas, tipos de datos y relaciones.
 
@@ -62,5 +62,5 @@ La arquitectura de la base de datos se sostiene sobre tres pilares fundamentales
 | Archivo / Directorio | Función Principal | ¿Cuándo lo modificamos o usamos? |
 | :--- | :--- | :--- |
 | `SqliteManager.js` | **Conexión y Configuración** | Para depurar problemas de conexión o activar logs. |
-| `Model/` | **Definición de Tablas** | **Siempre** que necesitemos cambiar la estructura de la BD. |
+| `Models/` | **Definición de Tablas** | **Siempre** que necesitemos cambiar la estructura de la BD. |
 | `Data/MarIADono3DB.sqlite`| **Almacén de Datos** | Para hacer/restaurar backups o para inspección manual. |
