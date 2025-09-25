@@ -1,2 +1,0 @@
- Formato Markdown: Estaría escrito en formato markdown para estructurar la información de manera legible y fácil de referenciar.
-• Etiquetas XML para estructura: Se recomienda el uso de etiquetas XML para delimitar diferentes secciones de las instrucciones y mejorar la comprensión de los modelos GPT5. Esto ayuda a reducir las malas interpretaciones por parte del agente de IA. Por ejemplo, se pueden definir secciones como <context> para el contexto y <task> para la tarea dentro del archivo.
