@@ -49,12 +49,12 @@ const configuracionHorarioBulk = {
     activo: true,
 
     reglas: [
-        { diaSemana: 1, horaInicio: "10:00:00", horaFin: "20:00:00", activo: true }, // Lunes
-        { diaSemana: 2, horaInicio: "10:00:00", horaFin: "20:00:00", activo: true }, // Martes
-        { diaSemana: 3, horaInicio: "10:00:00", horaFin: "20:00:00", activo: true }, // Miércoles
-        { diaSemana: 4, horaInicio: "10:00:00", horaFin: "20:00:00", activo: true }, // Jueves
-        { diaSemana: 5, horaInicio: "10:00:00", horaFin: "20:00:00", activo: true }, // Viernes
-        { diaSemana: 6, horaInicio: "10:00:00", horaFin: "18:00:00", activo: true }, // Sábado
+        { diaSemana: 1, horaInicio: "09:00:00", horaFin: "20:00:00", activo: true }, // Lunes
+        { diaSemana: 2, horaInicio: "09:00:00", horaFin: "20:00:00", activo: true }, // Martes
+        { diaSemana: 3, horaInicio: "09:00:00", horaFin: "20:00:00", activo: true }, // Miércoles
+        { diaSemana: 4, horaInicio: "09:00:00", horaFin: "20:00:00", activo: true }, // Jueves
+        { diaSemana: 5, horaInicio: "09:00:00", horaFin: "20:00:00", activo: true }, // Viernes
+        { diaSemana: 6, horaInicio: "09:00:00", horaFin: "18:00:00", activo: true }, // Sábado
         { diaSemana: 0, horaInicio: "00:00:00", horaFin: "00:00:00", activo: false }, // Domingo (inactivo)
     ],
 
@@ -77,10 +77,12 @@ const flowTest = addKeyword(['t1', 't2'])
             if (ctx.body === 't1') {
                 configuracionHorario = configuracionHorarioAuto; // Usar configuración automática
                 console.log(`Iniciando creación de horario automático para el bot: ${botName}...`);
+                 console.log(`Configuración del horario automático:`, configuracionHorario);
                 await flowDynamic(` Creando horario automático para *${botName}*, por favor espera...`);
             } else if (ctx.body === 't2') {
                 configuracionHorario = configuracionHorarioBulk; // Usar configuración bulk
                 console.log(`Iniciando creación de horario bulk para el bot: ${botName}...`);
+                console.log(`Configuración del horario de bulk:`, configuracionHorario);
                 await flowDynamic(` Creando horario bulk para *${botName}*, por favor espera...`);
             }
 

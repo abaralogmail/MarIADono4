@@ -75,7 +75,6 @@ BotJujuy.qr.png
 Logs\Data
 
 src/config/userConfig.json
-src/utils/messageProcessor.js
 src/database/data/
 
 BotRoly_sessions/
@@ -101,5 +100,6 @@ BotOfertasTucuman.qr.png
 BotRoly.qr.png
 .gitignore
 app.js
+BotMetan.qr.png
 BotMetan.qr.png
 BotMetan.qr.png
