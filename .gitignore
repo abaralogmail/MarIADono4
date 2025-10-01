@@ -73,6 +73,7 @@ ecosystem.config.js
 my_duckdb.db
 BotJujuy.qr.png
 Logs\Data
+BMAD-METHOD/
 
 src/config/userConfig.json
 src/database/data/
@@ -103,3 +104,4 @@ app.js
 BotMetan.qr.png
 BotMetan.qr.png
 BotMetan.qr.png
+src/FixUp/BMAD-METHOD-main/
