@@ -4,9 +4,9 @@
  
  ---
  
- ## 1. Punto de Entrada (`app.js`)
+ ## 1. Punto de Entrada (`../app.js`)
  
- *   **`app.js`**: Es el orquestador principal del sistema. Su responsabilidad es inicializar y ejecutar múltiples instancias de bots de WhatsApp, cada una configurada para operar en un puerto diferente.
+ *   **`../app.js`**: Es el orquestador principal del sistema. Su responsabilidad es inicializar y ejecutar múltiples instancias de bots de WhatsApp, cada una configurada para operar en un puerto diferente.
  
  ---
  

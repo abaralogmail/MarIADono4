@@ -9,7 +9,7 @@ class MessageSender {
     }
 
     async enviarMensaje(messageData) {
-        const { from, body, imageUrl, audioUrl, mediaUrl, imageFile, videoUrl } = messageData;
+        const { from, body, imageUrl, audioUrl, mediaUrl, imageFile, videoUrl, videoFile } = messageData;
 
         const recipient = `${from}@c.us`; // Assuming standard WhatsApp number format
 
@@ -49,7 +49,15 @@ class MessageSender {
             }
 
             // Nuevo bloque para enviar videos
-            if (videoUrl) {
+            if (videoFile) {
+                const fullVideoPath = path.resolve(videoFile);
+                if (fs.existsSync(fullVideoPath)) {
+                    messageId = await this.provider.sendVideo(`${from}@s.whatsapp.net`, fullVideoPath, "");
+                    console.log(`Video file sent to ${from}@s.whatsapp.net: ${fullVideoPath}`);
+                } else {
+                    console.error(`Video file not found: ${fullVideoPath}`);
+                }
+            } else if (videoUrl) {
                 messageId = await this.provider.sendVideo(`${from}@s.whatsapp.net`, videoUrl);
                 console.log(`Video URL sent to ${from}@s.whatsapp.net: ${videoUrl}`);
             }
