@@ -33,6 +33,12 @@ const BOT_MESSAGE_LIMITS = {
   BotAdministracionSalta: 20,
   bot: 200,
   BotConsultasWeb: 100, // Add this line with an appropriate limit
+  BotSaltaMostrador: 100,
+  BotRamiro: 100, 
+  BotRoly: 100,
+  BotFranco: 100,
+  BotMetan: 100,
+
 };
 
 // Initialize an object to track messages sent by each bot

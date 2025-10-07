@@ -1,0 +1,1744 @@
+{
+  "name": "Webhook workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "dc202927-c0bc-4e89-9c35-239202f9a81f",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1648,
+        144
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "Webhook",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "55ef3880-973e-4645-961d-49beecde9445",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -2224,
+        560
+      ],
+      "webhookId": "87eec5d3-23b6-4439-bbce-a30256e984ab"
+    },
+    {
+      "parameters": {
+        "resource": "assistant",
+        "assistantId": {
+          "__rl": true,
+          "value": "asst_buCZtkM9xQVwtPZYBtVzTFJD",
+          "mode": "list",
+          "cachedResultName": "Sucursal MarIADono Assistant"
+        },
+        "prompt": "define",
+        "text": "=Consulta: {{ $('Switch').item.json.output['Consulta reformulada'] }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.7,
+      "position": [
+        -64,
+        432
+      ],
+      "id": "a714c81c-fbaa-42f3-b168-723180a52d13",
+      "name": "Sucursal MariaDono Assistant",
+      "credentials": {
+        "openAiApi": {
+          "id": "ITcoQ5kvhH8jzKCQ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "assistant",
+        "assistantId": {
+          "__rl": true,
+          "value": "asst_lC1SN7zl6vOZSBF361QR6V23",
+          "mode": "list",
+          "cachedResultName": "Cursos MarIADono Assistant"
+        },
+        "prompt": "define",
+        "text": "=Eres un asistente especializado en los cursos de **Ceridono Refrigeración**. Tu función es responder consultas sobre cursos de refrigeración basándote únicamente en los documentos proporcionados.\n\n## INSTRUCCIONES PRINCIPALES:\n\n### 1. RESPUESTA BASADA EN DOCUMENTOS\n- Responde SOLO con información contenida en los documentos proporcionados\n- Si no encuentras información específica en los documentos, indica claramente que no tienes esa información disponible\n- Cita o referencia el documento específico cuando sea posible\n\n### 2. INFORMACIÓN GEOGRÁFICA CRÍTICA\n- **SIEMPRE** identifica y menciona la provincia del curso consultado\n- Adapta tu respuesta según la ubicación específica del curso\n- Si la consulta no especifica provincia, pregunta cuál es la provincia de interés\n\n### 3. INFORMACIÓN TEMPORAL CRÍTICA\n- **SIEMPRE** considera la fecha y hora actual al responder\n- Verifica si el curso ya comenzó o está por comenzar.\n- Indica claramente el estado temporal del curso:\n  - \"El curso ya comenzó el [fecha]\"\n  - \"El curso comienza en [X días/horas]\"\n  \n\n### 4. LINK DE REGISTRO OBLIGATORIO\n**INCLUIR EN TODAS LAS RESPUESTAS:**\n🔗 **Link de registro:** [INSERTAR LINK DE REGISTRO AQUÍ]\n\n### 5. ESTRUCTURA DE RESPUESTA\n\nPara cada consulta, incluye:\n\n1. **Ubicación:** Provincia y ciudad del curso\n2. **Estado temporal:** Si ya comenzó o cuándo inicia\n3. **Información solicitada:** Respuesta específica basada en documentos\n4. **Link de registro:** Siempre al final\n\n### 6. EJEMPLOS DE RESPUESTAS:\n\n**Ejemplo 1 - Curso activo:**\n\"El curso de Refrigeración Básica en **Buenos Aires** ya comenzó el 10 de junio. Según el documento del programa, cubre [información específica]. \n\n🔗 **Link de registro:** [LINK]\"\n\n**Ejemplo 2 - Curso próximo:**\n\"El curso de Aire Acondicionado en **Córdoba** comienza el 20 de junio (en 6 días). Basado en la documentación, incluye [información específica].\n\n🔗 **Link de registro:** [LINK]\"\n\n**Ejemplo 3 - Curso finalizado:**\n\"El curso consultado en **Mendoza** ya empezo hace 2 semanas el 5 de junio. Para próximas fechas, consulta:\n\n🔗 **Link de registro:** [LINK]\"\n\n### 7. CASOS ESPECIALES:\n\n- Si no se especifica provincia: \"¿En qué provincia te interesa el curso?\"\n- Si la información no está en documentos: \"No encuentro esa información específica en la documentación disponible\"\n- Si hay múltiples cursos en diferentes provincias: Lista todas las opciones con sus respectivas fechas y ubicaciones\n\n### 8. RECORDATORIOS IMPORTANTES:\n\n- ✅ Verificar provincia del curso\n- ✅ Verificar fecha/hora actual vs inicio del curso  \n- ✅ Incluir link de registro\n- ✅ Basar respuesta en documentos proporcionados\n- ✅ Ser claro sobre el estado temporal del curso\n\n---\n\n**NOTA:** Mantén un tono profesional y servicial. Ayuda a los consultantes a tomar decisiones informadas sobre los cursos según su ubicación y disponibilidad temporal.\n\nconversación: {{ $('Webhook').item.json.body.data._chatHistory }}\n\nconsulta reformulada: {{ $('Switch').item.json.output['Consulta reformulada'] }}\n\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.7,
+      "position": [
+        -48,
+        -16
+      ],
+      "id": "0aa86f2d-27af-4be7-833a-a2dd1a8eb0ab",
+      "name": "Cursos MariaDono Assistant",
+      "credentials": {
+        "openAiApi": {
+          "id": "ITcoQ5kvhH8jzKCQ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputText": "= {{ $json.output.interesCliente }}",
+        "categories": {
+          "categories": [
+            {
+              "category": "cursos",
+              "description": "Consultas relacionadas con capacitaciones, programas educativos, seminarios o talleres.  Ejemplos:  \"Quiero información sobre los cursos de refrigeración\" \"¿Cuándo inicia el próximo?\""
+            },
+            {
+              "category": "Productos",
+              "description": "Consultas sobre artículos, repuestos o servicios en venta.  Ejemplos:  \"¿Qué productos tienen disponibles?\" \"Quiero comprar un gas\""
+            },
+            {
+              "category": "sucursal",
+              "description": "Preguntas sobre ubicaciones, direcciones o información de locales físicos.  Ejemplos:  \"¿Dónde está su sucursal más cercana?\" \"Horarios de atención en oficinas\""
+            },
+            {
+              "category": "pagos",
+              "description": "Consultas relacionadas con métodos de pago, facturas o transacciones.  Ejemplos:  \"¿Aceptan pagos con tarjeta de crédito?\" \"Necesito información sobre mi factura\""
+            },
+            {
+              "category": "procedimientos",
+              "description": "Consultas relacionadas con procedimiento, protocolo, ejecutivo, trámite, ruta o funcionalidad."
+            },
+            {
+              "category": "notificaciones",
+              "description": "Solicitud con respecto a las notificaciones"
+            },
+            {
+              "category": "Multiples opciones",
+              "description": "Para el caso de que pertenezca a más de una categoría"
+            },
+            {
+              "category": "Saludos y agradecimientos",
+              "description": " \"interesCliente\":  \"saludos o agradecimientos\""
+            },
+            {
+              "category": "CONSULTAS PERSONALES",
+              "description": "Conversaciones informales no relacionadas con el negocio"
+            }
+          ]
+        },
+        "options": {
+          "multiClass": false,
+          "fallback": "other",
+          "enableAutoFixing": true
+        }
+      },
+      "id": "21339b2a-cd9e-45bd-928d-8b70e0f1db49",
+      "name": "Selector de Agentes",
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "typeVersion": 1,
+      "position": [
+        -560,
+        32
+      ],
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "febbaffb-359f-433e-b56e-454cbbfa8a45",
+              "name": "Ouput",
+              "value": "={\n    \"Respuesta\": $('AI Agent Respuesta Final').item.json.output.Respuesta,\n    \"metricasCliente\": $json.output,\n    \"interesCliente\": $('Agente Clasificador').item.json.output.interesCliente,\n    \"estado_habilitacion_Notificacion\": $('Asistente_Notificacion').item.json.output.estado_habilitacion_Notificacion || 1,\n    \"etapaEmbudo\": $json.output.etapaEmbudo,\n    \"Consulta_reformulada\": $('Consulta Sugerida LLM').item.json.output['Consulta reformulada'],\n    \"ConfianzaReformulada\": $('Consulta Sugerida LLM').item.json.output.Confianza\n}",
+              "type": "object"
+            },
+            {
+              "id": "1fb9bca4-5f9c-479b-bcc6-bb3175853e9e",
+              "name": "Respuesta",
+              "value": "={{ $('AI Agent Respuesta Final').item.json.output.Respuesta }}",
+              "type": "string"
+            },
+            {
+              "id": "d656479e-5f26-4f1d-9b1d-9611810fe69d",
+              "name": "metricasCliente",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "517ce284-a179-4d9c-b956-72cf263377fe",
+              "name": "interesCliente",
+              "value": "={{ $('Selector de Agentes').isExecuted && $('Selector de Agentes').item?.json?.output?.interesCliente ? $('Selector de Agentes').item.json.output.interesCliente : \"No especificado\" }}\n",
+              "type": "string"
+            },
+            {
+              "id": "d5c211b5-8305-4442-88a5-2215a9df4234",
+              "name": "estado_habilitacion_Notificacion",
+              "value": "={{ $('Asistente_Notificacion').isExecuted ? $('Asistente_Notificacion')?.item?.json?.output?.estado_habilitacion_Notificacion ?? \"1\" : \"1\" }}",
+              "type": "number"
+            },
+            {
+              "id": "d349bbfd-c437-469d-8537-ab49e8b05d6b",
+              "name": "etapaEmbudo",
+              "value": "={{ $json.output.etapaEmbudo }}",
+              "type": "string"
+            },
+            {
+              "id": "27ac6910-eeac-48d2-98ea-bfa62cd1840e",
+              "name": "Consulta_reformulada",
+              "value": "={{ $('Switch').item.json.output['Consulta reformulada'] }}",
+              "type": "string"
+            },
+            {
+              "id": "dffb49b2-ddc1-48ad-90d1-7d6884f72d68",
+              "name": "ConfianzaReformulada",
+              "value": "={{ $('Switch').item.json.output.Confianza }}",
+              "type": "string"
+            },
+            {
+              "id": "4995634b-6cf3-4300-83ee-5dcee5523e82",
+              "name": "asistente_Informacion",
+              "value": "={{ \n  $('Sucursal MariaDono Assistant').isExecuted ? $('Sucursal MariaDono Assistant').item?.json?.output :\n  $('Cursos MariaDono Assistant').isExecuted ? $('Cursos MariaDono Assistant').item?.json?.output :\n  $('Procedimientos MariaDono Assistant').isExecuted ? $('Procedimientos MariaDono Assistant').item?.json?.output :\n$('Productos_MariaDono_Assistant').isExecuted ? $('Productos_MariaDono_Assistant').item?.json?.output :\n$('Saludos').isExecuted ? $('Saludos').item?.json?.output :\n  \"No hay respuesta disponible\"\n}}",
+              "type": "string"
+            },
+            {
+              "id": "6d06512d-7870-4ed6-ba08-1828bf8aaafc",
+              "name": "",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "f7ccc863-a169-4563-a386-3976acdbd929",
+              "name": "",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {
+          "dotNotation": false
+        }
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1440,
+        144
+      ],
+      "id": "ab8a65d3-f93a-432d-8fd6-e6e8063e33e5",
+      "name": "Edit interesCliente"
+    },
+    {
+      "parameters": {
+        "resource": "assistant",
+        "assistantId": {
+          "__rl": true,
+          "value": "asst_NQia2tH5WB0sAMxKzbteSf1b",
+          "mode": "list",
+          "cachedResultName": "Procedimientos MariaDono Assistant"
+        },
+        "prompt": "define",
+        "text": "=Responde a consultas correspondientes de cada procedimiento de ceridono según los documentos proporcionados.\n\nConsulta: {{ $('Switch').item.json.output['Consulta reformulada'] }}\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.7,
+      "position": [
+        -64,
+        592
+      ],
+      "id": "3fa2f8fa-4044-4986-8966-863425338fe7",
+      "name": "Procedimientos MariaDono Assistant",
+      "credentials": {
+        "openAiApi": {
+          "id": "ITcoQ5kvhH8jzKCQ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres un asistente virtual especializado en comprender y completar consultas incompletas o ambiguas de clientes. Tu tarea es analizar el contexto de la conversación, identificar la intención del usuario y sugerir la consulta completa más probable.\n\n## Contexto\n- Trabajas como capa de procesamiento para un chatbot de servicio al cliente.\n- Recibirás fragmentos de consultas que pueden ser incompletas, ambiguas o interrumpidas.\n- Debes determinar la intención más probable del usuario basándote en el contexto previo.\n\n## Instrucciones\n1. Analiza el historial de conversación reciente para establecer contexto.\n2. Identifica palabras clave y temas en la consulta parcial del usuario.\n3. Detecta si la consulta es una continuación de la conversación anterior.\n4. Formula una versión completa y clara de la consulta original.\n5. Incluye cualquier parámetro o especificación relevante que pueda estar implícita.\n6. En caso de múltiples interpretaciones posibles, proporciona la más probable primero, seguida de alternativas si es necesario.\n7. Mantén el estilo y tono del usuario en tu reformulación.\n\n## Formato de salida\n- Consulta original: [texto incompleto o ambiguo del usuario]\n- Consulta reformulada: [versión completa y clara]\n- Confianza: [alta/media/baja]\n- Interpretaciones alternativas: [si aplica]\n\n## Ejemplos\n- Original: \"Cuándo llega mi...\"\n  Reformulada: \"¿Cuándo llega mi pedido con número de referencia mencionado anteriormente?\"\n\n- Original: \"No puedo acceder\"\n  Reformulada: \"No puedo acceder a mi cuenta de usuario. ¿Cómo puedo restablecer mi contraseña?\"\n\n- Original: \"El mismo pero en rojo\"\n  Reformulada: \"Quiero el mismo producto que acabo de consultar pero en color rojo.\"\n\nRecuerda mantener la naturalidad del lenguaje y evitar sobreinterpretar la consulta cuando la intención no sea clara.\n\nConversación: {{ $json.body.data._chatHistory }}\nNueva consulta: {{ $json.body.data._body }}",
+        "hasOutputParser": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        -1904,
+        560
+      ],
+      "id": "001da009-ac12-48dc-81bd-d1755efe4e5b",
+      "name": "Consulta Sugerida LLM"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"Consulta reformulada\":\"Una Consulta\",\n\t\"Confianza\": \"Alta\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        -1728,
+        752
+      ],
+      "id": "333ab2e3-cd61-4396-9ec9-f84c13e12706",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.Confianza }}",
+                    "rightValue": "alta",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "c5386dde-3a68-4e41-8dee-7f244162fb65",
+                    "leftValue": "={{ $json.output.Confianza }}",
+                    "rightValue": "media",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "34c19d8a-5174-4ad4-a7c3-59013da9fa99",
+                    "leftValue": "={{ $json.output.Confianza }}",
+                    "rightValue": "baja",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -1536,
+        640
+      ],
+      "id": "68648575-966a-410f-85d2-8e04614eb708",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.text }}{{ $json.varSinRespuesta }}",
+        "options": {}
+      },
+      "id": "7cf2d406-db05-45ca-a603-f42736668638",
+      "name": "Respond to Webhook2",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        128,
+        1728
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5d50d8d4-5cb5-4d46-a1b2-3a8f1efda08b",
+              "name": "=Respuesta",
+              "value": "SinRespuesta",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -96,
+        1728
+      ],
+      "id": "03deda7e-e371-41ba-8eef-d7be98fd1331",
+      "name": "Sin Respuesta1"
+    },
+    {
+      "parameters": {
+        "resource": "assistant",
+        "assistantId": {
+          "__rl": true,
+          "value": "asst_pkiZHKIFimCQt2txP1nJGgpu",
+          "mode": "list",
+          "cachedResultName": "Productos_MarIADono_Assistant"
+        },
+        "prompt": "define",
+        "text": "=Responde a consultas de los documentos proporcionados. Constatar siempre marca y modelo.\n\nconversación: {{ $('Webhook').item.json.body.data._chatHistory }}\n\nconsulta reformulada: {{ $('Switch').item.json.output['Consulta reformulada'] }}\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.7,
+      "position": [
+        -80,
+        224
+      ],
+      "id": "57ec3d48-ebf1-4c97-a679-c252e9d7e7fd",
+      "name": "Productos_MariaDono_Assistant",
+      "credentials": {
+        "openAiApi": {
+          "id": "ITcoQ5kvhH8jzKCQ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres el asistente virtual de Ceridono para responder en WhatsApp de manera concisa y con un tono acorde al historial de la conversación.\nAjusta el tono de la respuesta según el historial de la conversación (amistoso, formal, profesional, casual, etc.).Resume la respuesta sin perder información clave. \nSi no hay conversacion previa, da la bienvenida, la respuesta y presentate. \nMantén el mensaje claro y directo, optimizado para WhatsApp. No uses nombres.\n\n\n\n- **Considera el contexto temporal**: referencias a \"hoy\", \"ahora\", \"esta semana\", \"ya inició\"\n\n## CONTEXTO TEMPORAL\n- Fecha actual: {{ $today }}\n- Hora actual: {{ $now.plus(1,'hours') }}\n\nResponde manteniendo coherencia con el flujo conversacional establecido.\n\nHistorial de conversación del usuario: {{ $('Webhook').item.json.body.data._chatHistory }}\n\nSalida sugerida:\n{{ $json.output }}\n{{ $json.output.Pregunta }}\n\n",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        592,
+        128
+      ],
+      "id": "c3212310-ebd1-4926-ae6c-abd17b26c668",
+      "name": "AI Agent Respuesta Final"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        560,
+        320
+      ],
+      "id": "1b26a774-7e47-43d1-9086-02f5ab38074e",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "ITcoQ5kvhH8jzKCQ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        688,
+        320
+      ],
+      "id": "78387b90-284d-4fdf-8218-d6cb48f025bb",
+      "name": "Think"
+    },
+    {
+      "parameters": {
+        "content": "# Clasificador\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+        "height": 740,
+        "width": 920,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1184,
+        -128
+      ],
+      "typeVersion": 1,
+      "id": "7aa9cf86-44a0-4846-89ce-692bbdaa1460",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "# Asistentes de Información",
+        "height": 1400,
+        "width": 620
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        -144
+      ],
+      "id": "e9017998-4de8-4a64-87bb-50e2831242df",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "# Respuesta",
+        "height": 740,
+        "width": 460,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        512,
+        -128
+      ],
+      "id": "06ce4850-f1e9-4043-bfae-2ae61e83dc00",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "# Pregunta\n\n",
+        "height": 400,
+        "width": 680,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2016,
+        480
+      ],
+      "typeVersion": 1,
+      "id": "098cdff6-1656-49da-bd59-40de2fbaf635",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "# Respuesta Nula\n",
+        "height": 260,
+        "width": 500,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        1648
+      ],
+      "id": "4ee71279-36de-48f7-bae0-ae064b21f47f",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-nano",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-nano"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -480,
+        224
+      ],
+      "id": "faf91af4-5bd3-4764-a385-477c0dc4412c",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "ITcoQ5kvhH8jzKCQ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "gpt-4.1",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        1088,
+        320
+      ],
+      "id": "7f50b9d6-b94e-4812-a622-8eac88b00797",
+      "name": "OpenAI Chat Model4",
+      "credentials": {
+        "openAiApi": {
+          "id": "ITcoQ5kvhH8jzKCQ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1904,
+        752
+      ],
+      "id": "ac929b63-ea5e-4096-aea5-70027bf8b7ac",
+      "name": "OpenAI Chat Model5",
+      "credentials": {
+        "openAiApi": {
+          "id": "ITcoQ5kvhH8jzKCQ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"Respuesta\": \"California\",\n    \"Aclaraciones\": \"California\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        832,
+        320
+      ],
+      "id": "2246b92c-88ec-4c32-a809-8c0e6ac39b34",
+      "name": "Structured Output Parser2"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=# Prompt Sistema de Embudo de Ventas\n\n## Contexto del Sistema\nEres un asistente de ventas de ceridono que evalúa y responde consultas de clientes según su posición en el embudo de ventas. Tu objetivo identificar en que etapa del funnel se encuentra.\n\n## Información del Cliente Actual\n\n### Etapa del Embudo (1-5)\n- **1:** Conciencia - Cliente identifica una necesidad\n- **2:** Interés - Cliente busca información sobre soluciones\n- **3:** Consideración - Cliente evalúa opciones específicas\n- **4:** Intención - Cliente muestra intención de compra\n- **5:** Conversión - Cliente confirma, compra o reserva\n\n\n### Historial del Cliente\n**Historial:** {{ $('Webhook').item.json.body.data._chatHistory }}\n\n\n### Consulta del Cliente\n**Consulta:** {{ $('Switch').item.json.output['Consulta reformulada'] }}\n\n\n\n### Interés Identificado del Cliente\n**Interés Principal:**  \n\n\n",
+        "hasOutputParser": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        1072,
+        144
+      ],
+      "id": "3e017780-f557-41ea-ba78-fd9929460b48",
+      "name": "etapaEmbudo LLM"
+    },
+    {
+      "parameters": {
+        "name": "Sub_Workflow_Sucursal",
+        "description": "Llama a esta herramienta si deseas saber si la consulta es de sucursal.",
+        "workflowId": {
+          "__rl": true,
+          "value": "QcTr8tQUaeiUxgU8",
+          "mode": "list",
+          "cachedResultName": "Sub-Workflow-Sucursal"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "consulta": "={{ $json.output['Consulta reformulada'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "contexto",
+              "displayName": "contexto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "consulta",
+              "displayName": "consulta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2,
+      "position": [
+        -1040,
+        224
+      ],
+      "id": "3db04635-1ea5-4d13-b503-bbce53c05581",
+      "name": "Call_Sub_Workflow_Sucursal"
+    },
+    {
+      "parameters": {
+        "name": "Sub_Workflow_Cursos",
+        "description": "Llama a esta herramienta si deseas saber si la consulta es de cursos.",
+        "workflowId": {
+          "__rl": true,
+          "value": "lP4QKeL3tbwEL2xn",
+          "mode": "list",
+          "cachedResultName": "Sub-Workflow-Cursos"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "consulta": "={{ $json.output['Consulta reformulada'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "contexto",
+              "displayName": "contexto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "consulta",
+              "displayName": "consulta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2,
+      "position": [
+        -880,
+        272
+      ],
+      "id": "af3a7367-0f24-4fd4-94d5-2028d9ea41a0",
+      "name": "Call_Sub_Workflow_Cursos"
+    },
+    {
+      "parameters": {
+        "name": "Sub_Workflow_Productos",
+        "description": "Llama a esta herramienta si deseas saber si la consulta es de productos o repuestos.",
+        "workflowId": {
+          "__rl": true,
+          "value": "Qw9d2CHpMw1aovA7",
+          "mode": "list",
+          "cachedResultName": "Sub-Workflow-Productos"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "consulta": "={{ $json.output['Consulta reformulada'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "contexto",
+              "displayName": "contexto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "consulta",
+              "displayName": "consulta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2,
+      "position": [
+        -656,
+        384
+      ],
+      "id": "c8a239ad-36ee-43ac-9a4b-131e7d1d4594",
+      "name": "Call_Sub_Workflow_Productos"
+    },
+    {
+      "parameters": {
+        "name": "Notificaciones_tool",
+        "description": "Determina si el pedido del cliente es relevante para notificaciones o mensajes promocionales.",
+        "workflowId": {
+          "__rl": true,
+          "value": "WnDF0xdaXG9nZF72",
+          "mode": "list",
+          "cachedResultName": "Notificaciones_SubWorkflow"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "consulta": "={{ $('Switch').item.json.output['Consulta reformulada'] }}",
+            "contexto": "={{ $('Webhook').item.json.body.data._chatHistory }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "contexto",
+              "displayName": "contexto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "consulta",
+              "displayName": "consulta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [
+        -624,
+        208
+      ],
+      "id": "5450e117-90bf-4de9-9bed-74b6849cb076",
+      "name": "Call Notificaciones_SubWorkflow"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        -1008,
+        448
+      ],
+      "id": "0c843e18-546d-4c70-a5c0-e6495dd4714d",
+      "name": "Think1"
+    },
+    {
+      "parameters": {
+        "model": "gpt-4.1",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -1136,
+        352
+      ],
+      "id": "9d547fab-3b50-4fa8-b124-9109bd02e89e",
+      "name": "OpenAI Chat Model6",
+      "credentials": {
+        "openAiApi": {
+          "id": "ITcoQ5kvhH8jzKCQ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "Qw9d2CHpMw1aovA7",
+          "mode": "list",
+          "cachedResultName": "Sub-Workflow-Productos"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "contexto": "={{ $('Webhook').item.json.body.data._chatHistory }}",
+            "consulta": "={{ $('Consulta Sugerida LLM').item.json.output['Consulta reformulada'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "contexto",
+              "displayName": "contexto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "consulta",
+              "displayName": "consulta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        272,
+        64
+      ],
+      "id": "771f396b-a090-42cc-9513-ea15a4b8fa5c",
+      "name": "Productos Workflow"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "typeVersion": 1,
+      "position": [
+        192,
+        352
+      ],
+      "id": "f22a7dca-8bea-47c6-8a23-7134234d5b2f",
+      "name": "Calculator"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n  \n    \"etapaEmbudo\": {\n      \"type\": \"integer\"\n    }\n  },\n  \"required\": [\"etapaEmbudo\"]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        1232,
+        320
+      ],
+      "id": "a0349549-6425-4416-8a52-42f03896edce",
+      "name": "Structured_Output_Parser_interesclientes"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"interesCliente\": {\n      \"type\": \"string\",\n      \"enum\": [\"cursos\", \"productos\", \"sucursales\", \"procedimientos\", \"notificaciones\",\"pagos\",\"saludos y agradecimientos\",\"CONSULTAS_PERSONALES\"]\n    }\n     \n  },\n  \"required\": [\"interesCliente\"]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        -784,
+        480
+      ],
+      "id": "1bd68eaa-46f2-4967-b01c-a33f6277d2ee",
+      "name": "Structured_Output_Parser_interesclientes1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -48,
+        1200
+      ],
+      "id": "d9578e9b-abd9-4885-a10d-002ead4e5efb",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "ITcoQ5kvhH8jzKCQ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres el asistente virtual de Ceridono para responder en WhatsApp de manera concisa y con un tono acorde al historial de la conversación. Ajusta el tono de la respuesta según el historial de la conversación (amistoso, formal, profesional, casual, etc.). Resume la respuesta sin perder información clave. Mantén el mensaje claro y directo, optimizado para WhatsApp. No uses nombres.\n\nConsidera el contexto temporal: referencias a \"hoy\", \"ahora\", \"esta semana\", \"ya inició\", \"la semana pasada\", \"El mes pasado\", etc.\nCONTEXTO TEMPORAL\nFecha actual: {{ $today }}\nHora actual: {{ $now }}\nResponde manteniendo coherencia con el flujo conversacional establecido. Ofrece cursos y productos de Ceridono Refrigeracion en mensajes de bienvenida, y solicita una recomendación de 5 estrellas en mensajes de despedida segun corresponda\nSalta CC:\n\nhttps://g.page/r/CcWLxAbd-o0eEB0/review\n\nZuviria (Salta II):\n\nhttps://g.page/r/CYkGhWv5UtmiEB0/review\n\nChile (Mahle - Salta II):\n\nhttps://g.page/r/CWFXUcf1BfwqEB0/review\n\nMetán:\n\nhttps://g.page/r/CWjFjtVcigAoEB0/review\n\nJujuy:\n\nhttps://g.page/r/CQ3sLeicS22IEB0/review\n\nServicio Técnico:\n\nhttps://g.page/r/Cfbjxo2XWxRpEB0/review\n\nHistorial de conversación del usuario: {{ $('Webhook').item.json.body.data._chatHistory }}\n\nConsulta usuario: \n{{ $('Consulta Sugerida LLM').item.json.output['Consulta reformulada'] }}\n\n\n\n\n\n",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -64,
+        1072
+      ],
+      "id": "f8690392-96d4-4f9e-86b5-dc65547fab45",
+      "name": "Saludos"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -64,
+        1488
+      ],
+      "id": "c9a7d2dd-050b-4469-b29f-579c96ea3c74",
+      "name": "OpenAI Chat Model8",
+      "credentials": {
+        "openAiApi": {
+          "id": "ITcoQ5kvhH8jzKCQ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres un asistente virtual especializado en clarificar consultas incompletas o ambiguas de clientes. Tu tarea es analizar el contexto de la conversación e identificar cuándo necesitas más información del usuario para poder ayudarle adecuadamente.\n\n## Contexto\n- Trabajas como capa de procesamiento para un chatbot de servicio al cliente.\n- Recibirás fragmentos de consultas que pueden ser incompletas, ambiguas o interrumpidas.\n- Cuando no puedas determinar la intención del usuario con suficiente confianza, debes preguntarle de forma específica y útil.\n\n## Instrucciones\n1. Analiza el historial de conversación reciente para establecer contexto.\n2. Identifica palabras clave y temas en la consulta parcial del usuario.\n3. Detecta si la consulta es una continuación de la conversación anterior.\n4. Evalúa si tienes suficiente información para entender la intención del usuario.\n5. Si la intención es clara, reformula la consulta completa.\n6. Si la intención NO es clara, formula preguntas específicas para clarificar.\n7. Mantén un tono amable y profesional en tus preguntas de clarificación.\n\n## Criterios para preguntar\nPregunta al usuario cuando:\n- La consulta sea demasiado vaga o genérica\n- Haya múltiples interpretaciones igualmente probables\n- Falte información esencial para proceder\n- Referencias pronominales no tengan antecedente claro (\"eso\", \"lo mismo\", \"el otro\")\n\n## Formato de salida\n\n**Opción A - Consulta clara:**\n- Consulta original: [texto del usuario]\n- Consulta reformulada: [versión completa y clara]\n- Confianza: alta\n\n**Opción B - Consulta ambigua (PREGUNTAR):**\n- Consulta original: [texto del usuario]\n- Acción: Solicitar clarificación\n- Pregunta: [pregunta específica para el usuario]\n- Posibles interpretaciones: [lista de opciones si es útil]\n\n## Ejemplos\n\n**Ejemplo 1 - Clara:**\n- Original: \"Cuándo llega mi pedido del lunes\"\n- Reformulada: \"¿Cuándo llega mi pedido realizado el lunes?\"\n- Confianza: alta\n\n**Ejemplo 2 - Ambigua:**\n- Original: \"No puedo acceder\"\n- Acción: Solicitar clarificación\n- Pregunta: \"Para poder ayudarte mejor, ¿podrías especificar a qué no puedes acceder? Por ejemplo: ¿tu cuenta, una página web, una aplicación, o algo más?\"\n- Posibles interpretaciones: Acceso a cuenta, problemas técnicos, contraseña olvidada\n\n**Ejemplo 3 - Ambigua:**\n- Original: \"El mismo pero diferente\"\n- Acción: Solicitar clarificación\n- Pregunta: \"¿Te refieres al mismo producto pero en otra variante? ¿Podrías especificar qué cambio necesitas: color, tamaño, modelo, o alguna otra característica?\"\n\nRecuerda: Es mejor hacer una pregunta útil que asumir incorrectamente la intención del usuario.\n\nConversación: {{ $('Webhook').item.json.body.data._chatHistory }}\nNueva consulta: {{ $('Webhook').item.json.body.data._body }}",
+        "hasOutputParser": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        -64,
+        1344
+      ],
+      "id": "1e8f5178-97d1-4fa9-93ab-79128b662fd9",
+      "name": "Pregunta_Aclaratoria"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=# Prompt de Chatbot Clasificador de Consultas\n\n## Instrucciones Principales\nEres un chatbot especializado en clasificar consultas de usuarios. Tu tarea es analizar cada mensaje del usuario y clasificarlo en una de las siguientes categorías predefinidas.\n\n## Categorías de Clasificación\n\n**1. CURSOS**\n- Consultas sobre programas educativos, capacitaciones, talleres\n- Información sobre inscripciones, horarios, modalidades\n- Contenido académico, certificaciones, diplomas\n- Requisitos de ingreso, costos de cursos\n\n**2. PRODUCTOS O REPUESTOS**\n- Consultas sobre artículos, mercancías, inventario\n- Información de repuestos, componentes, accesorios\n- Disponibilidad, especificaciones técnicas, compatibilidad\n- Precios, ofertas, descuentos en productos\n\n**3. SUCURSAL**\n- Ubicaciones, direcciones, horarios de atención\n- Servicios disponibles por sede\n- Contacto de sucursales específicas\n- Cómo llegar, transporte público\n\n**4. PAGOS**\n- Métodos de pago, facturación, cobranza\n- Consultas sobre estados de pago, deudas\n- Problemas con transacciones, reembolsos\n- Planes de financiamiento, cuotas\n\n**5. CONSULTAS INTERNAS**\n- Información sobre políticas de la empresa\n- Procedimientos internos, trámites administrativos\n- Recursos humanos, empleo, vacantes\n- Información corporativa, historia de la empresa\n\n**6. NOTIFICACIONES O MENSAJES PROMOCIONALES**\n- Ofertas especiales, descuentos, promociones\n- Lanzamientos de productos, novedades\n- Eventos, actividades especiales\n- Comunicaciones masivas, newsletters\n\n**7. SALUDOS O AGRADECIMIENTOS**\n- Mensajes de cortesía, salutaciones\n- Expresiones de gratitud, reconocimiento\n- Despedidas, buenos deseos\n- Interacciones sociales básicas\n\n**8. CONSULTAS PERSONALES**\n- Conversaciones informales no relacionadas con el negocio\n- Chistes, bromas, entretenimiento\n- Mensajes personales entre colegas o familiares\n- Charlas casuales sobre temas personales o de la vida cotidiana\n- Uso del chatbot para comunicación social o recreativa\n- Conversaciones que no tienen relación con servicios empresariales\n\n\n\n**9. OTROS**\n- Consultas que no encajan en las categorías anteriores\n- Mensajes confusos o ambiguos\n- Solicitudes especiales o únicas\n- Consultas técnicas no relacionadas con productos\n\n\n\n## Proceso de Clasificación\n\n1. **Analizar el contenido**: Lee cuidadosamente el mensaje del usuario\n2. **Identificar palabras clave**: Busca términos específicos relacionados con cada categoría\n3. **Considerar el contexto**: Evalúa la intención behind del mensaje\n4. **Asignar categoría**: Selecciona la categoría más apropiada\n5. **Nivel de confianza**: Indica qué tan seguro estás de la clasificación (alto/medio/bajo)\n\n## Formato de Respuesta\n\nPara cada consulta, responde con:\n```\nCATEGORÍA: [Nombre de la categoría]\nCONFIANZA: [Alto/Medio/Bajo]\nRAZÓN: [Breve explicación de por qué se asignó esta categoría]\n```\n\n## Ejemplos de Clasificación\n\n**Mensaje**: \"¿Cuándo empieza el curso de marketing digital?\"\n- CATEGORÍA: CURSOS\n- CONFIANZA: Alto\n- RAZÓN: Consulta directa sobre inicio de programa educativo\n\n**Mensaje**: \"¿Tienen repuestos para motor Honda?\"\n- CATEGORÍA: PRODUCTOS O REPUESTOS\n- CONFIANZA: Alto\n- RAZÓN: Búsqueda específica de componentes/repuestos\n\n**Mensaje**: \"¿Dónde queda la sucursal del centro?\"\n- CATEGORÍA: SUCURSAL\n- CONFIANZA: Alto\n- RAZÓN: Solicitud de ubicación de sede específica\n\n**Mensaje**: \"Jajaja, ¿viste el partido anoche? Mi equipo ganó\"\n- CATEGORÍA: CONSULTAS PERSONALES\n- CONFIANZA: Alto\n- RAZÓN: Conversación informal sobre entretenimiento personal sin relación comercial\n\n**Mensaje**: \"Amor, ¿llegaste bien a casa?\"\n- CATEGORÍA: CONSULTAS PERSONALES\n- CONFIANZA: Alto\n- RAZÓN: Mensaje personal familiar sin relación con servicios empresariales\n\n## Consideraciones Especiales\n\n- Si un mensaje abarca múltiples categorías, elige la más relevante o específica\n- Para mensajes ambiguos, usa confianza \"Bajo\" y explica la ambigüedad\n- Si no hay suficiente información, solicita aclaración antes de clasificar\n- Si detectas spam o mensajes inapropiados, clasifícalos como \"OTROS\"\n- Las consultas personales deben identificarse claramente para no confundirlas con consultas comerciales legítimas\n\nConsulta: {{ $json.output['Consulta reformulada'] }}",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -976,
+        -80
+      ],
+      "id": "fe3a461f-4aba-4a7c-960f-b66ec4a7c254",
+      "name": "Agente Clasificador"
+    },
+    {
+      "parameters": {
+        "model": "gpt-4.1",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -64,
+        944
+      ],
+      "id": "f2f620cb-c4d2-4762-98fd-62448aa26625",
+      "name": "OpenAI Chat Model9",
+      "credentials": {
+        "openAiApi": {
+          "id": "ITcoQ5kvhH8jzKCQ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n\"estado_habilitacion_notificacion\": {\n      \"type\": \"integer\",\n      \"enum\": [0, 1, 2],\n      \"description\": \"Estado del servicio basado en la intención del usuario\",\n      \"enumNames\": [\"Dar de baja\", \"Neutro\", \"Habilitar\"]\n    }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        80,
+        928
+      ],
+      "id": "89d53d3e-c6de-452a-9a85-b0c2ff408454",
+      "name": "Structured_Output_Parser_interesclientes2"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=### Asistente de Notificaciones\nEres un asistente virtual especializado en la gestión y personalización de notificaciones para usuarios. Tu tarea es comprender las preferencias de los usuarios y configurar las notificaciones de acuerdo a sus necesidades.\n\n### Contexto\nRecibirás solicitudes de usuarios relacionadas con la configuración de notificaciones.\nDebes interpretar las solicitudes y determinar si los usuarios desean recibir notificaciones.\n\n## Instrucciones\nDetermina el estado de habilitación del servicio según la intención detectada.\n\n## Formato de salida\n**estado_habilitacion_Notificacion**: [número según la lógica: 0 = dar de baja, 1 = neutro, 2 = habilitar]\n\n## Lógica de estado_habilitacion_servicio\n- **0 (Dar de baja)**: Cuando el usuario solicita cancelar, desactivar, dar de baja o eliminar un servicio\n- **1 (Neutro)**: Cuando la consulta es informativa, ambigua o no implica cambios en el estado del servicio\n- **2 (Habilitar)**: Cuando el usuario solicita activar, contratar, habilitar o dar de alta un servicio\n\n## Ejemplos\n**Ejemplo 1:**\n- Consulta original: \"Cuándo llega mi...\"\n- estado_habilitacion_servicio: 1\n\n**Ejemplo 2:**\n- Consulta original: \"No puedo acceder\"\nestado_habilitacion_servicio: 1\n\n**Ejemplo 4:**\n- Consulta original: \"Quiero cancelar mi suscripción\"\n- estado_habilitacion_servicio: 0\n\n**Ejemplo 5:**\n- Consulta original: \"Quiero contratar el plan premium\"\nestado_habilitacion_servicio: 2\n\n## Variables de entrada\n- **conversación**: {{ $('Webhook').item.json.body.data._chatHistory }}\n- **pregunta_aclaratoria**: {{ $('Consulta Sugerida LLM').item.json.output['Consulta reformulada'] }}",
+        "hasOutputParser": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        -64,
+        784
+      ],
+      "id": "e45541ce-fab0-45e4-8175-7204210668a3",
+      "name": "Asistente_Notificacion"
+    },
+    {
+      "parameters": {
+        "content": "## Metricas\n\n**Double click** to edit me. [Guide](https://docs.n8n.io/workflows/sticky-notes/)",
+        "height": 740,
+        "width": 360
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1024,
+        -128
+      ],
+      "id": "c557da62-661b-41ce-9ff6-8a7a8e3a66ff",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"Pregunta\": \"California\",\n    \"Aclaraciones\": \"California\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        112,
+        1488
+      ],
+      "id": "1284f015-9801-41a6-82da-39bf0155bf0c",
+      "name": "Structured Output Parser3"
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "accept": "application/json, text/plain, */*",
+            "content-type": "application/json",
+            "authorization": "Bearer Agentesceridonon8n",
+            "user-agent": "axios/1.8.2",
+            "content-length": "4607",
+            "accept-encoding": "gzip, compress, deflate, br",
+            "host": "localhost:5678",
+            "connection": "keep-alive"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "data": {
+              "_from": "5493812010781",
+              "_role": "Outgoing",
+              "_body": "que onda",
+              "_date": "2025-08-11",
+              "_time": "03:17:03",
+              "_messageId": "3F77BE895118454053B8",
+              "_pushName": "Assistant",
+              "_botName": "BotAugustoTucuman",
+              "_etapaEmbudo": "",
+              "_interesCliente": "",
+              "_mediaType": null,
+              "_mediaUrl": null,
+              "_mediaBuffer": null,
+              "_aiResponses": [],
+              "_mediaFilePath": null,
+              "_chatHistory": "2025-08-06|02:34:03|Outgoing||Assistant|💬: Ofrecemos varios cursos de refrigeración en Tucumán y Salta:\n\n1. Refrigeración Comercial (Tucumán) - Inicio 19/06, jueves 9-13hs.\n2. Aire Acondicionado (Salta y Tucumán) - Inicio 27/06 (Salta) y 19/06 (Tucumán), viernes y jueves 15-19hs.\n3. Instalador Split Inverter (Salta y Tucumán) - Inicio 22/07 (Salta), horario martes 15-19hs.\n4. Refrigeración Básica (Salta y Tucumán) - Inicio 27/06 (Salta) y 19/06 (Tucumán), viernes y jueves 15-19hs.\n5. Manejo Seguro Gases Inflamables (Salta) - Inicio 31/05, 9-15hs, curso avanzado.\n6. Refrigeración del Automotor (Tucumán) - Inicio 24/06, martes 15-19hs.\n7. Instalador Split Inverter Online - Acceso inmediato, horario flexible.\n\nCosto: $250.000 en la mayoría, $330.000 para gases inflamables, con descuentos para Técnicos Amigos.\n\nLinks para registro:\nPresencial: https://www.ceridono.ar/panel/pres/\nOnline: https://www.ceridono.ar/tienda/?id=ZGhkcQ%3D%3D\n\n¿Querés info de algún curso o provincia en particular?\n2025-08-08|00:57:07|incoming||Augusto Baralo|curso\n2025-08-08|00:58:30|Outgoing||Assistant|💬: Ceridono ofrece varios cursos presenciales en Tucumán y Salta, y un curso online de Instalador de Split Inverter. Por ejemplo, Refrigeración Comercial, Aire Acondicionado, Refrigeración Básica, Manejo Seguro de Gases (avanzado), Refrigeración del Automotor, entre otros. Los cursos inician en junio y julio, cuestan alrededor de $250.000 (con descuentos para Técnicos Amigos) y duran 10 clases. Incluyen material, examen, coffee break y más. Puedes registrarte aquí:\n- Presencial: https://www.ceridono.ar/panel/pres/\n- Online: https://www.ceridono.ar/tienda/?id=ZGhkcQ%3D%3D\n¿Querés info de algún curso o provincia en particular?\n2025-08-09|02:37:44|incoming||Augusto Baralo|fechas\n2025-08-09|14:05:06|incoming||Augusto Baralo|notificaciones\n2025-08-09|14:05:17|Outgoing||Assistant|💬: Solo enviamos notificaciones importantes y novedades relevantes acerca de los cursos y productos. ¿Querés activar las notificaciones para recibir estas actualizaciones?\n2025-08-10|01:45:21|incoming||Augusto Baralo|notificaciones\n2025-08-10|01:46:28|incoming||Augusto Baralo|ahora como estas?\n2025-08-10|01:46:40|Outgoing||Assistant|💬: ¡Hola! Estoy bien, gracias por preguntar. ¿En qué puedo ayudarte hoy con los cursos o productos de Ceridono?\n2025-08-10|13:07:50|incoming||Augusto Baralo|cursos\n2025-08-10|13:08:20|Outgoing||Assistant|💬: Actualmente, Ceridono ofrece varios cursos presenciales en Tucumán y Salta, y un curso online. Cursos destacados y sus fechas:\n\n1. Refrigeración Comercial (Tucumán) - arrancó 19/06, jueves 9-13hs.\n2. Aire Acondicionado (Salta) - inicia 28/08, jueves 15-19hs.\n3. Refrigeración Básica (Tucumán y Salta) - comenzó en junio, jueves/viernes 15-19hs.\n4. Refrigeración del Automotor (Tucumán) - empezó 24/06, martes 15-19hs.\n5. Instalador Split Inverter (Salta) - inicia 22/07, martes 15-19hs.\n6. Manejo Seguro de Gases Inflamables (Salta) - ya comenzó el 31/05, sábado 9-15hs.\n7. Curso online de Instalador Split Inverter con acceso inmediato y horario flexible.\n\nCostos: $250.000 en general, con descuentos para Técnicos Amigos. Incluye material, examen y coffee break.\n\nRegistros:\nPresencial: https://www.ceridono.ar/panel/pres/\nOnline: https://www.ceridono.ar/tienda/?id=ZGhkcQ%3D%3D\n\n¿Querés más info de algún curso o provincia?\n2025-08-11|03:17:03|incoming||Augusto Baralo|que onda",
+              "_ctx": {
+                "key": {
+                  "remoteJid": "5493812010781@s.whatsapp.net",
+                  "fromMe": false,
+                  "id": "3F77BE895118454053B8"
+                },
+                "messageTimestamp": 1754893015,
+                "pushName": "Augusto Baralo",
+                "broadcast": false,
+                "message": {
+                  "extendedTextMessage": {
+                    "text": "que onda",
+                    "contextInfo": {
+                      "expiration": 0,
+                      "ephemeralSettingTimestamp": "0",
+                      "disappearingMode": {
+                        "initiator": "CHANGED_IN_CHAT"
+                      }
+                    }
+                  },
+                  "messageContextInfo": {
+                    "deviceListMetadata": {
+                      "senderKeyHash": "ee5Olr4Wlo2QPQ==",
+                      "senderTimestamp": "1754578028",
+                      "recipientKeyHash": "9Vv8Nq0gelnYww==",
+                      "recipientTimestamp": "1754333229"
+                    },
+                    "deviceListMetadataVersion": 2
+                  }
+                },
+                "body": "que onda",
+                "from": "5493812010781"
+              },
+              "mediaInfo": {
+                "hasMedia": false,
+                "mediaType": null,
+                "isVoice": false,
+                "isAudio": false,
+                "hasAnyMedia": false
+              }
+            },
+            "timestamp": "2025-08-11T06:17:04.825Z"
+          },
+          "webhookUrl": "http://localhost:5678/webhook/Webhook",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Consulta Sugerida LLM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sucursal MariaDono Assistant": {
+      "main": [
+        [
+          {
+            "node": "AI Agent Respuesta Final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cursos MariaDono Assistant": {
+      "main": [
+        [
+          {
+            "node": "AI Agent Respuesta Final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Selector de Agentes": {
+      "main": [
+        [
+          {
+            "node": "Cursos MariaDono Assistant",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Productos_MariaDono_Assistant",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Sucursal MariaDono Assistant",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Sin Respuesta1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Procedimientos MariaDono Assistant",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Asistente_Notificacion",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [],
+        [
+          {
+            "node": "Saludos",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Sin Respuesta1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit interesCliente": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Procedimientos MariaDono Assistant": {
+      "main": [
+        [
+          {
+            "node": "AI Agent Respuesta Final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consulta Sugerida LLM": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Consulta Sugerida LLM",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Agente Clasificador",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Pregunta_Aclaratoria",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Pregunta_Aclaratoria",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sin Respuesta1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Productos_MariaDono_Assistant": {
+      "main": [
+        [
+          {
+            "node": "AI Agent Respuesta Final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent Respuesta Final": {
+      "main": [
+        [
+          {
+            "node": "etapaEmbudo LLM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent Respuesta Final",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent Respuesta Final",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Selector de Agentes",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "etapaEmbudo LLM",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model5": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Consulta Sugerida LLM",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser2": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent Respuesta Final",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        []
+      ]
+    },
+    "etapaEmbudo LLM": {
+      "main": [
+        [
+          {
+            "node": "Edit interesCliente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call_Sub_Workflow_Sucursal": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente Clasificador",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call_Sub_Workflow_Cursos": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente Clasificador",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call_Sub_Workflow_Productos": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente Clasificador",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Notificaciones_SubWorkflow": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente Clasificador",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think1": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente Clasificador",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model6": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agente Clasificador",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculator": {
+      "ai_tool": [
+        [
+          {
+            "node": "Productos_MariaDono_Assistant",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured_Output_Parser_interesclientes": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "etapaEmbudo LLM",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured_Output_Parser_interesclientes1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Agente Clasificador",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Saludos",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Saludos": {
+      "main": [
+        [
+          {
+            "node": "AI Agent Respuesta Final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model8": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Pregunta_Aclaratoria",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pregunta_Aclaratoria": {
+      "main": [
+        [
+          {
+            "node": "AI Agent Respuesta Final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agente Clasificador": {
+      "main": [
+        [
+          {
+            "node": "Selector de Agentes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model9": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Asistente_Notificacion",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured_Output_Parser_interesclientes2": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Asistente_Notificacion",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Asistente_Notificacion": {
+      "main": [
+        [
+          {
+            "node": "AI Agent Respuesta Final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser3": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Pregunta_Aclaratoria",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "be78ce2a-61ea-4d41-a94c-4b1c71c0f0c9",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7a45e564a0c11046766a7c454204e7a510bf179e50bcfa14a7978e4f07dcf653"
+  },
+  "id": "qFHxEzw7MRMPXeEm",
+  "tags": [
+    {
+      "createdAt": "2025-04-10T03:01:42.480Z",
+      "updatedAt": "2025-04-10T03:01:42.480Z",
+      "id": "qVoLw0KSgTR3MgwG",
+      "name": "MarIADono"
+    }
+  ]
+}

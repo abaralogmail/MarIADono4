@@ -130,7 +130,7 @@ const BotConsultasWeb = async () => {
 }
 
 const BotRamiro = async () => {
-    const BotName = 'BotRamiro()'
+    const BotName = 'BotRamiro'
     const adapterDB = new JsonFileAdapter()
     const adapterFlow = createFlow([flowEnviarMensaje, flowTest, flowMedia, flowVoice, flowDesactivar, flowActivar, flowAsistente, updateVectorStoreFlow, flowPrincipal, flowEnviarDeudas])
     const adapterProvider = createProvider(BaileysProvider, { name: BotName })
@@ -207,6 +207,21 @@ const BotMetan = async () => {
     QRPortalWeb({ name: BotName, port: 6012 })
 }
 
+const BotSaltaMostrador = async () => {
+    const BotName = 'BotSaltaMostrador'
+    const adapterDB = new JsonFileAdapter()
+    const adapterFlow = createFlow([flowEnviarMensaje, flowTest, flowMedia, flowVoice, flowDesactivar, flowActivar, flowAsistente, updateVectorStoreFlow, flowPrincipal, flowEnviarDeudas])
+    const adapterProvider = createProvider(BaileysProvider, { name: BotName })
+
+    const bot = createBot({
+        flow: adapterFlow,
+        provider: adapterProvider,
+        database: adapterDB,
+    })
+
+    QRPortalWeb({ name: BotName, port: 6013 })
+}
+
 
 main()
 BotCursosSalta()  //BotName: bot - tel: 3875218575
@@ -214,13 +229,13 @@ BotCursosSalta()  //BotName: bot - tel: 3875218575
 //BotAdministracionSalta()
 BotAugustoTucuman() // BotName: BotAugustoTucuman - tel: 381248-8449
 BotConsultasWeb()// BotName: BotConsultasWeb - tel: 381590-8557
-//BotRamiro() // BotName: BotRamiro() - tel: 387225-5083
+BotRamiro() // BotName: BotRamiro() - tel: 387225-5083
 //BotJujuy() // BotName: BotJujuy - tel: 388571-2603
 BotRoly() // BotName: BotRoly - tel: 5493813690061
-BotFranco() // BotName: BotFranco - tel: 
+//BotFranco() // BotName: BotFranco - tel: 
 BotMetan() // BotName: BotMetan - tel: +549387 6621962
-//BotSaltaMostrador() // BotName: BotSaltaMostrador - tel: 
-
+BotSaltaMostrador() // BotName: BotSaltaMostrador - tel: 
+ 
 
 process.on('message', async (msg) => {
   if (msg === 'shutdown') {

@@ -100,8 +100,8 @@ class BulkMessageManager {
         data: rowData,
       } of this.excelReader.getRowIterator()) {
         // Basic validation for required data
-        if (!rowData || !rowData.telefono || !rowData.mensaje) {
-          
+        if (!rowData || !rowData.telefono) {
+          console.log(rowData, rowData.telefono, rowData.mensaje);
           console.log(typeof rowData.telefono, rowData.telefono);
           
           continue;
@@ -231,6 +231,14 @@ class BulkMessageManager {
       
       // Usa trimText para limpiar el mensaje formateado
       const formattedMessage = webHookRespuesta[0].Respuesta || messageData.body;
+      messageData.imageUrl = webHookRespuesta[0].imageUrl || null;
+      messageData.audioUrl = webHookRespuesta[0].audioUrl || null;    
+      messageData.videoUrl = webHookRespuesta[0].videoUrl || null;
+      messageData.documentUrl = webHookRespuesta[0].documentUrl || null;
+      messageData.mediaType = webHookRespuesta[0].mediaType || null;
+
+      console.log(messageData.mediaType, messageData.imageUrl, messageData.audioUrl, messageData.videoUrl, messageData.documentUrl);
+
       return formattedMessage.trim(); // Limpia el mensaje antes de devolverlo
 
     } catch (error) {
