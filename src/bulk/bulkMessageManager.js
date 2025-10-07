@@ -219,34 +219,34 @@ class BulkMessageManager {
   }
 
     async processMessageRow(messageData) {
-    try {
-      // Obtener el historial de chat
-      messageData.chatHistory = await getMessageHistory(this.provider, messageData);
+  try {
+    // Fetch chat history
+    messageData.chatHistory = await getMessageHistory(this.provider, messageData);
 
-      const n8nWebhook = new N8nWebhookListener(
-        "http://localhost:5678/webhook/formattedN8nSendBulkMessages"
-      );
+    const n8nWebhook = new N8nWebhookListener(
+      "http://localhost:5678/webhook/formattedN8nSendBulkMessages"
+    );
 
-      const webHookRespuesta = await n8nWebhook.sendWebhook(messageData);
-      
-      // Usa trimText para limpiar el mensaje formateado
-      const formattedMessage = webHookRespuesta[0].Respuesta || messageData.body;
-      messageData.imageUrl = webHookRespuesta[0].imageUrl || null;
-      messageData.audioUrl = webHookRespuesta[0].audioUrl || null;    
-      messageData.videoUrl = webHookRespuesta[0].videoUrl || null;
-      messageData.documentUrl = webHookRespuesta[0].documentUrl || null;
-      messageData.mediaType = webHookRespuesta[0].mediaType || null;
+    const webHookRespuesta = await n8nWebhook.sendWebhook(messageData);
 
-      console.log(messageData.mediaType, messageData.imageUrl, messageData.audioUrl, messageData.videoUrl, messageData.documentUrl);
-
-      return formattedMessage.trim(); // Limpia el mensaje antes de devolverlo
-
-    } catch (error) {
-      console.error(`Error processing message for ${messageData.from}:`, error);
-      throw error;
+    // Decide which URL to use based on response
+    if (webHookRespuesta[0].MediaUrl) {
+      messageData.mediaUrl = webHookRespuesta[0].MediaUrl;
     }
-  }
 
+    if (webHookRespuesta[0].MediaPath) {
+      messageData.mediaPath = webHookRespuesta[0].MediaPath;
+    }
+
+    // Set formatted message and trim text
+    const formattedMessage = webHookRespuesta[0].Respuesta || messageData.body;
+    return formattedMessage.trim();
+
+  } catch (error) {
+    console.error(`Error processing message for ${messageData.from}:`, error);
+    throw error;
+  }
+}
 
   createMessageContext(rowData) {
     const messageData = new MessageData();
@@ -273,6 +273,12 @@ class BulkMessageManager {
     } else if (rowData.audioUrl) {
       messageData.mediaType = "audio";
       messageData.mediaUrl = rowData.audioUrl; // Use mediaUrl for URLs
+    } else if (rowData.videoFile) {
+      messageData.mediaType = "video";
+      messageData.mediaPath = rowData.videoFile;
+    } else if (rowData.videoUrl) {
+      messageData.mediaType = "video";
+      messageData.mediaUrl = rowData.videoUrl;
     }
 
     // Add other relevant data from rowData if needed
