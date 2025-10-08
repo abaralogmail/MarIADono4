@@ -1,4 +1,4 @@
-# AGENTS.md - MarIADono3 WhatsApp Bot System
+# Gemini.md - MarIADono3 WhatsApp Bot System
 
 ## Commands
 - **Start bot**: `npm start` (runs linting first, then starts app.js)

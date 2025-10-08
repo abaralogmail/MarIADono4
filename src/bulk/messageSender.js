@@ -9,7 +9,7 @@ class MessageSender {
     }
 
     async enviarMensaje(messageData) {
-        const { from, body, imageUrl, audioUrl, mediaUrl, imageFile, videoUrl, documentUrl } = messageData;
+        const { from, body, imageUrl, audioUrl, mediaUrl, imageFile, documentUrl } = messageData;
 
         const recipient = `${from}@c.us`; // Assuming standard WhatsApp number format
 
@@ -42,12 +42,7 @@ class MessageSender {
                 console.log(`Audio URL sent to ${from}@s.whatsapp.net: ${audioUrl}`);
             }
             
-            // Envio de video
-            if (videoUrl) {
-                messageId = await this.provider.sendVideo(`${from}@s.whatsapp.net`, videoUrl);
-                console.log(`Video URL sent to ${from}@s.whatsapp.net: ${videoUrl}`);
-            }
-
+        
             // Envio de documento
             if (documentUrl) {
                 messageId = await this.provider.sendFile(`${from}@s.whatsapp.net`, documentUrl);
@@ -61,7 +56,7 @@ class MessageSender {
             }
 
             // Nuevo bloque para enviar videos
-            if (videoFile) {
+            /*if (videoFile) {
                 const fullVideoPath = path.resolve(videoFile);
                 if (fs.existsSync(fullVideoPath)) {
                     messageId = await this.provider.sendVideo(`${from}@s.whatsapp.net`, fullVideoPath, "");
@@ -72,7 +67,7 @@ class MessageSender {
             } else if (videoUrl) {
                 messageId = await this.provider.sendVideo(`${from}@s.whatsapp.net`, videoUrl);
                 console.log(`Video URL sent to ${from}@s.whatsapp.net: ${videoUrl}`);
-            }
+            }*/
 
             return {
                 success: true,
