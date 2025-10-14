@@ -208,20 +208,87 @@ const BotMetan = async () => {
 }
 
 
-main()
-BotCursosSalta()  //BotName: bot - tel: 3875218575
-//BotOfertasTucuman() // BotName:BotOfertasTucuman - tablet July - tel: 381363-8101
-//BotAdministracionSalta()
-BotAugustoTucuman() // BotName: BotAugustoTucuman - tel: 381248-8449
-BotConsultasWeb()// BotName: BotConsultasWeb - tel: 381590-8557
-//BotRamiro() // BotName: BotRamiro() - tel: 387225-5083
-//BotJujuy() // BotName: BotJujuy - tel: 388571-2603
-BotRoly() // BotName: BotRoly - tel: 5493813690061
-BotFranco() // BotName: BotFranco - tel: 
-BotMetan() // BotName: BotMetan - tel: +549387 6621962
+// ... existing code ...
 
-//BotSaltaMostrador() // BotName: BotSaltaMostrador - tel: 
+// Reemplaza el bloque de arranques múltiples por un despachador de un solo bot:
+//// main()
+//// BotCursosSalta()  //BotName: bot - tel: 3875218575
+//// BotAugustoTucuman() // BotName: BotAugustoTucuman - tel: 381248-8449
+//// ... resto de invocaciones comentadas ...
 
+// Inicia solo un bot por proceso según la variable de entorno BOT
+const startSingleBot = async () => {
+  const target = (process.env.BOT || 'BotAugustoTucuman');
+
+  switch (target) {
+    case 'cursossalta':
+    case 'botcursossalta':
+    case 'BotAugustoTucuman':
+      await main();
+      await BotAugustoTucuman();
+      break;
+/*
+
+    case 'bot':
+      await main();
+      await BotCursosSalta();
+      break;
+
+  
+    case 'ofertastucuman':
+      await main();
+      await BotOfertasTucuman();
+      break;
+
+
+    case 'consultasweb':
+      await main();
+      await BotConsultasWeb();
+      break;
+
+      
+    case 'roly':
+      await main();
+      await BotRoly();
+      break;
+
+    case 'franco':
+      await main();
+      await BotFranco();
+      break;
+
+    case 'metan':
+      await main();
+      await BotMetan();
+      break;
+
+      /*
+    case 'ramiro':
+      await main();
+      await BotRamiro();
+      break;
+
+    case 'jujuy':
+      await main();
+      await BotJujuy();
+      break;*/
+
+  /*case 'administracionsalta':
+      await main();
+      await BotAdministracionSalta();
+      break;*/
+
+    default:
+      console.error(
+        'Env var BOT no establecida o inválida. Usa uno de: CursosSalta, AdministracionSalta, OfertasTucuman, AugustoTucuman, ConsultasWeb, Ramiro, Jujuy, Roly, Franco, Metan'
+      );
+      process.exit(1);
+  }
+};
+
+startSingleBot();
+
+// ... rest of code ...
 
 process.on('message', async (msg) => {
   if (msg === 'shutdown') {

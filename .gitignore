@@ -1,4 +1,5 @@
 # Node.js
+app.js
 node_modules
 BotCursosSalta_sessions
 BotOfertasSalta_sessions
@@ -9,6 +10,7 @@ BotConsultasWebTucuman_sessions
 BotConsultasWeb_sessions
 BotRamiro()_sessions
 BotJujuy_sessions
+
 
 
 # Environment and configuration
@@ -103,3 +105,7 @@ BotRoly.qr.png
 app.js
 BotMetan.qr.png
 BotMetan.qr.png
+BotAugustoTucuman.qr.png
+app copy.js
+src/config/adminPhoneNumbers copy.js
+src/config/botConfigManager copy.js
