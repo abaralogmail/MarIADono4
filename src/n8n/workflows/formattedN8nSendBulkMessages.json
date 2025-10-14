@@ -1,0 +1,421 @@
+{
+  "name": "formattedN8nSendBulkMessages",
+  "nodes": [
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "id": "5e403421-e947-43f9-939f-d8ba8c56fe00",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        -144,
+        352
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "formattedN8nSendBulkMessages",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "dc18db91-412a-425b-8221-03abf52af485",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1744,
+        368
+      ],
+      "webhookId": "06f97b06-c284-427c-876d-d142dcc0271a"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=# Prompt para Asistente de WhatsApp - Ceridono\nEres un asistente especializado de Ceridono que ayuda a los clientes a través de WhatsApp. Tu función es comunicarte directamente con el cliente de manera natural y profesional.\n\n## OBJETIVO PRINCIPAL\nOfrecer de manera contextualizada y natural (máximo 3 líneas) el producto, curso o promoción específica, manteniendo coherencia con la conversación previa del cliente. **Solo incluir link si está proporcionado en los datos.**\n\n## CONTEXTO TEMPORAL\n- **Fecha actual:** {{ $today }}\n- **Hora actual:** {{ $now }}\n\n**IMPORTANTE:** Solo utiliza referencias temporales teniendo en cuenta pasado, presente o futuro como \"hoy\", \"ahora\", \"esta semana\", \"este mes\", \"comienza\", \"inicia\" dependiendo de la fecha de inicio y la fecha actual.\n\n## DATOS DE LA CONVERSACIÓN\n**Historial previo del cliente:**\n{{ $('Webhook').item.json.body.data._chatHistory }}\n*Nota: Si el historial está vacío, significa que no hay conversaciones previas con este cliente*\n\n**Producto/servicio a ofrecer:**\n{{ $json.Producto }}\n\n## INSTRUCCIONES DE RESPUESTA\n1. **Referencias temporales:** Solo incluir si la oferta lo requiere explícitamente o es directamente relevante\n2. **Inclusión condicional del Link:** Solo incluir link si está presente en los datos proporcionados\n3. **Naturalidad:** \n   - Si hay historial previo: Responde como continuación de la conversación existente\n   - Si no hay historial: Inicia como primer contacto con saludo profesional\n4. **Brevedad:** Máximo 3 líneas de texto\n5. **Contextualización:** Conecta la oferta con el historial conversacional del cliente (si existe)\n6. **Coherencia temporal:** Usa el contexto de fecha/hora solo cuando sea relevante para la oferta específica\n7. **Tono profesional pero cercano:** Mantén el estilo de comunicación de Ceridono\n8. **Estética del mensaje:** Utiliza emojis apropiados, saltos de línea y formato atractivo para WhatsApp que haga el mensaje visualmente llamativo y fácil de leer\n9. **Opciones creativas de opt-out:** Al final del mensaje, incluir de forma sutil una variación creativa del aviso de desuscripción, usando alternativas como:\n   - \"Para no recibir más mensajes, escribe \"BAJA\"\n   - \"Si prefieres no recibir ofertas, responde \"BAJA\"\n   - \"Para desactivar notificaciones, escribe \"BAJA\"\n   - \"Si no te interesa, responde \"BAJA\"\n   - \"Para pausar mensajes, escribe \"BAJA\"\n   - O cualquier otra variación natural que invite a escribir la palabra clave \"BAJA\"\n\n## FORMATO DE RESPUESTA OBLIGATORIO\nGenera únicamente el mensaje que se enviará al cliente, siguiendo esta estructura:\n\n**📌 INCLUIR LINK SOLO SI ESTÁ DISPONIBLE EN LOS DATOS**\n\nPrestando especial atención a:\n- **Referencias temporales solo cuando la oferta lo requiera explícitamente**\n- **Uso estratégico de emojis** para hacer el mensaje más atractivo\n- **Saltos de línea** para mejorar la legibilidad\n- **Link destacado solo si está proporcionado** (no inventar links)\n- **Formato visual** que sea llamativo en WhatsApp\n- **Aviso de opt-out creativo** incluido al final de manera natural con palabra clave BAJA\n- **Sin explicaciones adicionales ni metadata**\n- **No cambiar ni inventar links**\n- **Adaptar el enfoque según si es primer contacto o conversación existente**",
+        "hasOutputParser": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        -752,
+        352
+      ],
+      "id": "b82f190e-b2dc-4f07-9f31-ad7119c853d9",
+      "name": "ConHistorial_Format"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cf7fe49b-d4ce-458a-a632-e931d9a42446",
+              "name": "Respuesta",
+              "value": "={{ $json.output.Respuesta }}",
+              "type": "string"
+            },
+            {
+              "id": "802968bc-bf0e-459c-bb4c-898edd5162fc",
+              "name": "imageUrl",
+              "value": "={{ $('Merge').item.json.imageUrl }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -352,
+        352
+      ],
+      "id": "5ea94c40-e622-4d6d-8f1d-8b9c649ed20b",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-mini"
+        },
+        "options": {
+          "temperature": 0.4
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -784,
+        512
+      ],
+      "id": "2d722019-856d-4574-852a-9e7f9627609a",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "ITcoQ5kvhH8jzKCQ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\"Respuesta\": \"California\"\n   \n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        -624,
+        512
+      ],
+      "id": "b0412bf2-5cba-4956-a2eb-09f1fa380c75",
+      "name": "Structured Output Parser2"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=SELECT producto_descripcion, imagen_url \nFROM ofertas \nWHERE bot_name = '{{ $('Webhook').item.json.body.data._botName }}' \nAND activo = true \nAND (fecha_inicio IS NULL OR fecha_inicio <= CURDATE()) \nAND (fecha_fin IS NULL OR fecha_fin >= CURDATE()) \nLIMIT 1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mysql",
+      "typeVersion": 2.4,
+      "position": [
+        -1552,
+        160
+      ],
+      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "name": "Consultar Ofertas DB",
+      "credentials": {
+        "mySql": {
+          "id": "TU_CREDENTIAL_ID",
+          "name": "MySQL account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition1",
+              "leftValue": "={{ $json.producto_descripcion }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.1,
+      "position": [
+        -1328,
+        160
+      ],
+      "id": "if-node-ofertas",
+      "name": "Oferta Encontrada?"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "33c7d9b7-6bc8-4f0c-ab29-80ce6bb8dae5",
+              "name": "Producto",
+              "value": "={{ $json.producto_descripcion }}",
+              "type": "string"
+            },
+            {
+              "id": "56398b02-15a0-4b30-b6a9-0688dcd7d1b7",
+              "name": "imageUrl",
+              "value": "={{ $json.imagen_url }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1120,
+        80
+      ],
+      "id": "set-oferta-db",
+      "name": "Preparar Oferta DB"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "default-producto",
+              "name": "Producto",
+              "value": "🚀 Tu trabajo merece calidad y rapidez. Encontrá todo lo que necesitás para refrigeración y línea blanca en: https://www.mercadolibre.com.ar/pagina/ceridono🙌 Seguinos y aprovechá *descuentos exclusivos para técnicos*.",
+              "type": "string"
+            },
+            {
+              "id": "default-imagen",
+              "name": "imageUrl",
+              "value": "mensajes\\Listas\\Campañas\\TiendaOficialMercadoLibre.jpg",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1120,
+        240
+      ],
+      "id": "set-oferta-default",
+      "name": "Oferta por Defecto"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -1056,
+        352
+      ],
+      "id": "7ce26a0b-a835-4fe8-a308-caffe53948cc",
+      "name": "Merge"
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "accept": "application/json, text/plain, */*",
+            "content-type": "application/json",
+            "authorization": "Bearer Agentesceridonon8n",
+            "user-agent": "axios/1.8.2",
+            "content-length": "591",
+            "accept-encoding": "gzip, compress, deflate, br",
+            "host": "localhost:5678",
+            "connection": "keep-alive"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "data": {
+              "_from": "5493815054923",
+              "_role": "BulkMessage",
+              "_body": "🌐 El R32 es el refrigerante del futuro, https://ceridono.ar/producto/curso-de-actualizacion-r32/\r\n\r\n\r\n\r\n\r\n\r\n",
+              "_date": "2025-08-20",
+              "_time": "12:35:58",
+              "_messageId": "",
+              "_pushName": "Repuestos Galvan",
+              "_botName": "botFranco",
+              "_etapaEmbudo": "",
+              "_interesCliente": "",
+              "_mediaType": "image",
+              "_mediaUrl": "C:\\Developer\\MariaDono\\MariaDonoJS\\MarIADono3\\mensajes\\Listas\\Imagenes\\R32.png",
+              "_mediaBuffer": null,
+              "_aiResponses": [],
+              "_mediaFilePath": null,
+              "_chatHistory": ""
+            },
+            "timestamp": "2025-08-20T12:35:58.956Z"
+          },
+          "webhookUrl": "http://localhost:5678/webhook/formattedN8nSendBulkMessages",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Consultar Ofertas DB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        []
+      ]
+    },
+    "ConHistorial_Format": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "ConHistorial_Format",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser2": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "ConHistorial_Format",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar Ofertas DB": {
+      "main": [
+        [
+          {
+            "node": "Oferta Encontrada?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Oferta Encontrada?": {
+      "main": [
+        [
+          {
+            "node": "Preparar Oferta DB",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Oferta por Defecto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar Oferta DB": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Oferta por Defecto": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "ConHistorial_Format",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "d451c6b8-6490-4038-8e2c-0951b4fe5a9d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7a45e564a0c11046766a7c454204e7a510bf179e50bcfa14a7978e4f07dcf653"
+  },
+  "id": "zgKydcGB7EUEvBLy",
+  "tags": []
+}

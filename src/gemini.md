@@ -27,6 +27,7 @@
  *   **`SqliteManager.js`**: El "Orquestador" de la base de datos SQLite. Gestiona la conexión, carga los modelos de datos (tablas) y sincroniza el esquema. Es el punto central para la capa de datos.
  *   **`DatabaseQueries.js`**: Proporciona una capa de abstracción para realizar consultas comunes a la base de datos, simplificando la interacción desde otras partes del código.
  *   **`models/`**: Directorio que contiene los "Planos" de la base de datos. Cada archivo define una tabla (modelo) usando Sequelize.
+ *   **`models/N8nMetric.js`**: Define la tabla `n8n_metrics` para almacenar métricas del webhook de n8n (userId, botName, interesCliente, etapaEmbudo, estadoHabilitacionNotificacion, consultaReformulada, confianzaReformulada, asistenteInformacion, respuestaFinal).
  *   **`Data/MarIADono3DB.sqlite`**: El archivo físico de la base de datos SQLite, la "Caja Fuerte" que contiene todos los datos.
  
  ---

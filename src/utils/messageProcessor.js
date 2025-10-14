@@ -8,42 +8,13 @@ const { isWithinRestrictedHours } = require("../utils/timeRestrictions");
 const botConfig = require("../config/botConfigManager"); // Import botConfig
 const { isAdmin, getAdmin } = require("./../utils/isAdmin");
 const HorarioManagerService = require("../services/HorarioManagerService");
+const SqliteManager = require("../database/SqliteManager");
+const DatabaseQueries = require("../database/DatabaseQueries");
 
 const TIPO_HORARIO_AUTO = 1; // Asume que el ID 1 corresponde al tipo 'Auto'
 const TIPO_HORARIO_BULK = 2; // Asume que el ID 2 corresponde al tipo 'bulk'
 
 
-/**
- * Actualiza el conversation_log.json buscando por messageId y
- * añadiendo o modificando las propiedades etapaEmbudo e interesCliente
- */
-function updateConversationLog(messageId, { etapaEmbudo, interesCliente }) {
-  const logPath = path.join(__dirname, "../../Logs/conversations_log.json");
-  try {
-    const raw = fs.readFileSync(logPath, "utf-8");
-    const conversations = JSON.parse(raw);
-    if (!Array.isArray(conversations)) {
-      console.warn("conversation_log.json no contiene un array en raíz");
-      return;
-    }
-
-    const idx = conversations.findIndex((c) => c.messageId === messageId);
-    if (idx === -1) {
-      console.warn(
-        `No se encontró mensaje con ID ${messageId} en conversations_log.json`
-      );
-      return;
-    }
-
-    conversations[idx].etapaEmbudo = etapaEmbudo;
-    conversations[idx].interesCliente = interesCliente;
-
-    fs.writeFileSync(logPath, JSON.stringify(conversations, null, 2), "utf-8");
-    //console.log(      `[INFO] conversation_log.json actualizado para messageId=${messageId}`    );
-  } catch (err) {
-    console.error("[ERROR] al actualizar conversation_log.json:", err);
-  }
-}
 
 async function processMessage(messageData, provider) {
   try {
@@ -99,67 +70,62 @@ async function processMessage(messageData, provider) {
       return;
     }
 
-    // Asigna métricas
-    messageData.etapaEmbudo =
-      webHookRespuesta.etapaEmbudo || "";
-    messageData.interesCliente =
-      webHookRespuesta.interesCliente || "";
+     messageData.etapaEmbudo = webHookRespuesta.etapaEmbudo || "";
+    messageData.interesCliente = webHookRespuesta.interesCliente || "";
 
     console.log(
       `[INFO]: ${messageData.botName} - ${messageData.from} - ` +
         `${messageData.interesCliente} - ${messageData.etapaEmbudo}`
     );
 
-    // Actualiza el log de conversación para que quede guardada esta info
-    updateConversationLog(messageData.messageId, {
+    // Actualiza el log de conversación
+    /*updateConversationLog(messageData.messageId, {
       etapaEmbudo: messageData.etapaEmbudo,
       interesCliente: messageData.interesCliente,
-    });
+    });*/
 
-    // Update user settings based on 'Dar_de_baja_Notificaciones'
-    
-    if (webHookRespuesta.estado_habilitacion_Notificacion === 0) {
-      try {
-        const userConfig = require("../config/userConfig"); // Import the user config module
-        userConfig.updateUserConfig(messageData.from, {notificationEnabled: false,});
-        //enviar mensaje a administrador, con botName y from
-        const mensaje = `El usuario ${messageData.from} ha dado de baja las notificaciones del bot ${messageData.botName}.`;
-        const adminNumber = getAdmin();
-       //explica el if: 
-        if (adminNumber) {
-          
-          const messageInfo = await provider.vendor.sendMessage(`${adminNumber}@c.us`, {
-            text: mensaje,
-          });
-        }
-      } catch (error) {
-        console.log("[ERROR]: Error updating user config:", error);
-      }
+    // NUEVO: Guardar métricas del webhook en la base de datos
+    try {
+      const metricasData = {
+        messageId: messageData.messageId,
+        respuesta: webHookRespuesta.Respuesta ?? null,
+        metricasCliente:
+          webHookRespuesta.Metricas_Cliente ??
+          null,
+        interesCliente: webHookRespuesta.interesCliente ?? null,
+
+        estadoHabilitacionNotificacion:
+          webHookRespuesta.estado_habilitacion_Notificacion == null
+            ? null
+            : Boolean(Number(webHookRespuesta.estado_habilitacion_Notificacion)),
+
+        etapaEmbudo: webHookRespuesta.etapaEmbudo ?? null,
+        consultaReformulada: webHookRespuesta.Consulta_reformulada ?? null,
+        confianzaReformulada: webHookRespuesta.Confianza_Reformulada ?? null,
+        asistenteInformacion:
+          webHookRespuesta.Asistente_Informacion ??
+          null,
+      };
+
+      await DatabaseQueries.guardarMetricasConversacion(metricasData);
+      console.log(
+        `[INFO]: Métricas guardadas en conversation_metricas para messageId=${messageData.messageId}`
+      );
+    } catch (metricasError) {
+      console.error(
+        "[ERROR]: No se pudieron guardar las métricas:",
+        metricasError
+      );
     }
 
+    // Update user settings based on 'Dar_de_baja_Notificaciones'
+    // ... existing code ...
+
     // Chequea horario restringido
-    //const varIsWithinRestrictedHours = isWithinRestrictedHours(messageData.botName,"auto");
-    const now = new Date();
-    const varIsWithinRestrictedHours = now.getHours() < 8 ? false : true;
+    // ... existing code ...
 
-    // Si no está en horario restringido, envía la respuesta
-    
-    if(!isAutoTime){
-      // Agregar emoji de robot al inicio de la respuesta
-      const respuestaConEmoji = `💬: ${webHookRespuesta.Respuesta}`;
-
-      //cambiar aqui
-      //sendChunksWithDelay(respuestaConEmoji, 0, messageData, provider);
-
-      // After sending the message, set status back to available
-      try {
-        await provider.vendor.sendPresenceUpdate("available", remoteJid);
-      } catch (presenceError) {
-        console.log(
-          "[INFO]: Could not update presence status to available:",
-          presenceError.message
-        );
-      }
+    if (!isAutoTime) {
+      // ... existing code ...
     } else {
       console.log(
         `[INFO]: ${messageData.botName} está fuera del horario restringido ` +

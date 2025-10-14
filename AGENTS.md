@@ -133,7 +133,7 @@ Web UI components for admin and monitoring.
 - **`routes/`**: Defines REST API endpoints for web UI (CRUD operations).
   - **`scheduleRoutes.js`**: Endpoints related to schedule creation, retrieval, and deletion.
 - **`public/`**: Static files served to clients.
-  - **`js/schedule-manager.js`**: Client-side logic for the schedule manager UI, making API calls to load/save data.
+  - **`schedule-manager.js`**: Client-side logic for the schedule manager UI, making API calls to load/save data.
 
 ---
 

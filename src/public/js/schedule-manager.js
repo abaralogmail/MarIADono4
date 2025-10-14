@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const dayTabsContainer = document.getElementById('dayTabs');
-    const dayContentContainer = document.getElementById('dayContent');
+    const botNameSelect = document.getElementById('botNameSelect');
+    const reloadAllBtn = document.getElementById('reloadAllBtn');
+
     const reloadSchedulesBtn = document.getElementById('reloadSchedulesBtn');
     const saveAllSchedulesBtn = document.getElementById('saveAllSchedulesBtn');
 
@@ -12,78 +13,64 @@ document.addEventListener('DOMContentLoaded', () => {
     const addExceptionBtn = document.getElementById('addExceptionBtn');
     const exceptionsTableBody = document.getElementById('exceptionsTableBody');
 
-    const daysOfWeek = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+    const daysOfWeek = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
     let allSchedules = []; // To store all fetched schedules (regular rules)
-    let activeDayIndex = 0; // Default to Monday (0)
+    let activeDayIndex = 1; // Default to Lunes (1 matching DB diaSemana)
+
+    // Cargar lista de bots en el combo
+    async function loadBots() {
+        try {
+            const res = await fetch('/api/bots');
+            const bots = await res.json();
+            botNameSelect.innerHTML = '<option value="" disabled selected>-- Elegir bot --</option>';
+            bots.forEach(b => {
+                const opt = document.createElement('option');
+                opt.value = b;
+                opt.textContent = b;
+                botNameSelect.appendChild(opt);
+            });
+        } catch (e) {
+            console.error('Error cargando bots', e);
+        }
+    }
+
+    function getSelectedBotName() {
+        const v = botNameSelect.value;
+        if (!v) {
+            alert('Selecciona un bot para continuar.');
+        }
+        return v;
+    }
 
     // --- Funciones para Horarios Regulares ---
 
     async function fetchSchedules() {
+        const botName = getSelectedBotName();
+        if (!botName) return;
         try {
-            const response = await fetch('/api/schedules');
+            const response = await fetch(`/api/schedules?botName=${encodeURIComponent(botName)}`);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             allSchedules = await response.json();
-            renderDayTabs();
-            renderDayContent(activeDayIndex);
+            displayTipoHorario();
+            renderAllDays();
         } catch (error) {
             console.error('Error fetching schedules:', error);
             alert('Error al cargar los horarios. Consulta la consola para más detalles.');
         }
     }
 
-    function renderDayTabs() {
-        dayTabsContainer.innerHTML = '';
-        daysOfWeek.forEach((day, index) => {
-            const dayTab = document.createElement('div');
-            dayTab.classList.add('day-tab');
-            if (index === activeDayIndex) {
-                dayTab.classList.add('active');
-            }
-            dayTab.dataset.dayIndex = index;
-            dayTab.innerHTML = `
-                <span>${day}</span>
-            `;
-            dayTab.addEventListener('click', () => {
-                setActiveDay(index);
-            });
-            dayTabsContainer.appendChild(dayTab);
-        });
+
+    function displayTipoHorario() {
+        const el = document.getElementById('tipoHorarioDisplay');
+        const tipos = [...new Set(allSchedules.map(s => s.tipoHorario_id))];
+        el.innerText = tipos.length === 1
+            ? `Tipo de Horario: ${tipos[0]}`
+            : `Tipos de Horario: ${tipos.join(', ')}`;
     }
 
-    function setActiveDay(index) {
-        activeDayIndex = index;
-        document.querySelectorAll('.day-tab').forEach((tab, i) => {
-            if (i === activeDayIndex) {
-                tab.classList.add('active');
-            } else {
-                tab.classList.remove('active');
-            }
-        });
-        renderDayContent(activeDayIndex);
-    }
-
-    function renderDayContent(dayIndex) {
-        dayContentContainer.innerHTML = '';
-        const daySchedules = allSchedules.filter(s => s.diaSemana === dayIndex && !s._deleted);
-
-        if (daySchedules.length > 0) {
-            daySchedules.forEach(schedule => {
-                addTimeSlot(dayIndex, schedule);
-            });
-        } else {
-            addTimeSlot(dayIndex); // Add an empty slot if no schedules for the day
-        }
-
-        const addSlotButton = document.createElement('button');
-        addSlotButton.classList.add('btn-primary', 'add-time-slot-btn-day');
-        addSlotButton.textContent = 'Añadir Horario';
-        addSlotButton.addEventListener('click', () => addTimeSlot(dayIndex));
-        dayContentContainer.appendChild(addSlotButton);
-    }
-
-    function addTimeSlot(dayIndex, schedule = { reglaId: null, horaInicio: '', horaFin: '' }) {
+    function addTimeSlot(dayIndex, schedule = { reglaId: null, horaInicio: '', horaFin: '' }, parentContainer) {
         const timeSlotEntry = document.createElement('div');
         timeSlotEntry.classList.add('time-slot-entry');
         timeSlotEntry.dataset.reglaId = schedule.reglaId; // Use reglaId for rules
@@ -99,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             ${schedule.reglaId ? '<button class="remove-time-slot-btn-day">Eliminar</button>' : ''}
         `;
-        dayContentContainer.appendChild(timeSlotEntry);
+        (parentContainer || document.getElementById('allDaysContent')).appendChild(timeSlotEntry);
 
         const removeBtn = timeSlotEntry.querySelector('.remove-time-slot-btn-day');
         if (removeBtn) {
@@ -119,6 +106,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     saveAllSchedulesBtn.addEventListener('click', async () => {
+        const botName = getSelectedBotName();
+        if (!botName) return;
+
         const currentDayRulesInUI = [];
         const timeSlotEntries = dayContentContainer.querySelectorAll('.time-slot-entry');
 
@@ -141,6 +131,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 horaFin: endTime
             });
         }
+    
+        function renderAllDays() {
+            const container = document.getElementById('allDaysContent');
+            container.innerHTML = '';
+            daysOfWeek.forEach((day, index) => {
+                const section = document.createElement('div');
+                section.classList.add('day-section');
+                section.dataset.dayIndex = index;
+                const header = document.createElement('h3');
+                header.innerText = day;
+                section.appendChild(header);
+                const content = document.createElement('div');
+                content.classList.add('day-content');
+                section.appendChild(content);
+                const daySchedules = allSchedules.filter(s => s.diaSemana === index && !s._deleted);
+                if (daySchedules.length) {
+                    daySchedules.forEach(schedule => addTimeSlot(index, schedule, content));
+                } else {
+                    addTimeSlot(index, {}, content);
+                }
+                const addBtn = document.createElement('button');
+                addBtn.classList.add('btn-primary', 'add-time-slot-btn-day');
+                addBtn.textContent = 'Añadir Horario';
+                addBtn.addEventListener('click', () => addTimeSlot(index, {}, content));
+                section.appendChild(addBtn);
+                container.appendChild(section);
+            });
+        }
 
         const originalDayRules = allSchedules.filter(s => s.diaSemana === activeDayIndex && !s._deleted);
 
@@ -161,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Create new rules
             for (const rule of rulesToCreate) {
-                await fetch('/api/schedules', {
+                await fetch(`/api/schedules?botName=${encodeURIComponent(botName)}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(rule)
@@ -186,12 +204,24 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     reloadSchedulesBtn.addEventListener('click', fetchSchedules);
+    reloadAllBtn.addEventListener('click', () => {
+        activeDayIndex = 0;
+        fetchSchedules();
+        fetchExceptions();
+    });
+    botNameSelect.addEventListener('change', () => {
+        activeDayIndex = 0;
+        fetchSchedules();
+        fetchExceptions();
+    });
 
     // --- Funciones para Manejo de Excepciones ---
 
     async function fetchExceptions() {
+        const botName = getSelectedBotName();
+        if (!botName) return;
         try {
-            const response = await fetch('/api/exceptions');
+            const response = await fetch(`/api/exceptions?botName=${encodeURIComponent(botName)}`);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -286,6 +316,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     addExceptionBtn.addEventListener('click', async () => {
+        const botName = getSelectedBotName();
+        if (!botName) return;
+
         const fechaExcepcion = exceptionDateInput.value;
         const estado = exceptionStateSelect.value;
         const horaInicio = exceptionStartTimeInput.value;
@@ -326,7 +359,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify(data)
                 });
             } else {
-                response = await fetch('/api/exceptions', {
+                response = await fetch(`/api/exceptions?botName=${encodeURIComponent(botName)}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
@@ -356,6 +389,5 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Initial load
-    fetchSchedules();
-    fetchExceptions();
+    loadBots();
 });
