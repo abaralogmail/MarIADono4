@@ -4,13 +4,13 @@
  
  ---
  
- ## 1. Punto de Entrada (`app.js`)
+ ## 1. Punto de Entrada (`../app.js`)
  
- *   **`app.js`**: Es el orquestador principal del sistema. Su responsabilidad es inicializar y ejecutar múltiples instancias de bots de WhatsApp, cada una configurada para operar en un puerto diferente.
+ *   **`../app.js`**: Es el orquestador principal del sistema. Su responsabilidad es inicializar y ejecutar múltiples instancias de bots de WhatsApp, cada una configurada para operar en un puerto diferente.
  
  ---
  
- ## 2. Configuración (`src/config/`)
+ ## 2. Configuración (`config/`)
  
  Este directorio centraliza todos los parámetros y configuraciones del sistema.
  
@@ -20,7 +20,7 @@
  
  ---
  
- ## 3. Base de Datos (`src/database/`)
+ ## 3. Base de Datos (`database/`)
 
 Contiene toda la lógica de persistencia de datos. La documentación detallada se encuentra en `DATABASE_MAINTENANCE_GUIDE.md`.
 
@@ -41,7 +41,7 @@ Contiene toda la lógica de persistencia de datos. La documentación detallada s
  
  ---
  
- ## 4. Flujos de Conversación (`src/flows/`)
+ ## 4. Flujos de Conversación (`flows/`)
  
  Aquí se define la lógica conversacional del bot.
  
@@ -52,7 +52,7 @@ Contiene toda la lógica de persistencia de datos. La documentación detallada s
  
  ---
  
- ## 5. Lógica de Negocio e IA (`src/Logica/`)
+ ## 5. Lógica de Negocio e IA (`Logica/`)
  
  Contiene la inteligencia del bot y las integraciones con servicios de IA.
  
@@ -61,7 +61,7 @@ Contiene toda la lógica de persistencia de datos. La documentación detallada s
  
  ---
  
- ## 6. Automatización (`src/n8n/workflows/`)
+ ## 6. Automatización (`n8n/workflows/`)
  
  Almacena los flujos de trabajo de n8n en formato JSON. Estos archivos definen procesos automatizados complejos que son invocados por el bot.
  
@@ -71,7 +71,7 @@ Contiene toda la lógica de persistencia de datos. La documentación detallada s
  
  ---
  
- ## 7. Servicios (`src/services/`)
+ ## 7. Servicios (`services/`)
  
  Módulos que corren en segundo plano y proveen funcionalidades clave.
  
@@ -81,7 +81,7 @@ Contiene toda la lógica de persistencia de datos. La documentación detallada s
  
  ---
  
- ## 8. Mensajería Masiva (`src/bulk/`)
+ ## 8. Mensajería Masiva (`bulk/`)
  
  Contiene toda la lógica para el envío de mensajes a gran escala.
  
@@ -91,7 +91,7 @@ Contiene toda la lógica de persistencia de datos. La documentación detallada s
  
  ---
  
- ## 9. Utilidades (`src/utils/`)
+ ## 9. Utilidades (`utils/`)
  
  Conjunto de herramientas y funciones de ayuda utilizadas en todo el proyecto.
  
@@ -102,7 +102,7 @@ Contiene toda la lógica de persistencia de datos. La documentación detallada s
  
  ---
  
- ## 10. Scripts (`src/scripts/`)
+ ## 10. Scripts (`scripts/`)
  
  Herramientas para tareas de mantenimiento y desarrollo.
  
@@ -111,7 +111,7 @@ Contiene toda la lógica de persistencia de datos. La documentación detallada s
 
 ---
 
-## 11. Interfaz Web (`src/views/`, `src/routes/` y `src/public/`)
+## 11. Interfaz Web (`views/`, `routes/` y `public/`)
 
 Esta sección cubre los componentes que construyen la interfaz de usuario web para la administración y monitoreo del sistema.
 

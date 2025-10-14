@@ -9,7 +9,7 @@ class MessageSender {
     }
 
     async enviarMensaje(messageData) {
-        const { from, body, imageUrl, audioUrl, mediaUrl, imageFile, videoUrl } = messageData;
+        const { from, body, imageUrl, audioUrl, mediaUrl, imageFile, documentUrl } = messageData;
 
         const recipient = `${from}@c.us`; // Assuming standard WhatsApp number format
 
@@ -42,17 +42,32 @@ class MessageSender {
                 console.log(`Audio URL sent to ${from}@s.whatsapp.net: ${audioUrl}`);
             }
             
-            // Envio de media
+        
+            // Envio de documento
+            if (documentUrl) {
+                messageId = await this.provider.sendFile(`${from}@s.whatsapp.net`, documentUrl);
+                console.log(`Document URL sent to ${from}@s.whatsapp.net: ${documentUrl}`);
+            }
+            
+            // Envio de media genérico
             if (mediaUrl) {
                 messageId = await this.provider.sendMedia(`${from}@s.whatsapp.net`, mediaUrl );
                 console.log(`Media URL sent to ${from}@s.whatsapp.net: ${mediaUrl}`);
             }
 
             // Nuevo bloque para enviar videos
-            if (videoUrl) {
+            /*if (videoFile) {
+                const fullVideoPath = path.resolve(videoFile);
+                if (fs.existsSync(fullVideoPath)) {
+                    messageId = await this.provider.sendVideo(`${from}@s.whatsapp.net`, fullVideoPath, "");
+                    console.log(`Video file sent to ${from}@s.whatsapp.net: ${fullVideoPath}`);
+                } else {
+                    console.error(`Video file not found: ${fullVideoPath}`);
+                }
+            } else if (videoUrl) {
                 messageId = await this.provider.sendVideo(`${from}@s.whatsapp.net`, videoUrl);
                 console.log(`Video URL sent to ${from}@s.whatsapp.net: ${videoUrl}`);
-            }
+            }*/
 
             return {
                 success: true,

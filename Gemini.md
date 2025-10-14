@@ -1,4 +1,4 @@
-# AGENTS.md - MarIADono3 WhatsApp Bot System
+# Gemini.md - MarIADono3 WhatsApp Bot System
 
 ## Commands
 - **Start bot**: `npm start` (runs linting first, then starts app.js)
@@ -133,7 +133,7 @@ Web UI components for admin and monitoring.
 - **`routes/`**: Defines REST API endpoints for web UI (CRUD operations).
   - **`scheduleRoutes.js`**: Endpoints related to schedule creation, retrieval, and deletion.
 - **`public/`**: Static files served to clients.
-  - **`schedule-manager.js`**: Client-side logic for the schedule manager UI, making API calls to load/save data.
+  - **`js/schedule-manager.js`**: Client-side logic for the schedule manager UI, making API calls to load/save data.
 
 ---
 

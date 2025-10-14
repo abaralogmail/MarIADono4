@@ -8,16 +8,58 @@ async function getDbModels() {
     return db.models;
 }
 
+// --- Utilidad: listar bots (botName) ---
+router.get('/bots', async (req, res) => {
+    try {
+        const models = await getDbModels();
+        const horarios = await models.Horarios.findAll({ attributes: ['botName'], raw: true });
+        const botNames = [...new Set(horarios.map(h => h.botName))];
+        res.json(botNames);
+    } catch (error) {
+        console.error('Error fetching bot names:', error);
+        res.status(500).json({ message: 'Error al obtener los bots', error: error.message });
+    }
+});
+
 // --- Rutas para Reglas de Horario (Schedules) ---
 
 /**
  * GET /api/schedules
- * Obtiene todas las reglas de horario.
+ * Obtiene las reglas de horario. Permite filtrar por botName via query ?botName=XXX
  */
 router.get('/schedules', async (req, res) => {
     try {
+        const { botName } = req.query;
         const models = await getDbModels();
-        const reglas = await models.ReglasHorario.findAll();
+
+        if (botName) {
+            const horarios = await models.Horarios.findAll({ where: { botName } });
+            if (!horarios || horarios.length === 0) {
+                return res.json([]);
+            }
+            const horarioIds = horarios.map(h => h.horarioId);
+            const reglasRaw = await models.ReglasHorario.findAll({
+                where: { horarioId: horarioIds },
+                include: [{ model: models.Horarios, attributes: ['tipoHorario_id'] }]
+            });
+            const reglas = reglasRaw.map(r => {
+                const obj = r.toJSON();
+                obj.tipoHorario_id = obj.Horario.tipoHorario_id;
+                delete obj.Horario;
+                return obj;
+            });
+            return res.json(reglas);
+        }
+
+        const reglasRaw = await models.ReglasHorario.findAll({
+            include: [{ model: models.Horarios, attributes: ['tipoHorario_id'] }]
+        });
+        const reglas = reglasRaw.map(r => {
+            const obj = r.toJSON();
+            obj.tipoHorario_id = obj.Horario.tipoHorario_id;
+            delete obj.Horario;
+            return obj;
+        });
         res.json(reglas);
     } catch (error) {
         console.error('Error fetching schedule rules:', error);
@@ -28,25 +70,29 @@ router.get('/schedules', async (req, res) => {
 /**
  * POST /api/schedules
  * Crea una nueva regla de horario.
- * Asocia a un horario por defecto si no se especifica uno.
+ * Asocia a un horario por defecto o por botName si se especifica.
  */
 router.post('/schedules', async (req, res) => {
     try {
-        const { dayOfWeek, horaInicio, horaFin, activo } = req.body;
+        // Aceptar tanto dayOfWeek como diaSemana
+        const { dayOfWeek, diaSemana, horaInicio, horaFin, activo } = req.body;
+        const bodyBotName = req.body.botName || req.query.botName;
+        const day = dayOfWeek !== undefined ? dayOfWeek : diaSemana;
 
-        if (dayOfWeek === undefined || !horaInicio || !horaFin) {
-            return res.status(400).json({ message: 'dayOfWeek, horaInicio y horaFin son requeridos.' });
+        if (day === undefined || !horaInicio || !horaFin) {
+            return res.status(400).json({ message: 'dayOfWeek/diaSemana, horaInicio y horaFin son requeridos.' });
         }
 
         const models = await getDbModels();
 
-        // Buscar o crear un horario por defecto para asociar la regla
-        let defaultHorario = await models.Horarios.findOne({ where: { nombre: 'Default Bot Schedule' } });
-        if (!defaultHorario) {
-            defaultHorario = await models.Horarios.create({
-                nombre: 'Default Bot Schedule',
+        // Buscar o crear un horario para el bot indicado (o default)
+        const targetBotName = bodyBotName || 'default_bot';
+        let horario = await models.Horarios.findOne({ where: { botName: targetBotName } });
+        if (!horario) {
+            horario = await models.Horarios.create({
+                nombre: `${targetBotName} Default Schedule`,
                 descripcion: 'Horario por defecto para reglas individuales',
-                botName: 'default_bot',
+                botName: targetBotName,
                 tipoHorario_id: '1',
                 zonaHoraria: 'America/Argentina/Buenos_Aires',
                 activo: true,
@@ -54,8 +100,8 @@ router.post('/schedules', async (req, res) => {
         }
 
         const newRule = await models.ReglasHorario.create({
-            horarioId: defaultHorario.horarioId,
-            diaSemana: dayOfWeek,
+            horarioId: horario.horarioId,
+            diaSemana: day,
             horaInicio,
             horaFin,
             activo: activo !== undefined ? activo : true,
@@ -75,7 +121,8 @@ router.post('/schedules', async (req, res) => {
 router.put('/schedules/:id', async (req, res) => {
     try {
         const { id } = req.params; // id es reglaId
-        const { dayOfWeek, horaInicio, horaFin, activo } = req.body;
+        const { dayOfWeek, diaSemana, horaInicio, horaFin, activo } = req.body;
+        const day = dayOfWeek !== undefined ? dayOfWeek : diaSemana;
 
         const models = await getDbModels();
 
@@ -85,10 +132,10 @@ router.put('/schedules/:id', async (req, res) => {
         }
 
         await rule.update({
-            diaSemana: dayOfWeek,
-            horaInicio,
-            horaFin,
-            activo,
+            diaSemana: day !== undefined ? day : rule.diaSemana,
+            horaInicio: horaInicio !== undefined ? horaInicio : rule.horaInicio,
+            horaFin: horaFin !== undefined ? horaFin : rule.horaFin,
+            activo: activo !== undefined ? activo : rule.activo,
         });
 
         res.status(200).json(rule);
@@ -125,11 +172,23 @@ router.delete('/schedules/:id', async (req, res) => {
 
 /**
  * GET /api/exceptions
- * Obtiene todas las excepciones de horario.
+ * Obtiene las excepciones de horario. Permite filtrar por botName via query ?botName=XXX
  */
 router.get('/exceptions', async (req, res) => {
     try {
+        const { botName } = req.query;
         const models = await getDbModels();
+
+        if (botName) {
+            const horarios = await models.Horarios.findAll({ where: { botName } });
+            if (!horarios || horarios.length === 0) {
+                return res.json([]);
+            }
+            const horarioIds = horarios.map(h => h.horarioId);
+            const excepciones = await models.ExcepcionesHorario.findAll({ where: { horarioId: horarioIds } });
+            return res.json(excepciones);
+        }
+
         const excepciones = await models.ExcepcionesHorario.findAll();
         res.json(excepciones);
     } catch (error) {
@@ -145,6 +204,7 @@ router.get('/exceptions', async (req, res) => {
 router.post('/exceptions', async (req, res) => {
     try {
         const { fechaExcepcion, estado, horaInicio, horaFin, descripcion } = req.body;
+        const bodyBotName = req.body.botName || req.query.botName;
 
         if (!fechaExcepcion || !estado) {
             return res.status(400).json({ message: 'fechaExcepcion y estado son requeridos.' });
@@ -152,13 +212,14 @@ router.post('/exceptions', async (req, res) => {
 
         const models = await getDbModels();
 
-        // Buscar o crear un horario por defecto para asociar la excepción
-        let defaultHorario = await models.Horarios.findOne({ where: { nombre: 'Default Bot Schedule' } });
-        if (!defaultHorario) {
-            defaultHorario = await models.Horarios.create({
-                nombre: 'Default Bot Schedule',
+        // Buscar o crear un horario para el bot indicado (o default) para asociar la excepción
+        const targetBotName = bodyBotName || 'default_bot';
+        let horario = await models.Horarios.findOne({ where: { botName: targetBotName } });
+        if (!horario) {
+            horario = await models.Horarios.create({
+                nombre: `${targetBotName} Default Schedule`,
                 descripcion: 'Horario por defecto para excepciones individuales',
-                botName: 'default_bot',
+                botName: targetBotName,
                 tipoHorario_id: '1',
                 zonaHoraria: 'America/Argentina/Buenos_Aires',
                 activo: true,
@@ -166,7 +227,7 @@ router.post('/exceptions', async (req, res) => {
         }
 
         const newException = await models.ExcepcionesHorario.create({
-            horarioId: defaultHorario.horarioId,
+            horarioId: horario.horarioId,
             fechaExcepcion,
             estado,
             horaInicio: estado === 'horario_personalizado' ? horaInicio : null,

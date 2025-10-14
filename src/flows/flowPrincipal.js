@@ -146,10 +146,10 @@ const flowPrincipal = addKeyword(EVENTS.WELCOME).addAction(
       console.log("Processing message for user:", userId);
       
       } else {
-        console.log(
+        /*console.log(
       
           `Auto-respuestas deshabilitadas o fuera del horario laboral para ${botName}. Saltando el procesamiento del mensaje para el usuario ${userId}.`
-        );
+        );*/
         // Optionally, send a message indicating the bot is offline or busy
         // await flowDynamic('Actualmente no estoy disponible para responder. Por favor, inténtalo más tarde.');
       }

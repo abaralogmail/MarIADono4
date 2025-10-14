@@ -30,3 +30,5 @@ config/config.json
 *.rar
 *.zip
 *.tar.gz
+
+src/FixUp/BMAD-METHOD-main

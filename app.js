@@ -130,7 +130,7 @@ const BotConsultasWeb = async () => {
 }
 
 const BotRamiro = async () => {
-    const BotName = 'BotRamiro()'
+    const BotName = 'BotRamiro'
     const adapterDB = new JsonFileAdapter()
     const adapterFlow = createFlow([flowEnviarMensaje, flowTest, flowMedia, flowVoice, flowDesactivar, flowActivar, flowAsistente, updateVectorStoreFlow, flowPrincipal, flowEnviarDeudas])
     const adapterProvider = createProvider(BaileysProvider, { name: BotName })

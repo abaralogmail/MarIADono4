@@ -14,6 +14,7 @@ const UsuariosModel = require("./models/Usuarios");
 const HorariosModel = require("./models/Horarios");
 const ReglasHorarioModel = require("./models/ReglasHorario");
 const ExcepcionesHorarioModel = require("./models/ExcepcionesHorario");
+const N8nMetricModel = require("./models/N8nMetric");
 
 class SqliteManager {
   static instance = null;
@@ -94,6 +95,7 @@ class SqliteManager {
   async defineModels() {
     this.models.ConversationsLog = ConversationsLogModel(this.sequelize, DataTypes);
     this.models.ConversationMetricas = ConversationMetricasModel(this.sequelize, DataTypes);
+    this.models.N8nMetric = N8nMetricModel(this.sequelize, DataTypes);
     this.models.MensajeEstados = MensajeEstadosModel(this.sequelize, DataTypes);
     this.models.CtxLogs = CtxLogsModel(this.sequelize, DataTypes);
     this.models.ProviderLogs = ProviderLogsModel(this.sequelize, DataTypes);
@@ -210,6 +212,10 @@ class SqliteManager {
 
   async saveMetricas(metricasData) {
     return await this.models.ConversationMetricas.create(metricasData);
+  }
+
+  async saveN8nMetric(metricData) {
+    return await this.models.N8nMetric.create(metricData);
   }
 
   async saveEstadoMensaje(estadoData) {
@@ -370,7 +376,7 @@ class SqliteManager {
     }
 
     try {
-      const [results, metadata] = await this.sequelize.query(sql, {
+      const results = await this.sequelize.query(sql, {
         type: Sequelize.QueryTypes.SELECT,
         ...options,
       });
@@ -446,20 +452,20 @@ class SqliteManager {
 }
 
   async verificarDisponibilidad(tipo_horario_id, botName, fechaHora = new Date()) {
-  console.debug(`[verificarDisponibilidad] 🕵️  Checking for: tipo_horario_id=${tipo_horario_id} botName="${botName}" at ${fechaHora}`);
+  //console.debug(`[verificarDisponibilidad] 🕵️  Checking for: tipo_horario_id=${tipo_horario_id} botName="${botName}" at ${fechaHora}`);
 
   const horario = await this.obtenerHorarioCompleto(tipo_horario_id, botName);
   if (!horario) {
-    console.debug(`[verificarDisponibilidad] ❌ No active schedule found for tipo_horario_id=${tipo_horario_id} botName="${botName}". Returning false.`);
+    //console.debug(`[verificarDisponibilidad] ❌ No active schedule found for tipo_horario_id=${tipo_horario_id} botName="${botName}". Returning false.`);
     return false;
   }
-  console.debug(`[verificarDisponibilidad] ✅ Found schedule: "${horario.nombre}" (ID: ${horario.horarioId})`);
+  //console.debug(`[verificarDisponibilidad] ✅ Found schedule: "${horario.nombre}" (ID: ${horario.horarioId})`);
 
   const fecha = new Date(fechaHora);
   const diaSemana = fecha.getDay();
   const hora = fecha.toTimeString().slice(0, 8);
   const fechaString = fecha.toISOString().slice(0, 10);
-  console.debug(`[verificarDisponibilidad] 🕒 Current check time: Day=${diaSemana}, Time=${hora}, Date=${fechaString}`);
+  //console.debug(`[verificarDisponibilidad] 🕒 Current check time: Day=${diaSemana}, Time=${hora}, Date=${fechaString}`);
 
   // Verificar excepciones primero
   const excepcion = horario.excepciones?.find(e => 
@@ -482,17 +488,17 @@ class SqliteManager {
   // Verificar reglas normales
   const reglasDia = horario.reglas?.filter(r => r.diaSemana === diaSemana);
   if (!reglasDia || reglasDia.length === 0) {
-    console.debug(`[verificarDisponibilidad]  नियम No rules found for day of week ${diaSemana} in schedule ID ${horario.horarioId}. Returning false.`);
+    //console.debug(`[verificarDisponibilidad]  नियम No rules found for day of week ${diaSemana} in schedule ID ${horario.horarioId}. Returning false.`);
     return false;
   }
 
   const reglaCoincidente = reglasDia.find(regla => hora >= regla.horaInicio && hora <= regla.horaFin);
 
   if (reglaCoincidente) {
-    console.debug(`[verificarDisponibilidad]  नियम Rule match found (ID: ${reglaCoincidente.reglaId}) from ${reglaCoincidente.horaInicio} to ${reglaCoincidente.horaFin}. Current time ${hora} is AVAILABLE. Returning true.`);
+    //console.debug(`[verificarDisponibilidad]  नियम Rule match found (ID: ${reglaCoincidente.reglaId}) from ${reglaCoincidente.horaInicio} to ${reglaCoincidente.horaFin}. Current time ${hora} is AVAILABLE. Returning true.`);
     return true;
   } else {
-    console.debug(`[verificarDisponibilidad]  नियम No matching rule for current time ${hora}. Day rules are: ${reglasDia.map(r => `(ID: ${r.reglaId}) ${r.horaInicio}-${r.horaFin}`).join(', ')}. Returning false.`);
+    //console.debug(`[verificarDisponibilidad]  नियम No matching rule for current time ${hora}. Day rules are: ${reglasDia.map(r => `(ID: ${r.reglaId}) ${r.horaInicio}-${r.horaFin}`).join(', ')}. Returning false.`);
     return false;
   }
 }
