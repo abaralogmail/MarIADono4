@@ -167,6 +167,6 @@ async function logMessage(messageData) {
   // Mostrar el messageData formateado en una sola línea
   logFormattedMessageData(messageData);
 
-  console.log(`📝 Mensaje loggueado correcatamente: ${messageData.from}`);
+  console.log(`📝 Mensaje loggueado correctamente: ${messageData.from}`);
 }
 module.exports = { logMessage };

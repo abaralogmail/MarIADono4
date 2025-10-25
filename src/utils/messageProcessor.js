@@ -136,8 +136,25 @@ async function processMessage(messageData, provider) {
     // Chequea horario restringido
     // ... existing code ...
 
-    if (!isAutoTime) {
-      // ... existing code ...
+      if(!isAutoTime){
+      // Agregar emoji de robot al inicio de la respuesta
+      const respuestaConEmoji = `💬: ${webHookRespuesta.Respuesta}`;
+
+      //cambiar aqui
+
+      if(provider.globalVendorArgs.name=="BotAugustoTucuman")
+        {      
+          sendChunksWithDelay(respuestaConEmoji, 0, messageData, provider);
+        }
+      // After sending the message, set status back to available
+      try {
+        await provider.vendor.sendPresenceUpdate("available", remoteJid);
+      } catch (presenceError) {
+        console.log(
+          "[INFO]: Could not update presence status to available:",
+          presenceError.message
+        );
+      }
     } else {
       console.log(
         `[INFO]: ${messageData.botName} está fuera del horario restringido ` +

@@ -44,7 +44,7 @@ class SqliteManager {
     // SQLite database path
     this.databasePath =
       process.env.SQLITE_DB_PATH ||
-      path.join(process.cwd(), "../database/Data/MarIADono3DB.sqlite");
+      path.join(process.cwd(), "Data/MarIADono3DB.sqlite");
   }
 
   async initialize() {
