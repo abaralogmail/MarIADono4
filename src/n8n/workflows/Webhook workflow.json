@@ -89,12 +89,48 @@
     },
     {
       "parameters": {
+        "resource": "assistant",
+        "assistantId": {
+          "__rl": true,
+          "value": "asst_CursoOnlineID",
+          "mode": "list",
+          "cachedResultName": "CursoOnline MariaDono Assistant"
+        },
+        "prompt": "define",
+        "text": "=Eres un asistente especializado en los cursos **online** de Ceridono. Tu función es responder consultas sobre cursos online, inscripciones, acceso a plataformas virtuales, fechas de inicio, modalidad online, links de registro y soporte técnico de cursos online, basándote únicamente en los documentos proporcionados.\n\n## INSTRUCCIONES PRINCIPALES:\n\n- Responde SOLO con información contenida en los documentos proporcionados.\n- Si no encuentras información específica en los documentos, indica claramente que no tienes esa información disponible.\n- Cita o referencia el documento específico cuando sea posible.\n- Incluye siempre el link de registro online: https://www.ceridono.ar/tienda/?id=ZGhkcQ%3D%3D\n- Si la consulta es sobre acceso, soporte o problemas técnicos, ofrece pasos básicos de solución y el contacto de soporte.\n\n### Ejemplo de respuesta:\n\"El curso online de Instalador Split Inverter está disponible para inscripción inmediata. Puedes acceder al curso y registrarte aquí: https://www.ceridono.ar/tienda/?id=ZGhkcQ%3D%3D. Si tienes problemas de acceso, por favor contacta a soporte@ceridono.ar\"\n\nconversación: {{ $('Webhook').item.json.body.data._chatHistory }}\n\nconsulta reformulada: {{ $('Switch').item.json.output['Consulta reformulada'] }}\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.7,
+      "position": [
+        -48,
+        -80
+      ],
+      "id": "cursoonline-node-uuid-001",
+      "name": "CursoOnline MariaDono Assistant",
+      "credentials": {
+        "openAiApi": {
+          "id": "ITcoQ5kvhH8jzKCQ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
         "inputText": "= {{ $json.output.interesCliente }}",
         "categories": {
           "categories": [
             {
               "category": "cursos",
               "description": "Consultas relacionadas con capacitaciones, programas educativos, seminarios o talleres.  Ejemplos:  \"Quiero información sobre los cursos de refrigeración\" \"¿Cuándo inicia el próximo?\""
+            },
+            {
+              "category": "curso_online",
+              "description": "Consultas sobre cursos online, inscripciones, acceso a plataformas virtuales, fechas de inicio, modalidad online, links de registro, soporte técnico de cursos online. Ejemplo: \"¿Cómo me inscribo al curso online?\", \"¿Cuándo empieza el curso online de Split Inverter?\""
+            },
+            {
+              "category": "curso_online",
+              "description": "Consultas sobre cursos online, inscripciones, acceso a plataformas virtuales, fechas de inicio, modalidad online, links de registro, soporte técnico de cursos online. Ejemplo: \"¿Cómo me inscribo al curso online?\", \"¿Cuándo empieza el curso online de Split Inverter?\""
             },
             {
               "category": "Productos",
@@ -201,7 +237,7 @@
             {
               "id": "4995634b-6cf3-4300-83ee-5dcee5523e82",
               "name": "asistente_Informacion",
-              "value": "={{ \n  $('Sucursal MariaDono Assistant').isExecuted ? $('Sucursal MariaDono Assistant').item?.json?.output :\n  $('Cursos MariaDono Assistant').isExecuted ? $('Cursos MariaDono Assistant').item?.json?.output :\n  $('Procedimientos MariaDono Assistant').isExecuted ? $('Procedimientos MariaDono Assistant').item?.json?.output :\n$('Productos_MariaDono_Assistant').isExecuted ? $('Productos_MariaDono_Assistant').item?.json?.output :\n$('Saludos').isExecuted ? $('Saludos').item?.json?.output :\n  \"No hay respuesta disponible\"\n}}",
+              "value": "={{ \n  $('Sucursal MariaDono Assistant').isExecuted ? $('Sucursal MariaDono Assistant').item?.json?.output :\n  $('Cursos MariaDono Assistant').isExecuted ? $('Cursos MariaDono Assistant').item?.json?.output :\n  $('CursoOnline MariaDono Assistant').isExecuted ? $('CursoOnline MariaDono Assistant').item?.json?.output :\n  $('Procedimientos MariaDono Assistant').isExecuted ? $('Procedimientos MariaDono Assistant').item?.json?.output :\n$('Productos_MariaDono_Assistant').isExecuted ? $('Productos_MariaDono_Assistant').item?.json?.output :\n$('Saludos').isExecuted ? $('Saludos').item?.json?.output :\n  \"No hay respuesta disponible\"\n}}",
               "type": "string"
             },
             {
@@ -1283,6 +1319,13 @@
         [
           {
             "node": "Cursos MariaDono Assistant",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CursoOnline MariaDono Assistant",
             "type": "main",
             "index": 0
           }
