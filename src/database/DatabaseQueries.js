@@ -4,8 +4,10 @@ const { QueryTypes } = require("sequelize");
 
 class DatabaseQueries {
   static async mensajesBulkEnviadosHoy() {
-    const sql = 'SELECT * FROM conversations_log WHERE id = 6366 or id = 6378 OR id = 17189 LIMIT 3';
+    const today = new Date();
+    const providerBotName= 'BotAugustoTucuman'
 
+    const sql = 'SELECT * FROM conversations_log WHERE (id = 6366 OR id = 6378 OR id = 17189) AND botname= :providerBotName LIMIT 3';
 
     try {
       const sqliteDb = await SqliteManager.getInstance();
