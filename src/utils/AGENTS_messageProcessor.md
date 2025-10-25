@@ -1,0 +1,1 @@
+desglozar en funciones para que [[messageProcessor.js]] quede limpia

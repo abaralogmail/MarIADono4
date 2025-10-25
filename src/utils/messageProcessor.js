@@ -14,25 +14,66 @@ const DatabaseQueries = require("../database/DatabaseQueries");
 const TIPO_HORARIO_AUTO = 1; // Asume que el ID 1 corresponde al tipo 'Auto'
 const TIPO_HORARIO_BULK = 2; // Asume que el ID 2 corresponde al tipo 'bulk'
 
+// Descomposición en helpers con nombres en español
 
+function construirRemoteJid(desde) {
+  return `${desde}@c.us`;
+}
+
+async function actualizarPresenciaComponiendo(proveedor, remoteJid) {
+  try {
+    await proveedor.vendor.sendPresenceUpdate("composing", remoteJid);
+  } catch (presenceError) {
+    console.log("[INFO]: No se pudo actualizar la presencia a composing:", presenceError.message);
+  }
+}
+
+async function enviarWebhookN8n(messageData) {
+  const webhook = new N8nWebhookListener("http://localhost:5678/webhook/Webhook");
+  return await webhook.sendWebhook(messageData);
+}
+
+function asignarEmbudoInteres(messageData, webHookRespuesta) {
+  messageData.etapaEmbudo = webHookRespuesta?.etapaEmbudo || "";
+  messageData.interesCliente = webHookRespuesta?.interesCliente ?? "";
+}
+
+async function guardarMetricasDesdeWebhook(messageData, webHookRespuesta) {
+  const metricasData = {
+    messageId: messageData.messageId,
+    respuesta: webHookRespuesta?.Respuesta ?? null,
+    metricasCliente: webHookRespuesta?.Metricas_Cliente ?? null,
+    interesCliente: webHookRespuesta?.interesCliente ?? null,
+    estadoHabilitacionNotificacion:
+      webHookRespuesta?.estado_habilitacion_Notificacion == null
+        ? null
+        : Boolean(Number(webHookRespuesta.estado_habilitacion_Notificacion)),
+    etapaEmbudo: webHookRespuesta?.etapaEmbudo ?? null,
+    consultaReformulada: webHookRespuesta?.Consulta_reformulada ?? null,
+    confianzaReformulada: webHookRespuesta?.Confianza_Reformulada ?? null,
+    asistenteInformacion: webHookRespuesta?.Asistente_Informacion ?? null,
+  };
+
+  await DatabaseQueries.guardarMetricasConversacion(metricasData);
+  console.log(
+    `[INFO]: Métricas guardadas en conversation_metricas para messageId=${messageData.messageId}`
+  );
+}
 
 async function processMessage(messageData, provider) {
   try {
-    //await provider.sendPresenceUpdate('composing', messageData.from); // Actualiza la presencia al inicio
-    //remotejid
+    const remoteJid = construirRemoteJid(messageData.from);
 
-    //await provider.sendPresenceUpdate(messageData.ctx.key.remoteJid, 'available'); // Cambia a "available" después de enviar el mensaje
     const horarioService = new HorarioManagerService();
+    const isAutoTime = await horarioService.verificarHorarioBot(
+      TIPO_HORARIO_AUTO,
+      messageData.botName,
+      new Date()
+    );
+    console.log("isAutoTime: ", isAutoTime);
 
-    const remoteJid = `${messageData.from}@c.us`;
-      const isAutoTime = await horarioService.verificarHorarioBot(TIPO_HORARIO_AUTO, messageData.botName , new Date());
-      console.log("isAutoTime: ", isAutoTime);
-  
-      //if (!isWithinRestrictedHours(messageData.botName, "auto")) {
-      if(!isAutoTime){
-   
+    if (!isAutoTime) {
       try {
-        // Set status to "composing" before processing the message
         await provider.vendor.sendPresenceUpdate("composing", remoteJid);
       } catch (presenceError) {
         console.log(
@@ -45,18 +86,14 @@ async function processMessage(messageData, provider) {
     messageData.role = "Outgoing";
     messageData.pushName = "Assistant";
 
-    // Inicializa listener n8n
-    const n8nWebhook = new N8nWebhookListener(
-      "http://localhost:5678/webhook/Webhook"
-      
-    );
-    const webHookRespuesta = await n8nWebhook.sendWebhook(messageData);
+    const webHookRespuesta = await enviarWebhookN8n(messageData);
 
     // Si la respuesta está vacía, no hacemos nada
-    if (!webHookRespuesta?.Respuesta || 
-    webHookRespuesta.Respuesta === "SinRespuesta" || 
-    webHookRespuesta.Respuesta === "") {
-    
+    if (
+      !webHookRespuesta?.Respuesta ||
+      webHookRespuesta.Respuesta === "SinRespuesta" ||
+      webHookRespuesta.Respuesta === ""
+    ) {
       // After sending the message, set status back to available
       try {
         await provider.vendor.sendPresenceUpdate("available", remoteJid);
@@ -70,8 +107,7 @@ async function processMessage(messageData, provider) {
       return;
     }
 
-     messageData.etapaEmbudo = webHookRespuesta.etapaEmbudo || "";
-    messageData.interesCliente = webHookRespuesta.interesCliente || "";
+    asignarEmbudoInteres(messageData, webHookRespuesta);
 
     console.log(
       `[INFO]: ${messageData.botName} - ${messageData.from} - ` +
@@ -86,36 +122,12 @@ async function processMessage(messageData, provider) {
 
     // NUEVO: Guardar métricas del webhook en la base de datos
     try {
-      const metricasData = {
-        messageId: messageData.messageId,
-        respuesta: webHookRespuesta.Respuesta ?? null,
-        metricasCliente:
-          webHookRespuesta.Metricas_Cliente ??
-          null,
-        interesCliente: webHookRespuesta.interesCliente ?? null,
-
-        estadoHabilitacionNotificacion:
-          webHookRespuesta.estado_habilitacion_Notificacion == null
-            ? null
-            : Boolean(Number(webHookRespuesta.estado_habilitacion_Notificacion)),
-
-        etapaEmbudo: webHookRespuesta.etapaEmbudo ?? null,
-        consultaReformulada: webHookRespuesta.Consulta_reformulada ?? null,
-        confianzaReformulada: webHookRespuesta.Confianza_Reformulada ?? null,
-        asistenteInformacion:
-          webHookRespuesta.Asistente_Informacion ??
-          null,
-      };
-
-      await DatabaseQueries.guardarMetricasConversacion(metricasData);
+      await guardarMetricasDesdeWebhook(messageData, webHookRespuesta);
       console.log(
         `[INFO]: Métricas guardadas en conversation_metricas para messageId=${messageData.messageId}`
       );
     } catch (metricasError) {
-      console.error(
-        "[ERROR]: No se pudieron guardar las métricas:",
-        metricasError
-      );
+      console.error("[ERROR]: No se pudieron guardar las métricas:", metricasError);
     }
 
     // Update user settings based on 'Dar_de_baja_Notificaciones'

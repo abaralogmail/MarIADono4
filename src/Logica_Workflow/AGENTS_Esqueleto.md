@@ -1,0 +1,1 @@
+implementa solo el esqueleto, crear archivos con Logica_workflowManager.js, nombres en español de funciones, parametros y variables.
