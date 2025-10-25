@@ -14,6 +14,7 @@ const UsuariosModel = require("./models/Usuarios");
 const HorariosModel = require("./models/Horarios");
 const ReglasHorarioModel = require("./models/ReglasHorario");
 const ExcepcionesHorarioModel = require("./models/ExcepcionesHorario");
+const N8nMetricModel = require("./models/N8nMetric");
 
 class SqliteManager {
   static instance = null;
@@ -94,6 +95,7 @@ class SqliteManager {
   async defineModels() {
     this.models.ConversationsLog = ConversationsLogModel(this.sequelize, DataTypes);
     this.models.ConversationMetricas = ConversationMetricasModel(this.sequelize, DataTypes);
+    this.models.N8nMetric = N8nMetricModel(this.sequelize, DataTypes);
     this.models.MensajeEstados = MensajeEstadosModel(this.sequelize, DataTypes);
     this.models.CtxLogs = CtxLogsModel(this.sequelize, DataTypes);
     this.models.ProviderLogs = ProviderLogsModel(this.sequelize, DataTypes);
@@ -210,6 +212,10 @@ class SqliteManager {
 
   async saveMetricas(metricasData) {
     return await this.models.ConversationMetricas.create(metricasData);
+  }
+
+  async saveN8nMetric(metricData) {
+    return await this.models.N8nMetric.create(metricData);
   }
 
   async saveEstadoMensaje(estadoData) {
@@ -370,7 +376,7 @@ class SqliteManager {
     }
 
     try {
-      const [results, metadata] = await this.sequelize.query(sql, {
+      const results = await this.sequelize.query(sql, {
         type: Sequelize.QueryTypes.SELECT,
         ...options,
       });

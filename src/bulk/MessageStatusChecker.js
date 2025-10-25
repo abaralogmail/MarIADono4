@@ -8,8 +8,8 @@ class MessageStatusChecker {
   // Verificar estado de un mensaje específico
   async checkMessageStatus({ messageid, remoteJid }) {
     try {
-      const messages = this.provider.store.messages;
-      const userMessages = messages[remoteJid].array || [];
+      const messages = this.provider.store.messages || {};
+      const userMessages = messages[remoteJid]?.array ?? [];
       /*
       for (let i = 0; i < userMessages.length; i++) {
         const message = userMessages[i];
@@ -65,7 +65,7 @@ class MessageStatusChecker {
           return {
             id: message.id,
             status: status ?? message.status,
-            timestamp: message.timestamp,
+            timestamp: `${message.date}T${message.time}`,
             from: message.from,
             to: message.to,
             body: message.body,
@@ -73,7 +73,13 @@ class MessageStatusChecker {
         })
       );
 
-      return messageStatuses;
+  // Filtrar solo aquellos estados que no son nulos
+      const messageStatusesNonNull = messageStatuses.filter(msg => msg.status && msg.status.status !== null);
+     // const messageStatusesIsInteger = messageStatuses.filter(msg => Number.isInteger(msg.status));
+      //console.log("Filtered message statuses (non-null):", messageStatusesIsInteger);
+      // messageStatuses.filter(message => message.status !== null);
+      return messageStatusesNonNull;
+
     } catch (error) {
       console.error("Error getting all message statuses:", error);
       return [];
