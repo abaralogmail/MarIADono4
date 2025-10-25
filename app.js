@@ -224,18 +224,18 @@ const BotSaltaMostrador = async () => {
 
 
 main()
-BotCursosSalta()  //BotName: bot - tel: 3875218575
+//BotCursosSalta()  //BotName: bot - tel: 3875218575
 //BotOfertasTucuman() // BotName:BotOfertasTucuman - tablet July - tel: 381363-8101
 //BotAdministracionSalta()
 BotAugustoTucuman() // BotName: BotAugustoTucuman - tel: 381248-8449
-BotConsultasWeb()// BotName: BotConsultasWeb - tel: 381590-8557
+/*BotConsultasWeb()// BotName: BotConsultasWeb - tel: 381590-8557
 BotRamiro() // BotName: BotRamiro() - tel: 387225-5083
 BotJujuy() // BotName: BotJujuy - tel: 388571-2603
 BotRoly() // BotName: BotRoly - tel: 5493813690061
 BotFranco() // BotName: BotFranco - tel: 
 BotMetan() // BotName: BotMetan - tel: +549387 6621962
 BotSaltaMostrador() // BotName: BotSaltaMostrador - tel: +54 9 387 521-8221
-
+*/
 
 process.on('message', async (msg) => {
   if (msg === 'shutdown') {
