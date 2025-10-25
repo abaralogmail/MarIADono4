@@ -10,8 +10,8 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
       "position": [
-        1648,
-        144
+        1640,
+        140
       ]
     },
     {
@@ -26,7 +26,7 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
       "position": [
-        -2224,
+        -2220,
         560
       ],
       "webhookId": "87eec5d3-23b6-4439-bbce-a30256e984ab"
@@ -47,8 +47,8 @@
       "type": "@n8n/n8n-nodes-langchain.openAi",
       "typeVersion": 1.7,
       "position": [
-        -64,
-        432
+        -60,
+        420
       ],
       "id": "a714c81c-fbaa-42f3-b168-723180a52d13",
       "name": "Sucursal MariaDono Assistant",
@@ -75,39 +75,11 @@
       "type": "@n8n/n8n-nodes-langchain.openAi",
       "typeVersion": 1.7,
       "position": [
-        -48,
-        -16
+        -40,
+        -20
       ],
       "id": "0aa86f2d-27af-4be7-833a-a2dd1a8eb0ab",
       "name": "Cursos MariaDono Assistant",
-      "credentials": {
-        "openAiApi": {
-          "id": "ITcoQ5kvhH8jzKCQ",
-          "name": "OpenAi account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "resource": "assistant",
-        "assistantId": {
-          "__rl": true,
-          "value": "asst_CursoOnlineID",
-          "mode": "list",
-          "cachedResultName": "CursoOnline MariaDono Assistant"
-        },
-        "prompt": "define",
-        "text": "=Eres un asistente especializado en los cursos **online** de Ceridono. Tu función es responder consultas sobre cursos online, inscripciones, acceso a plataformas virtuales, fechas de inicio, modalidad online, links de registro y soporte técnico de cursos online, basándote únicamente en los documentos proporcionados.\n\n## INSTRUCCIONES PRINCIPALES:\n\n- Responde SOLO con información contenida en los documentos proporcionados.\n- Si no encuentras información específica en los documentos, indica claramente que no tienes esa información disponible.\n- Cita o referencia el documento específico cuando sea posible.\n- Incluye siempre el link de registro online: https://www.ceridono.ar/tienda/?id=ZGhkcQ%3D%3D\n- Si la consulta es sobre acceso, soporte o problemas técnicos, ofrece pasos básicos de solución y el contacto de soporte.\n\n### Ejemplo de respuesta:\n\"El curso online de Instalador Split Inverter está disponible para inscripción inmediata. Puedes acceder al curso y registrarte aquí: https://www.ceridono.ar/tienda/?id=ZGhkcQ%3D%3D. Si tienes problemas de acceso, por favor contacta a soporte@ceridono.ar\"\n\nconversación: {{ $('Webhook').item.json.body.data._chatHistory }}\n\nconsulta reformulada: {{ $('Switch').item.json.output['Consulta reformulada'] }}\n",
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.openAi",
-      "typeVersion": 1.7,
-      "position": [
-        -48,
-        -80
-      ],
-      "id": "cursoonline-node-uuid-001",
-      "name": "CursoOnline MariaDono Assistant",
       "credentials": {
         "openAiApi": {
           "id": "ITcoQ5kvhH8jzKCQ",
@@ -123,14 +95,6 @@
             {
               "category": "cursos",
               "description": "Consultas relacionadas con capacitaciones, programas educativos, seminarios o talleres.  Ejemplos:  \"Quiero información sobre los cursos de refrigeración\" \"¿Cuándo inicia el próximo?\""
-            },
-            {
-              "category": "curso_online",
-              "description": "Consultas sobre cursos online, inscripciones, acceso a plataformas virtuales, fechas de inicio, modalidad online, links de registro, soporte técnico de cursos online. Ejemplo: \"¿Cómo me inscribo al curso online?\", \"¿Cuándo empieza el curso online de Split Inverter?\""
-            },
-            {
-              "category": "curso_online",
-              "description": "Consultas sobre cursos online, inscripciones, acceso a plataformas virtuales, fechas de inicio, modalidad online, links de registro, soporte técnico de cursos online. Ejemplo: \"¿Cómo me inscribo al curso online?\", \"¿Cuándo empieza el curso online de Split Inverter?\""
             },
             {
               "category": "Productos",
@@ -178,7 +142,7 @@
       "typeVersion": 1,
       "position": [
         -560,
-        32
+        20
       ],
       "retryOnFail": true
     },
@@ -237,7 +201,7 @@
             {
               "id": "4995634b-6cf3-4300-83ee-5dcee5523e82",
               "name": "asistente_Informacion",
-              "value": "={{ \n  $('Sucursal MariaDono Assistant').isExecuted ? $('Sucursal MariaDono Assistant').item?.json?.output :\n  $('Cursos MariaDono Assistant').isExecuted ? $('Cursos MariaDono Assistant').item?.json?.output :\n  $('CursoOnline MariaDono Assistant').isExecuted ? $('CursoOnline MariaDono Assistant').item?.json?.output :\n  $('Procedimientos MariaDono Assistant').isExecuted ? $('Procedimientos MariaDono Assistant').item?.json?.output :\n$('Productos_MariaDono_Assistant').isExecuted ? $('Productos_MariaDono_Assistant').item?.json?.output :\n$('Saludos').isExecuted ? $('Saludos').item?.json?.output :\n  \"No hay respuesta disponible\"\n}}",
+              "value": "={{ \n  $('Sucursal MariaDono Assistant').isExecuted ? $('Sucursal MariaDono Assistant').item?.json?.output :\n  $('Cursos MariaDono Assistant').isExecuted ? $('Cursos MariaDono Assistant').item?.json?.output :\n  $('Procedimientos MariaDono Assistant').isExecuted ? $('Procedimientos MariaDono Assistant').item?.json?.output :\n$('Productos_MariaDono_Assistant').isExecuted ? $('Productos_MariaDono_Assistant').item?.json?.output :\n$('Saludos').isExecuted ? $('Saludos').item?.json?.output :\n  \"No hay respuesta disponible\"\n}}",
               "type": "string"
             },
             {
@@ -262,7 +226,7 @@
       "typeVersion": 3.4,
       "position": [
         1440,
-        144
+        140
       ],
       "id": "ab8a65d3-f93a-432d-8fd6-e6e8063e33e5",
       "name": "Edit interesCliente"
@@ -283,8 +247,8 @@
       "type": "@n8n/n8n-nodes-langchain.openAi",
       "typeVersion": 1.7,
       "position": [
-        -64,
-        592
+        -60,
+        580
       ],
       "id": "3fa2f8fa-4044-4986-8966-863425338fe7",
       "name": "Procedimientos MariaDono Assistant",
@@ -304,7 +268,7 @@
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.5,
       "position": [
-        -1904,
+        -1900,
         560
       ],
       "id": "001da009-ac12-48dc-81bd-d1755efe4e5b",
@@ -317,8 +281,8 @@
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.2,
       "position": [
-        -1728,
-        752
+        -1720,
+        740
       ],
       "id": "333ab2e3-cd61-4396-9ec9-f84c13e12706",
       "name": "Structured Output Parser"
@@ -401,7 +365,7 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        -1536,
+        -1540,
         640
       ],
       "id": "68648575-966a-410f-85d2-8e04614eb708",
@@ -418,8 +382,8 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
       "position": [
-        128,
-        1728
+        120,
+        1720
       ]
     },
     {
@@ -439,8 +403,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -96,
-        1728
+        -100,
+        1720
       ],
       "id": "03deda7e-e371-41ba-8eef-d7be98fd1331",
       "name": "Sin Respuesta1"
@@ -462,7 +426,7 @@
       "typeVersion": 1.7,
       "position": [
         -80,
-        224
+        220
       ],
       "id": "57ec3d48-ebf1-4c97-a679-c252e9d7e7fd",
       "name": "Productos_MariaDono_Assistant",
@@ -483,8 +447,8 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.8,
       "position": [
-        592,
-        128
+        580,
+        120
       ],
       "id": "c3212310-ebd1-4926-ae6c-abd17b26c668",
       "name": "AI Agent Respuesta Final"
@@ -519,7 +483,7 @@
       "type": "@n8n/n8n-nodes-langchain.toolThink",
       "typeVersion": 1,
       "position": [
-        688,
+        680,
         320
       ],
       "id": "78387b90-284d-4fdf-8218-d6cb48f025bb",
@@ -534,8 +498,8 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        -1184,
-        -128
+        -1180,
+        -120
       ],
       "typeVersion": 1,
       "id": "7aa9cf86-44a0-4846-89ce-692bbdaa1460",
@@ -550,8 +514,8 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -208,
-        -144
+        -200,
+        -140
       ],
       "id": "e9017998-4de8-4a64-87bb-50e2831242df",
       "name": "Sticky Note1"
@@ -566,8 +530,8 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        512,
-        -128
+        500,
+        -120
       ],
       "id": "06ce4850-f1e9-4043-bfae-2ae61e83dc00",
       "name": "Sticky Note3"
@@ -581,7 +545,7 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        -2016,
+        -2020,
         480
       ],
       "typeVersion": 1,
@@ -599,7 +563,7 @@
       "typeVersion": 1,
       "position": [
         -160,
-        1648
+        1640
       ],
       "id": "4ee71279-36de-48f7-bae0-ae064b21f47f",
       "name": "Sticky Note4"
@@ -618,7 +582,7 @@
       "typeVersion": 1.2,
       "position": [
         -480,
-        224
+        220
       ],
       "id": "faf91af4-5bd3-4764-a385-477c0dc4412c",
       "name": "OpenAI Chat Model2",
@@ -637,7 +601,7 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1,
       "position": [
-        1088,
+        1080,
         320
       ],
       "id": "7f50b9d6-b94e-4812-a622-8eac88b00797",
@@ -662,8 +626,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        -1904,
-        752
+        -1900,
+        740
       ],
       "id": "ac929b63-ea5e-4096-aea5-70027bf8b7ac",
       "name": "OpenAI Chat Model5",
@@ -681,7 +645,7 @@
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.2,
       "position": [
-        832,
+        820,
         320
       ],
       "id": "2246b92c-88ec-4c32-a809-8c0e6ac39b34",
@@ -696,8 +660,8 @@
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.5,
       "position": [
-        1072,
-        144
+        1060,
+        140
       ],
       "id": "3e017780-f557-41ea-ba78-fd9929460b48",
       "name": "etapaEmbudo LLM"
@@ -748,7 +712,7 @@
       "typeVersion": 2,
       "position": [
         -1040,
-        224
+        220
       ],
       "id": "3db04635-1ea5-4d13-b503-bbce53c05581",
       "name": "Call_Sub_Workflow_Sucursal"
@@ -798,7 +762,7 @@
       "typeVersion": 2,
       "position": [
         -880,
-        272
+        260
       ],
       "id": "af3a7367-0f24-4fd4-94d5-2028d9ea41a0",
       "name": "Call_Sub_Workflow_Cursos"
@@ -847,8 +811,8 @@
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2,
       "position": [
-        -656,
-        384
+        -660,
+        380
       ],
       "id": "c8a239ad-36ee-43ac-9a4b-131e7d1d4594",
       "name": "Call_Sub_Workflow_Productos"
@@ -897,8 +861,8 @@
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.1,
       "position": [
-        -624,
-        208
+        -620,
+        200
       ],
       "id": "5450e117-90bf-4de9-9bed-74b6849cb076",
       "name": "Call Notificaciones_SubWorkflow"
@@ -908,8 +872,8 @@
       "type": "@n8n/n8n-nodes-langchain.toolThink",
       "typeVersion": 1,
       "position": [
-        -1008,
-        448
+        -1000,
+        440
       ],
       "id": "0c843e18-546d-4c70-a5c0-e6495dd4714d",
       "name": "Think1"
@@ -922,8 +886,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1,
       "position": [
-        -1136,
-        352
+        -1140,
+        340
       ],
       "id": "9d547fab-3b50-4fa8-b124-9109bd02e89e",
       "name": "OpenAI Chat Model6",
@@ -977,19 +941,43 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        272,
-        64
+        260,
+        60
       ],
       "id": "771f396b-a090-42cc-9513-ea15a4b8fa5c",
       "name": "Productos Workflow"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1020,
+        900
+      ],
+      "id": "8f9d8d8e-89ae-45fe-a01b-0f2d4ab1790a",
+      "name": "OpenAI Chat Model7",
+      "credentials": {
+        "openAiApi": {
+          "id": "ITcoQ5kvhH8jzKCQ",
+          "name": "OpenAi account"
+        }
+      }
     },
     {
       "parameters": {},
       "type": "@n8n/n8n-nodes-langchain.toolCalculator",
       "typeVersion": 1,
       "position": [
-        192,
-        352
+        180,
+        340
       ],
       "id": "f22a7dca-8bea-47c6-8a23-7134234d5b2f",
       "name": "Calculator"
@@ -1002,7 +990,7 @@
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.2,
       "position": [
-        1232,
+        1220,
         320
       ],
       "id": "a0349549-6425-4416-8a52-42f03896edce",
@@ -1016,7 +1004,7 @@
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.2,
       "position": [
-        -784,
+        -780,
         480
       ],
       "id": "1bd68eaa-46f2-4967-b01c-a33f6277d2ee",
@@ -1035,7 +1023,7 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        -48,
+        -40,
         1200
       ],
       "id": "d9578e9b-abd9-4885-a10d-002ead4e5efb",
@@ -1057,11 +1045,33 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.8,
       "position": [
-        -64,
-        1072
+        -60,
+        1060
       ],
       "id": "f8690392-96d4-4f9e-86b5-dc65547fab45",
       "name": "Saludos"
+    },
+    {
+      "parameters": {
+        "inputText": "=### Asistente de Notificaciones\nEres un asistente virtual especializado en la gestión y personalización de notificaciones para usuarios. Tu tarea es comprender las preferencias de los usuarios y configurar las notificaciones de acuerdo a sus necesidades.\n\n### Contexto\nRecibirás solicitudes de usuarios relacionadas con la configuración de notificaciones.\nDebes interpretar las solicitudes y determinar si los usuarios desean recibir notificaciones.\n\n## Instrucciones\nDetermina el estado de habilitación del servicio según la intención detectada.\n\n## Formato de salida\n**estado_habilitacion_Notificacion**: [número según la lógica: 0 = dar de baja, 1 = neutro, 2 = habilitar]\n\n## Lógica de estado_habilitacion_servicio\n- **0 (Dar de baja)**: Cuando el usuario solicita cancelar, desactivar, dar de baja o eliminar un servicio\n- **1 (Neutro)**: Cuando la consulta es informativa, ambigua o no implica cambios en el estado del servicio\n- **2 (Habilitar)**: Cuando el usuario solicita activar, contratar, habilitar o dar de alta un servicio\n\n## Ejemplos\n**Ejemplo 1:**\n- Consulta original: \"Cuándo llega mi...\"\n- estado_habilitacion_servicio: 1\n\n**Ejemplo 2:**\n- Consulta original: \"No puedo acceder\"\nestado_habilitacion_servicio: 1\n\n**Ejemplo 4:**\n- Consulta original: \"Quiero cancelar mi suscripción\"\n- estado_habilitacion_servicio: 0\n\n**Ejemplo 5:**\n- Consulta original: \"Quiero contratar el plan premium\"\nestado_habilitacion_servicio: 2\n\n## Variables de entrada\n- **conversación**: {{ $('Webhook').item.json.body.data._chatHistory }}\n- **pregunta_aclaratoria**: {{ $('Consulta Sugerida LLM').item.json.output['Consulta reformulada'] }}",
+        "categories": {
+          "categories": [
+            {
+              "category": "deshabilitar notificaciones",
+              "description": "deshabilitar notificaciones"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "typeVersion": 1,
+      "position": [
+        920,
+        760
+      ],
+      "id": "9e1b19ec-72dd-4c97-9120-d5b659031510",
+      "name": "NotificacionesClasffier"
     },
     {
       "parameters": {
@@ -1076,8 +1086,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        -64,
-        1488
+        -60,
+        1480
       ],
       "id": "c9a7d2dd-050b-4469-b29f-579c96ea3c74",
       "name": "OpenAI Chat Model8",
@@ -1097,8 +1107,8 @@
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.5,
       "position": [
-        -64,
-        1344
+        -60,
+        1340
       ],
       "id": "1e8f5178-97d1-4fa9-93ab-79128b662fd9",
       "name": "Pregunta_Aclaratoria"
@@ -1113,7 +1123,7 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.7,
       "position": [
-        -976,
+        -980,
         -80
       ],
       "id": "fe3a461f-4aba-4a7c-960f-b66ec4a7c254",
@@ -1127,8 +1137,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1,
       "position": [
-        -64,
-        944
+        -60,
+        940
       ],
       "id": "f2f620cb-c4d2-4762-98fd-62448aa26625",
       "name": "OpenAI Chat Model9",
@@ -1148,7 +1158,7 @@
       "typeVersion": 1.2,
       "position": [
         80,
-        928
+        920
       ],
       "id": "89d53d3e-c6de-452a-9a85-b0c2ff408454",
       "name": "Structured_Output_Parser_interesclientes2"
@@ -1162,11 +1172,33 @@
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.5,
       "position": [
-        -64,
-        784
+        -60,
+        780
       ],
       "id": "e45541ce-fab0-45e4-8175-7204210668a3",
       "name": "Asistente_Notificacion"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -240,
+        800
+      ],
+      "typeVersion": 1,
+      "id": "0129d5f0-4932-468e-bc1b-5ae4fabfe4d3",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -240,
+        800
+      ],
+      "typeVersion": 1,
+      "id": "9064b370-1215-4a4f-b98b-e5eee4d14318",
+      "name": "Sticky Note6"
     },
     {
       "parameters": {
@@ -1177,8 +1209,8 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        1024,
-        -128
+        1020,
+        -120
       ],
       "id": "c557da62-661b-41ce-9ff6-8a7a8e3a66ff",
       "name": "Sticky Note7"
@@ -1190,11 +1222,37 @@
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.2,
       "position": [
-        112,
-        1488
+        100,
+        1480
       ],
       "id": "1284f015-9801-41a6-82da-39bf0155bf0c",
       "name": "Structured Output Parser3"
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        -60
+      ],
+      "id": "e24f2a0d-835e-43fe-9a71-0fcd468c4075",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "lIsqOyk6A7Fh9W1Y",
+          "name": "Gmail account"
+        }
+      }
     }
   ],
   "pinData": {
@@ -1319,13 +1377,6 @@
         [
           {
             "node": "Cursos MariaDono Assistant",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "CursoOnline MariaDono Assistant",
             "type": "main",
             "index": 0
           }
@@ -1632,6 +1683,17 @@
         ]
       ]
     },
+    "OpenAI Chat Model7": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "NotificacionesClasffier",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Calculator": {
       "ai_tool": [
         [
@@ -1685,6 +1747,11 @@
             "index": 0
           }
         ]
+      ]
+    },
+    "NotificacionesClasffier": {
+      "main": [
+        []
       ]
     },
     "OpenAI Chat Model8": {
@@ -1770,7 +1837,7 @@
     "executionOrder": "v1",
     "callerPolicy": "workflowsFromSameOwner"
   },
-  "versionId": "be78ce2a-61ea-4d41-a94c-4b1c71c0f0c9",
+  "versionId": "59f7536e-b2ff-416c-b2bf-f12988f45ad2",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "7a45e564a0c11046766a7c454204e7a510bf179e50bcfa14a7978e4f07dcf653"

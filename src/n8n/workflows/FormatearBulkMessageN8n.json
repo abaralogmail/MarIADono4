@@ -38,6 +38,33 @@
         "type": "n8n-nodes-base.set",
         "typeVersion": 1,
         "position": [450, 300]
+      },
+      {
+        "parameters": {
+          "values": {
+            "string": [
+              {
+                "name": "products",
+                "value": "=[{\"id\":1,\"name\":\"Producto A\",\"category\":\"A\"},{\"id\":2,\"name\":\"Producto B\",\"category\":\"B\"},{\"id\":3,\"name\":\"Producto C\",\"category\":\"C\"}]"
+              }
+            ]
+          }
+        },
+        "id": "3",
+        "name": "Product Table",
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 1,
+        "position": [250, 500]
+      },
+      {
+        "parameters": {
+          "functionCode": "// Inputs: $json.processedData (client history), $json.products (product table)\nconst history = $json.processedData;\nconst products = $json.products ? JSON.parse($json.products) : [];\n// Example: select product by category match or fallback to first\nlet selectedProduct = products[0];\nif (history && history.category) {\n  const match = products.find(p => p.category === history.category);\n  if (match) selectedProduct = match;\n}\nreturn [{ ...$json, selectedProduct }];"
+        },
+        "id": "4",
+        "name": "Select Product",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 1,
+        "position": [450, 500]
       }
     ],
     "connections": {
@@ -46,6 +73,28 @@
           [
             {
               "node": "Process Response",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Product Table": {
+        "main": [
+          [
+            {
+              "node": "Select Product",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Process Response": {
+        "main": [
+          [
+            {
+              "node": "Select Product",
               "type": "main",
               "index": 0
             }
