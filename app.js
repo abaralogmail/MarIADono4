@@ -232,9 +232,9 @@ BotConsultasWeb()// BotName: BotConsultasWeb - tel: 381590-8557
 BotRamiro() // BotName: BotRamiro() - tel: 387225-5083
 BotJujuy() // BotName: BotJujuy - tel: 388571-2603
 BotRoly() // BotName: BotRoly - tel: 5493813690061
-//BotFranco() // BotName: BotFranco - tel: 
-//BotMetan() // BotName: BotMetan - tel: +549387 6621962
-BotSaltaMostrador() // BotName: BotSaltaMostrador - tel: 
+BotFranco() // BotName: BotFranco - tel: 
+BotMetan() // BotName: BotMetan - tel: +549387 6621962
+BotSaltaMostrador() // BotName: BotSaltaMostrador - tel: +54 9 387 521-8221
 
 
 process.on('message', async (msg) => {

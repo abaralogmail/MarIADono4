@@ -167,8 +167,14 @@ class BulkMessageManager {
         try {
           const messageData = this.createMessageContext(rowData);
           const formattedMessage = await this.processMessageRow(messageData);
-          messageData.body = formattedMessage;
-
+         
+          messageData.body = formattedMessage.Respuesta;
+          messageData.mediaUrl = formattedMessage.mediaUrl || null;
+          messageData.audioUrl = formattedMessage.AudioUrl || null;
+          messageData.videoUrl = formattedMessage.VideoUrl || null;
+          messageData.documentUrl = formattedMessage.DocumentUrl || null;
+          messageData.imageUrl = formattedMessage.ImageUrl || null;
+          //messageData.mediaPath = formattedMessage.MediaPath || null;
             // Envía el mensaje usando el sender
           const { success, messageId } = await this.messageSender.enviarMensaje(messageData);
 
@@ -239,8 +245,8 @@ class BulkMessageManager {
     }
 
     // Set formatted message and trim text
-    const formattedMessage = webHookRespuesta[0].Respuesta || messageData.body;
-    return formattedMessage.trim();
+    const formattedMessage = webHookRespuesta[0] || messageData.body;
+    return formattedMessage;
 
   } catch (error) {
     console.error(`Error processing message for ${messageData.from}:`, error);
