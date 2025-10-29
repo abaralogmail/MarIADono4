@@ -52,12 +52,18 @@ async function handleMessageStatusCheck(provider, flowDynamic) {
     try {
         const messageStatusChecker = new MessageStatusChecker(provider);
         const statuses = await messageStatusChecker.getAllMessageStatusesHoy();
+        //const statuses = await messageStatusChecker.mensajesBulkEnviadosEstaSemana();
+
+        if (!statuses) {
+            throw new Error('No message statuses were retrieved');
+        }
 
         console.log("Message statuses retrieved:", statuses);
-        await flowDynamic(`Here are today's message statuses: ${JSON.stringify(statuses)}`);
+        await flowDynamic(`Here are today's message statuses: ${JSON.stringify(statuses, null, 2)}`);
     } catch (error) {
         console.error("Error checking message statuses:", error);
-        await flowDynamic(`❌ An error occurred while checking message statuses: ${error?.message ?? error}`);
+        const errorMessage = error?.message || (typeof error === 'string' ? error : 'Unknown error occurred');
+        await flowDynamic(`❌ Error checking message statuses: ${errorMessage}`);
     }
 }
 

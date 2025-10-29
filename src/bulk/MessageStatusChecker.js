@@ -1,4 +1,5 @@
 const DatabaseQueries = require("../database/DatabaseQueries");
+const SqliteManager = require("../database/SqliteManager");
 
 class MessageStatusChecker {
   constructor(provider) {
@@ -23,7 +24,6 @@ class MessageStatusChecker {
           return message.status;
         }
       }*/
-
       const varMessage = userMessages.find((msg) => msg.key.id === messageid);
       console.log("varMessage:", varMessage);
       if (varMessage) {
@@ -44,8 +44,8 @@ class MessageStatusChecker {
   async getAllMessageStatusesHoy() {
     try {
       // Step 1: Get today's message count from the database
-      const mensageshoy = await DatabaseQueries.mensajesBulkEnviadosHoy();
-     
+      const mensageshoy = await DatabaseQueries.mensajesBulkEnviadosEstaSemana();
+
       console.log(`Messages sent today: ${mensageshoy.length}`);
 
       // Step 2: Access all messages from the provider
@@ -73,15 +73,29 @@ class MessageStatusChecker {
         })
       );
 
-  // Filtrar solo aquellos estados que no son nulos
-      const messageStatusesNonNull = messageStatuses.filter(msg => msg.status && msg.status.status !== null);
-     // const messageStatusesIsInteger = messageStatuses.filter(msg => Number.isInteger(msg.status));
+      // Filtrar solo aquellos estados que no son nulos
+      const messageStatusesNonNull = messageStatuses.filter((msg) => msg.status && msg.status.status !== null);
+      // const messageStatusesIsInteger = messageStatuses.filter(msg => Number.isInteger(msg.status));
+
       //console.log("Filtered message statuses (non-null):", messageStatusesIsInteger);
       // messageStatuses.filter(message => message.status !== null);
       return messageStatusesNonNull;
 
     } catch (error) {
       console.error("Error getting all message statuses:", error);
+      return [];
+    }
+  }
+
+  /**
+   * Obtiene registros de conversaciones masivas enviadas durante la última semana
+   */
+  async mensajesBulkEnviadosEstaSemana() {
+    try {
+      const mensajes = await DatabaseQueries.mensajesBulkEnviadosEstaSemana();
+      return mensajes;
+    } catch (error) {
+      console.error("Error obteniendo mensajes enviados esta semana:", error);
       return [];
     }
   }
@@ -98,5 +112,21 @@ class MessageStatusChecker {
       return [];
     }
   }
+
+  async saveMessageStatusToDb({ messageid, status }) {
+    try {
+      let statusValue = status;
+      if (statusValue && typeof statusValue === 'object') {
+        statusValue = statusValue.status;
+      }
+      if (statusValue !== undefined && statusValue !== null) {
+        const sqliteDb = await SqliteManager.getInstance();
+        await sqliteDb.saveEstadoMensaje({ messageId: messageid, estado: statusValue, timestamp: new Date() });
+      }
+    } catch (error) {
+      console.error("❌ Error guardando estado en DB:", error, { messageid, status });
+    }
+  }
 }
+
 module.exports = MessageStatusChecker; // Use `module.exports`, not `exports`

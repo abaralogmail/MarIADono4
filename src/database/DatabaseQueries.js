@@ -25,6 +25,36 @@ class DatabaseQueries {
     }
   }
 
+  /**
+   * Obtiene todos los registros de conversaciones masivas enviadas durante la última semana
+   */
+  static async mensajesBulkEnviadosEstaSemana() {
+    const sqliteDb = await SqliteManager.getInstance();
+    // Fecha hace 7 días
+    const weekAgo = new Date();
+    weekAgo.setDate(weekAgo.getDate() - 7);
+    const providerBotName = 'BotAugustoTucuman';
+    const sql = `
+      SELECT *
+      FROM conversations_log
+      WHERE botname = :providerBotName
+        AND datetime(date || ' ' || time) >= datetime(:weekAgo)
+    `;
+    try {
+      const result = await sqliteDb.query(sql, {
+        replacements: { providerBotName, weekAgo: weekAgo.toISOString() },
+        type: QueryTypes.SELECT,
+      });
+      return result;
+    } catch (error) {
+      console.error(
+        "❌ Error querying mensajesBulkEnviadosEstaSemana from the database:",
+        error
+      );
+      throw error;
+    }
+  }
+
   // Nuevo: guarda métricas de conversación usando Sequelize (ConversationMetricas)
   static async guardarMetricasConversacion(datos) {
     try {

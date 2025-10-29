@@ -1,0 +1,154 @@
+{
+  "name": "Agente con Base de Conocimiento MD",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "chat",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "webhookId": "chat-webhook"
+    },
+    {
+      "parameters": {
+        "filePath": "=/data/conocimiento.md",
+        "options": {}
+      },
+      "id": "read-file",
+      "name": "Leer Archivo MD",
+      "type": "n8n-nodes-base.readBinaryFiles",
+      "typeVersion": 1,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Convertir el contenido binario del archivo MD a texto\nconst binaryData = items[0].binary.data;\nconst buffer = await this.helpers.getBinaryDataBuffer(0, 'data');\nconst contenidoMD = buffer.toString('utf-8');\n\nreturn [\n  {\n    json: {\n      contenido: contenidoMD,\n      pregunta: $input.first().json.body.question\n    }\n  }\n];"
+      },
+      "id": "convert-to-text",
+      "name": "Convertir a Texto",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "Eres un asistente útil que responde preguntas basándote ÚNICAMENTE en el contexto proporcionado. Si la información no está en el contexto, di claramente que no tienes esa información."
+        },
+        "text": "=Contexto de conocimiento:\n{{ $json.contenido }}\n\nPregunta del usuario: {{ $json.pregunta }}\n\nResponde la pregunta usando solo la información del contexto."
+      },
+      "id": "openai-node",
+      "name": "OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [900, 300],
+      "credentials": {
+        "openAiApi": {
+          "id": "1",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "question",
+              "name": "question",
+              "value": "={{ $('Convertir a Texto').item.json.pregunta }}",
+              "type": "string"
+            },
+            {
+              "id": "answer",
+              "name": "answer",
+              "value": "={{ $json.message.content }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "format-response",
+      "name": "Formatear Respuesta",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"question\": $json.question, \"answer\": $json.answer } }}"
+      },
+      "id": "response",
+      "name": "Responder",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1340, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Leer Archivo MD",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer Archivo MD": {
+      "main": [
+        [
+          {
+            "node": "Convertir a Texto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convertir a Texto": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Formatear Respuesta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatear Respuesta": {
+      "main": [
+        [
+          {
+            "node": "Responder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {}
+}
