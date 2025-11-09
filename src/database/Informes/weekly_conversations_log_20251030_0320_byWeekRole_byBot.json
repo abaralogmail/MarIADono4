@@ -1,0 +1,26 @@
+[
+  {
+    "botName": "BotAugustoCasa",
+    "weekYear": "2025-37",
+    "role": "incoming",
+    "messageCount": 1
+  },
+  {
+    "botName": "BotAugustoTucuman",
+    "weekYear": "2025-37",
+    "role": "incoming",
+    "messageCount": 2
+  },
+  {
+    "botName": "BotAugustoTucuman",
+    "weekYear": "2025-38",
+    "role": "incoming",
+    "messageCount": 3
+  },
+  {
+    "botName": "BotAugustoTucuman",
+    "weekYear": "2025-40",
+    "role": "incoming",
+    "messageCount": 1
+  }
+]

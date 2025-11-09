@@ -58,6 +58,28 @@ Contiene toda la lógica de persistencia.
 
 ---
 
+## Informes (`src/database/Informes/`)
+
+Este directorio contiene informes y análisis generados a partir de los datos de la base de datos `MarIADono3DB.sqlite`.
+
+Contenido típico:
+
+- Métricas de conversación (embudos, tiempos de respuesta, tasas de retención).
+- Registros de actividad del bot y métricas operativas.
+- Análisis de uso y rendimiento (por bot, por puerto, por periodo).
+
+Generación de informes:
+
+- Los informes pueden ser generados por scripts específicos o herramientas de análisis. Por ejemplo, use `src/scripts/generateDbReport.js` para generar reportes automatizados.
+- Consulte `src/database/Informes/README.md` para detalles, formatos y ejemplos.
+- Los informes se almacenan en este directorio y pueden ser consumidos por el panel web o herramientas externas para visualización y auditoría.
+
+Notas:
+
+- Mantenga los scripts idempotentes y documente el formato de salida (CSV/JSON/PDF) para facilitar su integración en procesos de automatización.
+- Cuando agregue nuevos tipos de informe, actualice `src/database/Informes/README.md`.
+
+
 ## 4. Flujos de Conversación (`src/flows/`)
 
 Define la lógica central de conversación del bot.
