@@ -45,6 +45,7 @@ class MessageStatusChecker {
     try {
       // Step 1: Get today's message count from the database
       const mensageshoy = await DatabaseQueries.mensajesBulkEnviadosEstaSemana();
+      //const mensageshoy = await DatabaseQueries.mensajesBulkEnviadosEsteMes();
 
       console.log(`Messages sent today: ${mensageshoy.length}`);
 
@@ -87,6 +88,36 @@ class MessageStatusChecker {
     }
   }
 
+// Obtiene estados de los mensajes enviados este mes
+  async getAllMessageStatusesEsteMes() {
+    try {
+      const { getMensajesBulkEsteMes } = require("../database/scripts/getMensajesBulkEsteMes");
+      const mensajesEsteMes = await getMensajesBulkEsteMes();
+      const detalles = mensajesEsteMes.map((m) => ({
+        id: m.id,
+        messageId: m.messageId ?? null,
+        status: m.status ?? null,
+        timestamp: m.timestamp ?? null,
+        from: m.from,
+        to: m.to,
+        body: m.body ?? null,
+      }));
+      // Resumen agregado: conteo por estado
+      const resumen = {};
+      for (const d of detalles) {
+        let s = d.status;
+        if (s && typeof s === "object") {
+          s = s.status;
+        }
+        const key = String(s ?? "desconocido");
+        resumen[key] = (resumen[key] ?? 0) + 1;
+      }
+      return { detalles, resumen };
+    } catch (error) {
+      console.error("Error obteniendo estados de mensajes este mes:", error);
+      return { detalles: [], resumen: {} };
+    }
+  }
   /**
    * Obtiene registros de conversaciones masivas enviadas durante la última semana
    */

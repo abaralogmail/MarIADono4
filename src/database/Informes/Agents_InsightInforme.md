@@ -1,0 +1,1 @@
+@/src/database/Informes/generateMonthlyBotMessageReport.js@/src/database/Informes/generateWeeklyBotMessageReport.js  generar un script para que ejecute los script de reporte obteniendo los resultados de los script de reportes mensual y semanal

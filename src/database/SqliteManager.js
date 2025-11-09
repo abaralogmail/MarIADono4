@@ -41,10 +41,23 @@ class SqliteManager {
     this.models = {};
     this.isInitialized = false;
 
-    // SQLite database path
-    this.databasePath =
-      process.env.SQLITE_DB_PATH ||
-      path.join(process.cwd(), "Data/MarIADono3DB.sqlite");
+    // SQLite database path: prefer env, otherwise resolve within src/database/(data|Data)
+    if (process.env.SQLITE_DB_PATH) {
+      this.databasePath = process.env.SQLITE_DB_PATH;
+    } else {
+      const candidates = [
+        path.join(process.cwd(), "src", "database", "data", "MarIADono3DB.sqlite"),
+        path.join(process.cwd(), "src", "database", "Data", "MarIADono3DB.sqlite"),
+        path.join(process.cwd(), "Data", "MarIADono3DB.sqlite"),
+      ];
+      this.databasePath = candidates.find((p) => {
+        try {
+          return require("fs").existsSync(p);
+        } catch (_) {
+          return false;
+        }
+      }) || candidates[0];
+    }
   }
 
   async initialize() {

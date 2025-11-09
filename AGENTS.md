@@ -24,6 +24,14 @@
 
 ---
 
+## Agente: Generador de Informes con Markdown e Insights
+
+- Descripción: Un agente que genera informes en formato Markdown a partir de la base de datos SQLite del bot, e incluye insights y recomendaciones. El informe se guarda en src/database/Informes/outputs como markdown.
+- Ruta del script principal: `src/database/Informes/markdownInsightAgent.js`.
+- Cómo ejecutarlo: `node src/database/Informes/markdownInsightAgent.js` o invocarlo desde tu flujo de informes.
+- Dependencias: Node.js, sqlite3 (debe estar disponible en el proyecto).
+- Salida: archivo Markdown con secciones de Resumen Ejecutivo, Métricas Clave, Insights y Recomendaciones.
+
 # Guía de Arquitectura y Componentes del Proyecto
 
 Este documento ofrece una visión general de la estructura del proyecto y la función de cada directorio principal dentro de `src/`.
@@ -138,6 +146,19 @@ Componentes de UI web para administración y monitoreo.
   - **`scheduleRoutes.js`**: Endpoints relacionados con la creación, recuperación y eliminación de horarios.
 - **`public/`**: Archivos estáticos servidos a los clientes.
   - **`js/schedule-manager.js`**: Lógica del cliente para la interfaz de gestión de horarios, haciendo llamadas a la API para cargar/guardar datos.
+
+---
+
+Módulo de Informes
+Ubicación: Informes
+Archivos:
+generateMonthlyBotMessageReport.js: script para generar informes mensuales de mensajes del bot. Conecta a la base de datos SQLite y genera un informe.
+leeme.md: documentación del módulo de Informes (cómo usar, parámetros, salidas).
+23-Octubre-2025/: carpeta con muestras de informes para esa fecha.
+Descripción: Este módulo genera informes mensuales de actividad del bot, útiles para monitoreo y auditoría. Puede integrarse con flujos n8n o dashboards.
+Cómo ejecutar: node src/database/Informes/generateMonthlyBotMessageReport.js
+Salidas: archivos de informe generados en un directorio de salida dentro de Informes.
+Dependencias: Node.js; acceso a la base de datos sqlite (MarIADono3DB.sqlite) o ruta equivalente; si se requieren paquetes externos, deben estar en package.json.
 
 ---
 

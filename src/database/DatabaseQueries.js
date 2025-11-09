@@ -55,6 +55,36 @@ class DatabaseQueries {
     }
   }
 
+  /**
+   * Obtiene mensajes bulk enviados durante este mes
+   */
+  static async mensajesBulkEnviadosEsteMes() {
+    const sqliteDb = await SqliteManager.getInstance();
+    const ahora = new Date();
+    const year = ahora.getFullYear();
+    const month = ahora.getMonth();
+    const start = new Date(year, month, 1, 0, 0, 0);
+    const end = new Date(year, month + 1, 1, 0, 0, 0);
+    const providerBotName = 'BotAugustoTucuman';
+    const sql = `
+      SELECT *
+      FROM conversations_log
+      WHERE botname = :providerBotName
+        AND datetime(date || ' ' || time) >= datetime(:start)
+        AND datetime(date || ' ' || time) < datetime(:end)
+    `;
+    try {
+      const result = await sqliteDb.query(sql, {
+        replacements: { providerBotName, start: start.toISOString(), end: end.toISOString() },
+        type: QueryTypes.SELECT,
+      });
+      return result;
+    } catch (error) {
+      console.error("❌ Error querying mensajesBulkEnviadosEsteMes from the database:", error);
+      throw error;
+    }
+  }
+
   // Nuevo: guarda métricas de conversación usando Sequelize (ConversationMetricas)
   static async guardarMetricasConversacion(datos) {
     try {
@@ -85,5 +115,4 @@ class DatabaseQueries {
     }
   }
 }
-
 module.exports = DatabaseQueries;
