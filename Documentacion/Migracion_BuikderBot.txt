@@ -1,0 +1,108 @@
+Migrating from bot-whatsapp to builderbot: A Simple Guide
+builderbot is the next evolution of bot-whatsapp, maintaining 99% compatibility while introducing significant improvements. This guide will walk you through the straightforward migration process.
+
+Key Differences
+Name Change: From bot-whatsapp to builderbot
+Enhanced Language Support: Now includes TypeScript in addition to JavaScript
+Improved Features: New functionalities while maintaining familiar concepts
+leifermendez
+leifermendez
+Easy Migration Steps
+Update Dependencies
+First, install the latest builderbot core:
+
+npm install @builderbot/bot@latest
+# or
+pnpm add @builderbot/bot@latest
+
+Copy
+Copied!
+Install Your Preferred Provider
+Choose and install the provider you're using:
+
+baileys
+meta
+twilio
+venom
+wppconnect
+whatsapp-web
+pnpm install @builderbot/provider-baileys@latest
+
+Copy
+Copied!
+Update Imports
+Modify your imports to use builderbot:
+
+// Old
+const { createBot, createProvider, createFlow, addKeyword } = require('@bot-whatsapp/bot')
+
+// New
+const { createBot, createProvider, createFlow, addKeyword, MemoryDB } = require('@builderbot/bot')
+
+Copy
+Copied!
+Update Provider
+Change the provider import and initialization:
+
+// Old
+const WebWhatsappProvider = require('@bot-whatsapp/provider/web-whatsapp')
+
+// New
+const { BaileysProvider } = require('@builderbot/bot')
+
+// When initializing:
+const adapterProvider = createProvider(BaileysProvider)
+adapterProvider.initHttpServer(3000) // New feature in builderbot
+
+Copy
+Copied!
+Update Database
+Update your database adapter:
+
+// Old
+const MockAdapter = require('@bot-whatsapp/database/mock')
+const adapterDB = new MockAdapter()
+
+// New
+const { MemoryDB } = require('@builderbot/bot')
+const adapterDB = new MemoryDB()
+
+Copy
+Copied!
+Review and Update Flows
+While most of your flows will work as-is, consider using new features like addAction for more complex logic:
+
+const infoFlow = addKeyword('info')
+    .addAction(async (ctx, { flowDynamix }) => {
+        await flowDynamix(`Welcome ${ctx.name}`)
+    })
+
+Copy
+Copied!
+Code Comparison
+Here's a side-by-side comparison of a basic bot setup in bot-whatsapp and builderbot:
+
+bot-whatsapp
+builderbot
+const { createBot, createProvider, createFlow, addKeyword } = require('@bot-whatsapp/bot')
+
+const BaileysProvider = require('@bot-whatsapp/provider/baileys')
+const MockAdapter = require('@bot-whatsapp/database/mock')
+
+const flowPrincipal = addKeyword(['hola', 'alo'])
+    .addAnswer(['Hola, bienvenido a mi tienda', '¿Como puedo ayudarte?'])
+    .addAnswer(['Tengo:', 'Zapatos', 'Bolsos', 'etc ...'])
+
+const main = async () => {
+    const adapterDB = new MockAdapter()
+    const adapterFlow = createFlow([flowPrincipal])
+    const adapterProvider = createProvider(BaileysProvider)
+    createBot({
+        flow: adapterFlow,
+        provider: adapterProvider,
+        database: adapterDB,
+    })
+}
+
+main()
+
