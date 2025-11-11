@@ -39,11 +39,11 @@ const main = async () => {
     // Start web server
     const PORT = process.env.PORT || 4152; // O el puerto que hayas definido
 
-    /*
+    
     app.listen(PORT, () => {
         console.log(`Dashboard available at http://localhost:${PORT}/dashboard`)
     })
-*/
+
    
 }
 
