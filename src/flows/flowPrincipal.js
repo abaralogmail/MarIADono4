@@ -1,4 +1,4 @@
-const { addKeyword, EVENTS } = require("@bot-whatsapp/bot");
+const { addKeyword, EVENTS } = require("@builderbot/bot");
 const {
   classifyCustomer,
 } = require("../../mensajes/services/customerClassification");

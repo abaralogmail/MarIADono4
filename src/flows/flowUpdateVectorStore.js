@@ -1,4 +1,4 @@
-const { addKeyword } = require('@bot-whatsapp/bot');
+const { addKeyword } = require('@builderbot/bot');
 const path = require('path');
 const fs = require('fs');
 const fsPromises = require('fs').promises;

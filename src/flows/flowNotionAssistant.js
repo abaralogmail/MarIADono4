@@ -1,4 +1,4 @@
-const { addKeyword } = require('@bot-whatsapp/bot');
+const { addKeyword } = require('@builderbot/bot');
 const sendBulkMessages = require('../utils/sendBulkMessages');
 const { isAdmin, getAdmin } = require('../utils/isAdmin');
 const { sendChunksWithDelay } = require('../utils/sendChunksWithDelay');

@@ -1,0 +1,17 @@
+Test run: 2025-12-10T17:16:44.572Z
+Target: https://ngcvvqzm-3000.brs.devtunnels.ms
+
+Detailed results:
+- /v1/messages: ok=true status=200 duration=1246ms size=6b
+  preview: sended
+  body: sended
+- /v1/register: ok=true status=200 duration=681ms size=7b
+  preview: trigger
+  body: trigger
+- /v1/samples: ok=true status=200 duration=132ms size=7b
+  preview: trigger
+  body: trigger
+- /v1/blacklist: ok=true status=200 duration=182ms size=55b
+  preview: {"status":"ok","number":"5493815908557","intent":"add"}
+  body: {"status":"ok","number":"5493815908557","intent":"add"}
+

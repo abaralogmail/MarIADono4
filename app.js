@@ -1,288 +1,166 @@
-const { createBot, createProvider, createFlow, addKeyword, EVENTS, gotoFlow } = require('@bot-whatsapp/bot')
-const QRPortalWeb = require('@bot-whatsapp/portal')
-const BaileysProvider = require('@bot-whatsapp/provider/baileys')
-const JsonFileAdapter = require('@bot-whatsapp/database/json')
-const express = require('express')
-const { initializeServices, closeAllServices } = require('./src/services/initServices')
-const sendBulkMessages = require('./mensajes/sendBulkMessages.js')
-const { chatWithAssistant } = require('./mensajes/Assistant')
-const { loadBlockedUsers, saveBlockedUsers, sendChunksWithDelay, logMessage } = require('./src/utils/sendChunksWithDelay')
-const { logicaMensajes } = require('./mensajes/logica')
-const OllamaFunnelClassifier = require('./mensajes/OllamaFunnelClassifier')
+import { join } from 'path'
+import { createBot, createProvider, createFlow, addKeyword, utils } from '@builderbot/bot'
+import { MemoryDB as Database } from '@builderbot/bot'
+import { MetaProvider as Provider } from '@builderbot/provider-meta'
+import 'dotenv/config'
+import { spawn } from 'child_process'
+import { EVENTS } from '@builderbot/bot'
 
-// Import flows
-const flowVoice = require('./src/flows/flowVoice')
-const flowMedia = require('./src/flows/flowMedia')
-const flowPrincipal = require('./src/flows/flowPrincipal')
-const flowEnviarMensaje = require('./src/flows/flowEnviarMensaje.js')
-const updateVectorStoreFlow = require('./src/flows/flowUpdateVectorStore.js')
-const flowAsistente = require('./src/flows/flowAsistente.js')
-const { flowDesactivar, flowActivar } = require('./src/flows/flowOperador.js')
-const flowTest = require('./src/flows/flowTest.js')
-const flowEnviarDeudas = require('./src/flows/flowEnviarDeudas')
-//const flowFileUpdate = require('./src/flows/flowFileUpdate.js')
+const PORT = process.env.PORT ?? 3000
 
+const infoFlow = addKeyword(['info', 'ceridono', 'empresa', 'quienes'])
+    .addAnswer(
+        [
+            'Ceridono es tu aliado regional con más de 40 años de experiencia en repuestos originales y alternativos para refrigeración domiciliaria, comercial, industrial y automotor en Tucumán, Salta y Jujuy.',
+            'Distribuidores oficiales de Mahle, Whirlpool, LG, Samsung y Electrolux. Stock amplio de herramientas, gases, compresores, mangueras, caños, filtros y manifolds.',
+            'Centro de Formación Profesional (matrícula CACAAV): cursos iniciales, intermedios y avanzados, online y presencial.',
+            'Servicio técnico multimarca con garantía oficial y asistencia a domicilio.',
+            'Visita nuestra tienda online o contactanos por WhatsApp al *381 590-8557* para asesoramiento y envíos a todo el NOA.',
+        ].join('\n\n')
+    )
 
+const welcomeFlow = addKeyword(EVENTS.WELCOME)
+    .addAnswer(`🙌 ¡Hola! Bienvenido a *Ceridono Refrigeración*`) 
+    .addAnswer(
+        [
+            '¿En qué podemos ayudarte? Escribe una de las opciones:',
+            '👉 *repuestos* - Ver catálogo y stock',
+            '👉 *cursos* - Información sobre formación y fechas',
+            '👉 *contacto* - Hablar con un asesor por WhatsApp',
+            '👉 *info* - Conocer más sobre Ceridono',
+        ].join('\n'),
+        { delay: 600, capture: true },
+        async (ctx, { fallBack }) => {
+            const body = ctx.body.toLocaleLowerCase()
+            if (!['repuestos', 'catalogo', 'cursos', 'contacto', 'info'].some(k => body.includes(k))) {
+                return fallBack('Por favor escribe *repuestos*, *cursos*, *contacto* o *info*.')
+            }
+            return
+        }
+    )
+
+const registerFlow = addKeyword(utils.setEvent('REGISTER_FLOW'))
+    .addAnswer(`Register_Flow Casa`, { capture: true }, async (ctx, { state }) => {
+        await state.update({ name: ctx.body })
+    })
+    .addAnswer('¿Qué marca y modelo buscas o qué consulta tenés?', { capture: true }, async (ctx, { state }) => {
+        await state.update({ producto: ctx.body })
+    })
+    .addAnswer('¿Desde qué localidad nos contactás? (Tucumán / Salta / Jujuy / Otra)', { capture: true }, async (ctx, { state }) => {
+        await state.update({ ciudad: ctx.body })
+    })
+    .addAction(async (_, { flowDynamic, state }) => {
+        await flowDynamic(
+            `${state.get('name')}, gracias. Registré tu consulta sobre: ${state.get('producto')}. Nos contactaremos desde Ceridono al WhatsApp *381 590-8557* para asesorarte y coordinar envío/servicio.`
+        )
+    })
+
+const repuestosFlow = addKeyword(['repuestos', 'catalogo', 'stock'])
+    .addAnswer('Contamos con amplio stock de repuestos originales y alternativos para todas las marcas.')
+    .addAnswer('Enviamos a todo el NOA. ¿Querés que te asesore un especialista por WhatsApp al *381 590-8557*?', { delay: 600, capture: true })
+
+const cursosFlow = addKeyword(['cursos', 'formación', 'formacion', 'capacitacion', 'capacitación'])
+    .addAnswer(
+        [
+            'Nuestro Centro de Formación Profesional (matrícula CACAAV) ofrece cursos iniciales, intermedios y avanzados en instalación y mantenimiento de split, aires comerciales y automotores.',
+            'Modalidades: online y presencial. Hay plazas y promociones periódicas.',
+            '¿Te interesa recibir información sobre fechas y aranceles? Escribe *si* para que te contactemos.',
+        ].join('\n\n'),
+        { capture: true }
+    )
+
+const contactoFlow = addKeyword(['contacto', 'asesor', 'asesoria', 'asesoramiento'])
+    .addAnswer('Podés comunicarte con nuestro equipo de ventas y soporte por WhatsApp al *381 590-8557* (horario comercial). ¿Querés que te llame un asesor?', { capture: true })
+    .addAction(async (ctx, { flowDynamic }) => {
+        const body = ctx.body.toLocaleLowerCase()
+        if (body.includes('si') || body.includes('sí')) {
+            await flowDynamic('Perfecto. Por favor envíanos tu nombre y un horario preferido y te contactamos.')
+        } else {
+            await flowDynamic('Entendido. Si necesitás algo más, escribí *repuestos*, *cursos* o *info*.')
+        }
+    })
+
+const samplesFlow = addKeyword(['samples', utils.setEvent('SAMPLES')])
+    .addAnswer(`Te envío un ejemplo de catálogo y materiales de Ceridono.`)
+    .addAnswer(`Visita nuestra tienda online o contactanos por WhatsApp al 381 590-8557.`)
+    .addAnswer(`Imagen de ejemplo`, { media: join(process.cwd(), 'assets', 'sample.png') })
 
 const main = async () => {
-    // Create Express app
-    const app = express()
-
-    // Initialize all services
-    /*const serviceInitializer = new ServiceInitializer()
-    serviceInitializer.initializeWebServer(app)*/
-    initializeServices(app)
-
-    const path = require('path');
-    app.use(express.static(path.join(__dirname, 'src', 'public')));
-    
-    // Start web server
-    const PORT = process.env.PORT || 4152; // O el puerto que hayas definido
-
-    
-    app.listen(PORT, () => {
-        console.log(`Dashboard available at http://localhost:${PORT}/dashboard`)
+    const adapterFlow = createFlow([
+        welcomeFlow,
+        infoFlow,
+        repuestosFlow,
+        cursosFlow,
+        contactoFlow,
+        registerFlow,
+        samplesFlow,
+    ])
+    const adapterProvider = createProvider(Provider, {
+        jwtToken: process.env.META_WHATSAPP_TOKEN,
+        numberId: process.env.META_PHONE_NUMBER_ID,
+        verifyToken: process.env.META_VERIFY_TOKEN,
+        version: process.env.META_API_VERSION ?? 'v22.0'
     })
+    const adapterDB = new Database()
 
-   
-}
-
-
-const BotCursosSalta = async () => {
-    const BotName = 'bot'
-    const adapterDB = new JsonFileAdapter()
-    const adapterFlow = createFlow([flowEnviarMensaje, flowTest, flowMedia, flowVoice, flowDesactivar, flowActivar, flowAsistente, updateVectorStoreFlow, flowPrincipal, flowEnviarDeudas])
-    const adapterProvider = createProvider(BaileysProvider, { name: BotName })
-    
-
-    createBot({
+    const { handleCtx, httpServer } = await createBot({
         flow: adapterFlow,
         provider: adapterProvider,
         database: adapterDB,
     })
 
-    QRPortalWeb({ name: BotName, port: 6001 })
+    adapterProvider.server.post(
+        '/v1/messages',
+        handleCtx(async (bot, req, res) => {
+            const { number, message, urlMedia } = req.body
+            await bot.sendMessage(number, message, { media: urlMedia ?? null })
+            return res.end('sended')
+        })
+    )
+
+    adapterProvider.server.post(
+        '/v1/register',
+        handleCtx(async (bot, req, res) => {
+            const { number, name } = req.body
+            await bot.dispatch('REGISTER_FLOW', { from: number, name })
+            return res.end('trigger')
+        })
+    )
+
+    adapterProvider.server.post(
+        '/v1/samples',
+        handleCtx(async (bot, req, res) => {
+            const { number, name } = req.body
+            await bot.dispatch('SAMPLES', { from: number, name })
+            return res.end('trigger')
+        })
+    )
+
+    adapterProvider.server.post(
+        '/v1/blacklist',
+        handleCtx(async (bot, req, res) => {
+            const { number, intent } = req.body
+            if (intent === 'remove') bot.blacklist.remove(number)
+            if (intent === 'add') bot.blacklist.add(number)
+
+            res.writeHead(200, { 'Content-Type': 'application/json' })
+            return res.end(JSON.stringify({ status: 'ok', number, intent }))
+        })
+    )
+
+    httpServer(+PORT)
+
+    if (process.env.RUN_TESTS_ON_START ?? 'true' === 'true') {
+        try {
+            const runner = spawn(process.execPath, ['tests/Testing_Webhook.js'], {
+                env: Object.assign({}, process.env, { RUN_FROM_APP: 'true' }),
+                stdio: 'inherit',
+            })
+            runner.on('exit', (code) => console.log(`Test runner salió con exito ${code}`))
+        } catch (err) {
+            console.error('Failed to start test runner:', err)
+        }
+    }
 }
 
-
-const BotAdministracionSalta = async () => {
-    const BotName = 'BotAdministracionSalta'
-    const adapterDB = new JsonFileAdapter()
-    const adapterFlow = createFlow([flowEnviarMensaje, flowTest, flowMedia, flowVoice, flowDesactivar, flowActivar, flowAsistente, updateVectorStoreFlow, flowPrincipal, flowEnviarDeudas])
-    const adapterProvider = createProvider(BaileysProvider, { name: BotName })
-
-    const bot = createBot({
-        flow: adapterFlow,
-        provider: adapterProvider,
-        database: adapterDB,
-    })
-
-    QRPortalWeb({ name: BotName, port: 6003 })
-}
-
-
-const BotOfertasTucuman = async () => {
-    const BotName = 'BotOfertasTucuman'
-    const adapterDB = new JsonFileAdapter()
-    const adapterFlow = createFlow([flowEnviarMensaje, flowTest, flowMedia, flowVoice, flowDesactivar, flowActivar, flowAsistente, updateVectorStoreFlow, flowPrincipal, flowEnviarDeudas])
-    const adapterProvider = createProvider(BaileysProvider, { name: BotName })
-
-    const bot = createBot({
-        flow: adapterFlow,
-        provider: adapterProvider,
-        database: adapterDB,
-    })
-
-    QRPortalWeb({ name: BotName, port: 6002 })
-//    simulateEvent(adapterProvider);
-
-}
-
-const BotAugustoTucuman = async () => {
-    const BotName = 'BotAugustoTucuman'
-    const adapterDB = new JsonFileAdapter()
-    const adapterFlow = createFlow([flowEnviarMensaje, flowTest, flowMedia, flowVoice, flowDesactivar, flowActivar, flowAsistente, updateVectorStoreFlow, flowPrincipal, flowEnviarDeudas])
-    const adapterProvider = createProvider(BaileysProvider, { name: BotName })
-
-    const bot = createBot({
-        flow: adapterFlow,
-        provider: adapterProvider,
-        database: adapterDB,
-    })
-
-    QRPortalWeb({ name: BotName, port: 6009 })
-    
-}
-
-const BotConsultasWeb = async () => {
-    const BotName = 'BotConsultasWeb'
-    const adapterDB = new JsonFileAdapter()
-    const adapterFlow = createFlow([flowEnviarMensaje, flowTest, flowMedia, flowVoice, flowDesactivar, flowActivar, flowAsistente, updateVectorStoreFlow, flowPrincipal, flowEnviarDeudas])
-    const adapterProvider = createProvider(BaileysProvider, { name: BotName })
-
-    const bot = createBot({
-        flow: adapterFlow,
-        provider: adapterProvider,
-        database: adapterDB,
-    })
-
-    QRPortalWeb({ name: BotName, port: 6004 })
-}
-
-const BotRamiro = async () => {
-    const BotName = 'BotRamiro()'
-    const adapterDB = new JsonFileAdapter()
-    const adapterFlow = createFlow([flowEnviarMensaje, flowTest, flowMedia, flowVoice, flowDesactivar, flowActivar, flowAsistente, updateVectorStoreFlow, flowPrincipal, flowEnviarDeudas])
-    const adapterProvider = createProvider(BaileysProvider, { name: BotName })
-
-    const bot = createBot({
-        flow: adapterFlow,
-        provider: adapterProvider,
-        database: adapterDB,
-    })
-
-    QRPortalWeb({ name: BotName, port: 6007 })
-}
-
-const BotJujuy = async () => {
-    const BotName = 'BotJujuy'
-    const adapterDB = new JsonFileAdapter()
-    const adapterFlow = createFlow([flowEnviarMensaje, flowTest, flowMedia, flowVoice, flowDesactivar, flowActivar, flowAsistente, updateVectorStoreFlow, flowPrincipal, flowEnviarDeudas])
-    const adapterProvider = createProvider(BaileysProvider, { name: BotName })
-
-    const bot = createBot({
-        flow: adapterFlow,
-        provider: adapterProvider,
-        database: adapterDB,
-    })
-
-    QRPortalWeb({ name: BotName, port: 6008 })
-}
-
-
-const BotRoly = async () => {
-    const BotName = 'BotRoly'
-    const adapterDB = new JsonFileAdapter()
-    const adapterFlow = createFlow([flowEnviarMensaje, flowTest, flowMedia, flowVoice, flowDesactivar, flowActivar, flowAsistente, updateVectorStoreFlow, flowPrincipal, flowEnviarDeudas])
-    const adapterProvider = createProvider(BaileysProvider, { name: BotName })
-
-    const bot = createBot({
-        flow: adapterFlow,
-        provider: adapterProvider,
-        database: adapterDB,
-    })
-
-    QRPortalWeb({ name: BotName, port: 6010 })
-}
-
-
-const BotFranco = async () => {
-    const BotName = 'BotFranco'
-    const adapterDB = new JsonFileAdapter()
-    const adapterFlow = createFlow([flowEnviarMensaje, flowTest, flowMedia, flowVoice, flowDesactivar, flowActivar, flowAsistente, updateVectorStoreFlow, flowPrincipal, flowEnviarDeudas])
-    const adapterProvider = createProvider(BaileysProvider, { name: BotName })
-
-    const bot = createBot({
-        flow: adapterFlow,
-        provider: adapterProvider,
-        database: adapterDB,
-    })
-
-    QRPortalWeb({ name: BotName, port: 6011 })
-}
-
-
-const BotMetan = async () => {
-    const BotName = 'BotMetan'
-    const adapterDB = new JsonFileAdapter()
-    const adapterFlow = createFlow([flowEnviarMensaje, flowTest, flowMedia, flowVoice, flowDesactivar, flowActivar, flowAsistente, updateVectorStoreFlow, flowPrincipal, flowEnviarDeudas])
-    const adapterProvider = createProvider(BaileysProvider, { name: BotName })
-
-    const bot = createBot({
-        flow: adapterFlow,
-        provider: adapterProvider,
-        database: adapterDB,
-    })
-
-    QRPortalWeb({ name: BotName, port: 6012 })
-}
-
-
-// ... existing code ...
-
-// Reemplaza el bloque de arranques múltiples por un despachador de un solo bot:
-//// main()
-//// BotCursosSalta()  //BotName: bot - tel: 3875218575
-//// BotAugustoTucuman() // BotName: BotAugustoTucuman - tel: 381248-8449
-//// ... resto de invocaciones comentadas ...
-
-// Determine target from CLI arg, then env, then default
-const startSingleBot = async () => {
-  const cliArg = (typeof process.argv[2] !== 'undefined' && process.argv[2]) ? process.argv[2] : null;
-  const targetFromEnv = (process.env.BOT || 'BotAugustoTucuman');
-  const target = cliArg || targetFromEnv;
-
-  // Dispatch to the correct bot based on the target
-  switch (target) {
-    case 'cursossalta':
-    case 'botcursossalta':
-    case 'BotAugustoTucuman':
-      await main();
-      await BotAugustoTucuman();
-      break;
-    case 'BotOfertasTucuman':
-      await main();
-      await BotOfertasTucuman();
-      break;
-    case 'BotAdministracionSalta':
-      await main();
-      await BotAdministracionSalta();
-      break;
-    case 'BotCursosSalta':
-      await main();
-      await BotCursosSalta();
-      break;
-    case 'BotConsultasWeb':
-      await main();
-      await BotConsultasWeb();
-      break;
-    case 'BotRamiro':
-      await main();
-      await BotRamiro();
-      break;
-    case 'BotJujuy':
-      await main();
-      await BotJujuy();
-      break;
-    case 'BotRoly':
-      await main();
-      await BotRoly();
-      break;
-    case 'BotFranco':
-      await main();
-      await BotFranco();
-      break;
-    case 'BotMetan':
-      await main();
-      await BotMetan();
-      break;
-    default:
-      console.error(
-        'Env var BOT no establecida o inválida. Usa uno de: CursosSalta, AdministracionSalta, OfertasTucuman, AugustoTucuman, ConsultasWeb, Ramiro, Jujuy, Roly, Franco, Metan'
-      );
-      process.exit(1);
-  }
-};
-
-startSingleBot();
-
-// ... rest of code ...
-
-process.on('message', async (msg) => {
-  if (msg === 'shutdown') {
-    console.log('Closing all connections...');
-    await closeAllServices();
-    console.log('All connections closed. Shutting down.');
-    process.exit(0);
-  }
-});
+main()

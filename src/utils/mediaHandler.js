@@ -1,4 +1,4 @@
-const { downloadMediaMessage } = require("@adiwajshing/baileys");
+const { downloadMediaMessage } = require("@builderbot/bot");
 const { checkTranscriptionEnabled } = require('../config/userConfig');
 const { writeMediaMessage } = require('./readWriteMediaMessage.js');
 const OpenAI = require('openai');

@@ -1,4 +1,4 @@
-const { addKeyword, EVENTS } = require('@bot-whatsapp/bot');
+const { addKeyword, EVENTS } = require('@builderbot/bot');
 const fs = require('fs');
 const path = require('path');
 const { botFileMapping } = require('../utils/botFileMapping.js');

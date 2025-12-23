@@ -1,4 +1,4 @@
-const { addKeyword } = require('@bot-whatsapp/bot');
+const { addKeyword } = require('@builderbot/bot');
 const HorarioManagerService = require('../services/HorarioManagerService');
 const MessageStatusChecker = require('../bulk/MessageStatusChecker');
 

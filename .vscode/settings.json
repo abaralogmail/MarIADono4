@@ -2,8 +2,8 @@
     "sqltools.connections": [],
     "workbench.colorTheme": "GitHub Dark Default",
     "workbench.colorCustomizations": {
-        "activityBar.background": "#0D313F",
-        "titleBar.activeBackground": "#124558",
+        "activityBar.background": "#087315",
+        "titleBar.activeBackground": "#0a7a33",
         "titleBar.activeForeground": "#F5FBFD"
     }
 }

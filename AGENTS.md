@@ -1,198 +1,190 @@
-# AGENTS.md - MarIADono3 WhatsApp Bot System
+## **Resumen Ejecutivo**
 
-## Comandos
-- **Iniciar bot**: `npm start` (ejecuta linting primero, luego inicia app.js)
-- **Lint**: `npx eslint . --no-ignore` (se ejecuta automáticamente antes de iniciar)
-- **Pre-copia**: `npm run pre-copy` (copia la librería desde el directorio padre)
-- **Entrada principal**: `node app.js` (inicio directo sin linting)
+- **Proyecto:** MarIADonoMeta — plantilla de bot con BuilderBot y Provider Meta.
+- **Propósito:** Bot basado en `@builderbot/bot` usando `provider-meta` y `MemoryDB` para muestras y flujos de registro.
+- **Estado:** Código fuente en `src/`, `Dockerfile` presente; sin base de datos persistente.
 
----
+## **Arquitectura General**
 
-## Arquitectura
+- **Core:** `@builderbot/bot` (gestiona flows, provider y DB).
+- **Proveedor:** `@builderbot/provider-meta` (adaptador para Meta).
+- **DB:** `MemoryDB` (memoria — no persistente).
+- **Entrypoint:** `src/src/y` crea bot, provider y expone endpoints HTTP.
+- **Contenedorización:** `Dockerfile` preparado con `node:21-alpine` y `pnpm`.
 
-- **Sistema de múltiples bots**: Varios bots de WhatsApp ejecutándose en diferentes puertos (6001-6015)
+## **Estructura del Proyecto**
 
-- **Sistema de múltiples bots**: Varios bots de WhatsApp ejecutándose en diferentes puertos (6001-6015)
-- **Marco central**: @bot-whatsapp/bot con proveedor Baileys para la integración de WhatsApp
-- **Base de datos**: sqlite para almacenamiento de mensajes
-- **Integración de IA**: OpenAI, Ollama, LangChain para respuestas inteligentes, n8n
-- **Integración de IA**: OpenAI, Ollama, LangChain para respuestas inteligentes, n8n
-- **Procesamiento de mensajes**: Manejo de conversaciones basado en flujos vía src/flows/
-- **Servicios**: SQLite, automatización n8n, mensajería masiva
-- **Servicios**: SQLite, automatización n8n, mensajería masiva
-- **Panel web**: Servidor Express con plantillas EJS en múltiples puertos
+- `src/src/app.js` : (raíz) la entrada real.
+- `Dockerfile` : Docker multi-stage (Node 21, pnpm).
+- `nodemon.json` : configuración nodemon.
+- `.env` : presente (variables no detalladas).
+- `package.json` : scripts y dependencias.
+- `assets/` : recursos (ej. `assets/sample.png` referenciado).
+- `src/`
+  - `core.class.log`, `queue.class.log` : archivos de logs presentes.
 
----
+## **Instalación y Requisitos**
 
-## Agente: Generador de Informes con Markdown e Insights
+- **SO:** Windows para desarrollo. Docker para despliegue.
+- **Node:** No especificado en `package.json`. Dockerfile usa `node:21`.
+- **Gestor de paquetes:** NPM local; Dockerfile usa `pnpm`.
+- **Comandos (PowerShell):**
 
-- Descripción: Un agente que genera informes en formato Markdown a partir de la base de datos SQLite del bot, e incluye insights y recomendaciones. El informe se guarda en src/database/Informes/outputs como markdown.
-- Ruta del script principal: `src/database/Informes/markdownInsightAgent.js`.
-- Cómo ejecutarlo: `node src/database/Informes/markdownInsightAgent.js` o invocarlo desde tu flujo de informes.
-- Dependencias: Node.js, sqlite3 (debe estar disponible en el proyecto).
-- Salida: archivo Markdown con secciones de Resumen Ejecutivo, Métricas Clave, Insights y Recomendaciones.
+```
+pnpm install; pnpm run dev
+pnpm install; pnpm start
+pnpm run lint
+```
 
-# Guía de Arquitectura y Componentes del Proyecto
+## **Configuración**
 
-Este documento ofrece una visión general de la estructura del proyecto y la función de cada directorio principal dentro de `src/`.
+- **Archivos clave:** `.env`, `package.json`, `nodemon.json`, `.eslintrc.json`.
+- **Variables detectadas:** `PORT` (por defecto `3008`). En `src/app.js` se usan credenciales del provider (`jwtToken`, `numberId`, `verifyToken`, `version`) que no están externalizadas en el repo.
+- **Puertos:** `PORT` = `3008` por defecto.
 
----
+## **Scripts y Comandos**
 
-## 1. Punto de entrada (`../app.js`)
+- `lint`: `eslint . --no-ignore`
+- `dev`: `npm run lint && nodemon --signal SIGKILL ./src/app.js`
+- `start`: `node ./src/app.js`
 
-- **`../app.js`**: Orquesta el sistema: inicia y ejecuta múltiples instancias de WhatsApp bot, cada una en un puerto distinto.
+## **Ejecución**
 
----
+- Desarrollo (PowerShell):
 
-## 2. Configuración (`src/config/`)
+```
+pnpm install; pnpm run dev
+```
 
-Centraliza todos los parámetros del sistema y la configuración.
+- Producción local:
 
-- **`botConfigManager.js`**: Gestiona y carga configuraciones por bot (límites, horarios, prompts personalizados, etc.).
-- **`userConfig.json`**: Gran JSON que almacena configuración y datos específicos del usuario—esencial para la personalización de la experiencia.
+```
+pnpm install; pnpm start
+```
 
----
+- Docker (ejemplo):
 
-## 3. Base de Datos (`src/database/`)
+```
+docker build -t base-bailey-json .; docker run -e PORT=3008 -p 3008:3008 base-bailey-json
+```
 
-Contiene toda la lógica de persistencia.  
-*(Ver `DATABASE_MAINTENANCE_GUIDE.md` para detalles.)*
+## **Servicios y Dependencias**
 
-- **`SqliteManager.js`**: Orquestador de SQLite: maneja la conexión, modelos de tablas y sincronización de esquemas. Capa de datos central.
-  - **Modelos gestionados**: ConversationsLog, ConversationMetricas, MensajeEstados, CtxLogs, ProviderLogs, Ofertas, Pedidos, Productos, Usuarios, Horarios, ReglasHorario, ExcepcionesHorario.
-- **`DatabaseQueries.js`**: Capa de abstracción para consultas comunes de BD—facilita su uso desde otros módulos.
-- **`models/`**: Directorio porTabla con archivos de modelos Sequelize.
-- **`Data/MarIADono3DB.sqlite`**: Archivo DB SQLite que almacena todos los datos del proyecto.
+- **Dependencias:** `@builderbot/bot`, `@builderbot/provider-meta`, `dotenv`.
+- **DevDependencies:** `eslint`, `nodemon`, plugins de eslint.
+- **Servicios externos:** Meta provider (requiere credenciales reales).
 
----
+## **Base de Datos**
 
-## Informes (`src/database/Informes/`)
+- **Tipo:** `MemoryDB` (in-memory) importado desde `@builderbot/bot`.
+- **Persistencia:** No persistente. Si se requiere, migrar a adaptador persistente (No especificado).
 
-Este directorio contiene informes y análisis generados a partir de los datos de la base de datos `MarIADono3DB.sqlite`.
+## **Flujos y Lógica**
 
-Contenido típico:
+- **Flows principales (en `src/app.js`):**
+  - `welcomeFlow` — saludo y enlace a `doc`.
+  - `discordFlow` — respuesta con documentación y navegación a `registerFlow`.
+  - `registerFlow` — captura `name` y `age`, confirma datos.
+  - `fullSamplesFlow` — envía media (imagen local, video/audio/url, PDF).
+- **Endpoints HTTP expuestos por provider:**
+  - `POST /v1/messages` — enviar mensaje.
+  - `POST /v1/register` — disparar `REGISTER_FLOW`.
+  - `POST /v1/samples` — disparar `SAMPLES`.
+  - `POST /v1/blacklist` — añadir/quitar número de lista negra.
 
-- Métricas de conversación (embudos, tiempos de respuesta, tasas de retención).
-- Registros de actividad del bot y métricas operativas.
-- Análisis de uso y rendimiento (por bot, por puerto, por periodo).
+## **Panel Web**
 
-Generación de informes:
+- **Estado:** No se detecta interfaz web de administración.
 
-- Los informes pueden ser generados por scripts específicos o herramientas de análisis. Por ejemplo, use `src/scripts/generateDbReport.js` para generar reportes automatizados.
-- Consulte `src/database/Informes/README.md` para detalles, formatos y ejemplos.
-- Los informes se almacenan en este directorio y pueden ser consumidos por el panel web o herramientas externas para visualización y auditoría.
+## **Docker y Despliegue**
 
-Notas:
+- **Dockerfile:** Multi-stage con `node:21-alpine3.18`, usa `pnpm`.
+- **docker-compose:** No especificado.
+- **Ejemplo:** ver sección Ejecución.
 
-- Mantenga los scripts idempotentes y documente el formato de salida (CSV/JSON/PDF) para facilitar su integración en procesos de automatización.
-- Cuando agregue nuevos tipos de informe, actualice `src/database/Informes/README.md`.
+## **Pruebas y Calidad**
+
+- **Linting:** `eslint` configurado.
+- **Tests:** No especificado.
+
+## **Seguridad y Logs**
+
+- **Logs detectados:** `core.class.log`, `queue.class.log`.
+- **Recomendaciones:** externalizar credenciales en `.env`, no commitear secretos, añadir persistencia si se requiere retención.
 
 
-## 4. Flujos de Conversación (`src/flows/`)
 
-Define la lógica central de conversación del bot.
+## **Referencias (archivos clave)**
 
-- **`flowPrincipal.js`**: Enrutador principal de mensajes entrantes, envía a los flujos relevantes.
-- **`flowMedia.js`**: Maneja mensajes con medios (imágenes, videos).
-- **`flowVoice.js`**: Procesa mensajes de voz, probablemente con transcripción.
-- **`flowOperador.js`**: Lógica para transferir la conversación a un operador humano.
-
----
-
-## 5. Lógica de Negocio e IA (`src/Logica_Workflow/`)
-
-Inteligencia del bot e integraciones de servicios de IA.
-
-- —
-
----
-
-## 6. Automatización (`src/n8n/workflows/`)
-
-Flujos de trabajo de n8n en JSON, que automatizan procesos invocados por el bot.
-
-- **`Webhook_workflow (X).json`**: Flujos de trabajo principales para solicitudes del bot (clasificación de intenciones, llamadas a OpenAI, orquestación de respuestas—el "cerebro" de IA).
-- **`Formateo_de_Documentos.json`**: Flujo de trabajo especializado para transformación y formateo de texto usando IA.
-- **`Workflow_formattedN8nSendBulkMessages.json`**: Preprocesa y personaliza mensajes masivos antes de enviarlos.
-
----
-
-## 7. Servicios (`src/services/`)
-
-Módulos de fondo que proporcionan funciones clave.
-
-- **`initServices.js`**: Inicia los servicios requeridos (BD, servidor web).
-- **`HorarioManagerService.js`**: Administra horarios de trabajo del bot, excepciones y disponibilidad.
-- **`webServerService.js`**: Inicia el servidor web (Express) que expone APIs y panel de control.
-
----
-
-## 8. Mensajería Masiva (`src/bulk/`)
-
-Lógica de mensajería masiva.
-
-- **`bulkMessageManager.js`**: Orquesta el proceso de envío masivo.
-- **`excelReader.js`**: Lee datos de mensajes/destinatarios desde archivos Excel.
-- **`messageSender.js`**: Maneja el envío real de mensajes, con demoras para evitar bloqueos.
+- `package.json`
+- `src/app.js`
+- `Dockerfile`
+- `.env` (presente)
+- `nodemon.json`
+- `.eslintrc.json`
+- `assets/`
 
 ---
 
-## 9. Utilidades (`src/utils/`)
+## **Explicación: comando `curl` para enviar plantilla WhatsApp**
 
-Utilidades y herramientas para todo el proyecto.
+- **Propósito:** Envía un mensaje tipo *template* por WhatsApp usando la Graph API de Meta.
 
-- **`MessageData.js`**: Clase/módulo para estandarizar la estructura de datos de mensajes.
-- **`messageProcessor.js`**: Orquestador principal para mensajes genéricos. Delegar lógica y generación de respuestas al webhook de n8n. Procesa la respuesta de n8n, registra métricas de embudo e interés del cliente, maneja la entrega de mensajes (respetando el horario).
-- **`voiceMediaManager.js`**: Utilidades de gestión de voz/medios.
-- **`chatHistoryAggregator.js`**: Acumula/formatea el historial de chat de un usuario para el contexto del modelo de IA.
+- **Comando (resumen):**
 
----
+```bash
+curl -i -X POST "https://graph.facebook.com/v22.0/949297758255988/messages" \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'Content-Type: application/json' \
+  -d '{ "messaging_product": "whatsapp", "to": "543812010781", "type": "template", "template": { "name": "jaspers_market_plain_text_v1", "language": { "code": "en_US" } } }'
+```
 
-## 10. Scripts (`src/scripts/`)
+- **Desglose rápido:**
+  - **`-i`**: muestra cabeceras HTTP en la respuesta.
+  - **`-X POST`**: método HTTP POST.
+  - **URL**: `https://graph.facebook.com/v22.0/<PHONE_NUMBER_ID>/messages` — el número `949297758255988` es el `PHONE_NUMBER_ID` del teléfono configurado en WhatsApp Business.
+  - **Header `Authorization`**: `Bearer <ACCESS_TOKEN>` — token de acceso de tu cuenta Meta/WhatsApp Cloud API.
+  - **Header `Content-Type`**: `application/json` indicando JSON en el cuerpo.
+  - **Body (`-d`)**: payload JSON que indica `messaging_product: "whatsapp"`, el `to` (destino), el `type: "template"` y los datos de la plantilla (`template.name` y `template.language.code`).
 
-Herramientas de mantenimiento y desarrollo.
+- **Estructura del JSON (campo relevantes):**
 
-- **`createBotExcelConfig.js`**: Genera la plantilla BotConfig.xlsx para la configuración del bot.
-- **`generateDbReport.js`**: Utilidad para generar informes del contenido/estado de la base de datos.
+```json
+{
+  "messaging_product": "whatsapp",
+  "to": "543812010781",
+  "type": "template",
+  "template": {
+    "name": "jaspers_market_plain_text_v1",
+    "language": { "code": "en_US" }
+  }
+}
+```
 
----
+- **Relación con la app en este repositorio:**
+  - El provider Meta usado por la app (archivo `src/app.js`) gestiona internamente llamadas equivalentes a este `curl` mediante `@builderbot/provider-meta`.
+  - Mapeo de valores:
+    - **`Authorization: Bearer` →** token configurado en la app (p. ej. `jwtToken` o `access token`) que debe provenir de variables de entorno (`.env`).
+    - **`949297758255988` →** `numberId` usado en la configuración del provider en `src/src/app.js`.
+    - **`to` →** número del usuario final; los flows de la app (por ejemplo `registerFlow`, `fullSamplesFlow`) usan números similares para enviar mensajes.
+  - En vez de ejecutar `curl` manual, la app crea y envía mensajes llamando al provider; internamente el provider realiza una petición POST a `https://graph.facebook.com/v{version}/{numberId}/messages` con el mismo payload. 
 
-## 11. Interfaz Web (`src/views/`, `src/routes/`, `src/public/`)
+- **Buenas prácticas y advertencias:**
+  - No subir el `ACCESS_TOKEN` al repositorio; usar `.env` y `process.env` en `src/app.js`.
+  - Asegurar que la plantilla (`template.name`) está aprobada en WhatsApp Business Manager.
+  - Validar que el número `to` esté en formato internacional (E.164), sin el signo `+` si tu llamada lo requiere.
+  - Comprobar la versión de la Graph API (`v22.0`) y actualizar si tu configuración usa otra versión (`version` en la configuración del provider).
 
-Componentes de UI web para administración y monitoreo.
+- **Equivalente en Node (pseudocódigo):**
 
-- **`views/`**: Plantillas HTML renderizadas con EJS para el panel de administración.
-  - **`schedule-manager.html`**: Vista principal para la gestión de horarios del bot.
-  - **`dashboard.html`**: Panel del sistema/dashboard.
-- **`routes/`**: Define puntos finales REST para la interfaz web (CRUD).
-  - **`scheduleRoutes.js`**: Endpoints relacionados con la creación, recuperación y eliminación de horarios.
-- **`public/`**: Archivos estáticos servidos a los clientes.
-  - **`js/schedule-manager.js`**: Lógica del cliente para la interfaz de gestión de horarios, haciendo llamadas a la API para cargar/guardar datos.
-
----
-
-Módulo de Informes
-Ubicación: Informes
-Archivos:
-generateMonthlyBotMessageReport.js: script para generar informes mensuales de mensajes del bot. Conecta a la base de datos SQLite y genera un informe.
-leeme.md: documentación del módulo de Informes (cómo usar, parámetros, salidas).
-23-Octubre-2025/: carpeta con muestras de informes para esa fecha.
-Descripción: Este módulo genera informes mensuales de actividad del bot, útiles para monitoreo y auditoría. Puede integrarse con flujos n8n o dashboards.
-Cómo ejecutar: node src/database/Informes/generateMonthlyBotMessageReport.js
-Salidas: archivos de informe generados en un directorio de salida dentro de Informes.
-Dependencias: Node.js; acceso a la base de datos sqlite (MarIADono3DB.sqlite) o ruta equivalente; si se requieren paquetes externos, deben estar en package.json.
-
----
-
-## Estilo de código
-
-- **Módulos ES**: Usar la sintaxis require() (CommonJS)
-- **Async/await**: Preferido sobre promesas para operaciones asíncronas
-- **Nombres**: camelCase para variables/funciones, PascalCase para clases
-- **Imports**: Desestructurar desde módulos: `const { createBot, createProvider } = require('@bot-whatsapp/bot')`
-- **Manejo de errores**: Usar bloques try/catch, registrar errores en consola
-- **Estructura de archivos**: Enfoque modular con archivos separados para flujos, servicios, utilidades
-- **Nombres de variables**: nombres de variables, funciones, clases, etc. deben ser en español.
-- **ESLint**: Usa el plugin bot-whatsapp con la configuración recomendada
-
----
+```js
+// ejemplo simple con fetch/axios
+fetch(`https://graph.facebook.com/v${version}/${numberId}/messages`, {
+  method: 'POST',
+  headers: {
+    'Authorization': `Bearer ${ACCESS_TOKEN}`,
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(payload)
+});
+```

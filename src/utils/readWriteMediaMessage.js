@@ -1,4 +1,4 @@
-const { downloadMediaMessage } = require("@adiwajshing/baileys");
+const { downloadMediaMessage } = require("@builderbot/bot");
 const fs = require('fs');
 
 

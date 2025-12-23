@@ -1,4 +1,4 @@
-const { addKeyword } = require('@bot-whatsapp/bot');
+const { addKeyword } = require('@builderbot/bot');
 const { isUserBlocked, saveBlockedUsers, blockUser, unblockUser  } = require('../../src/utils/userBlockManager');
 const { updateUserConfig } = require('../config/userConfig');
 const { sendChunksWithDelay } = require('../utils/sendChunksWithDelay');

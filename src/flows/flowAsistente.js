@@ -1,4 +1,4 @@
-const { createBot, createProvider, createFlow, addKeyword, EVENTS } = require('@bot-whatsapp/bot')
+const { createBot, createProvider, createFlow, addKeyword, EVENTS } = require('@builderbot/bot')
 const { getUserConfig, updateUserConfig } = require('../config/userConfig');
 const { sendChunksWithDelay } = require('../utils/sendChunksWithDelay');
 

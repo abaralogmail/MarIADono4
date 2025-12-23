@@ -1,9 +1,9 @@
 const { handlerAI } = require("../../mensajes/whisper.js");
-const { addKeyword, EVENTS } = require('@bot-whatsapp/bot');
+const { addKeyword, EVENTS } = require('@builderbot/bot');
 const flowPrincipal = require('./flowPrincipal.js');
 const { sendChunksWithDelay } = require('../utils/sendChunksWithDelay.js');
 const OllamaFunnelClassifier = require('../../mensajes/OllamaFunnelClassifier');
-const { downloadMediaMessage } = require("@adiwajshing/baileys");
+const { downloadMediaMessage } = require("@builderbot/bot");
 const { getUserConfig, checkTranscriptionEnabled } = require('../config/userConfig');
 const MessageData = require("../utils/MessageData.js");
 const { writeMediaMessage, readMediaFromContext } = require('../utils/readWriteMediaMessage.js');

@@ -1,5 +1,5 @@
 const { handlerAI } = require("../../mensajes/whisper.js")
-const { addKeyword, EVENTS } = require('@bot-whatsapp/bot');
+const { addKeyword, EVENTS } = require('@builderbot/bot');
 const flowPrincipal = require('./flowPrincipal');
 const { sendChunksWithDelay } = require('../utils/sendChunksWithDelay');
 const { getUserConfig, checkTranscriptionEnabled } = require('../config/userConfig');
