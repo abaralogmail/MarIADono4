@@ -1,4 +1,4 @@
-const { OpenAI } = require('openai');
+import { OpenAI } from 'openai';
 
 class SalesFunnelClassifier {
   constructor() {
@@ -22,4 +22,4 @@ class SalesFunnelClassifier {
   }
 }
 
-module.exports = SalesFunnelClassifier;
+export default SalesFunnelClassifier;

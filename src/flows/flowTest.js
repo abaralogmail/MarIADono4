@@ -1,6 +1,7 @@
-const { addKeyword } = require('@builderbot/bot');
-const HorarioManagerService = require('../services/HorarioManagerService');
-const MessageStatusChecker = require('../bulk/MessageStatusChecker');
+import pkg from '@builderbot/bot';
+const { addKeyword } = pkg;
+import HorarioManagerService from '../services/HorarioManagerService';
+import MessageStatusChecker from '../bulk/MessageStatusChecker';
 
 // Define the constants for the schedule types
 const TIPO_HORARIO_BULK = 2; // Assume ID 2 corresponds to 'bulk'
@@ -100,4 +101,4 @@ const flowTest = addKeyword(['t1', 't2', 'status'])
         }
     });
 
-module.exports = flowTest;
+export default flowTest;

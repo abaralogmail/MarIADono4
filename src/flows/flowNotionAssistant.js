@@ -1,9 +1,11 @@
-const { addKeyword } = require('@builderbot/bot');
-const sendBulkMessages = require('../utils/sendBulkMessages');
-const { isAdmin, getAdmin } = require('../utils/isAdmin');
-const { sendChunksWithDelay } = require('../utils/sendChunksWithDelay');
-const { chatWithAssistant, getOrCreateThread } = require('../../mensajes/Assistant');
-const { run, executeNotionAssistant, chatWithAnythingllm } = require('../../mensajes/logica');
+import pkg from '@builderbot/bot';
+const { addKeyword } = pkg;
+import sendBulkMessages from '../utils/sendBulkMessages';
+import { isAdmin, getAdmin } from '../utils/isAdmin';
+import { sendChunksWithDelay } from '../utils/sendChunksWithDelay';
+import AssistantModule from '../../mensajes/Assistant.js';
+const { chatWithAssistant, getOrCreateThread } = AssistantModule;
+import { run, executeNotionAssistant, chatWithAnythingllm } from '../../mensajes/logica.js';
 
 
 const flowNotionAssistant = addKeyword(['notion', 'database'])
@@ -20,4 +22,4 @@ const flowNotionAssistant = addKeyword(['notion', 'database'])
         }
     });
 
-module.exports = flowNotionAssistant;
+export default flowNotionAssistant;

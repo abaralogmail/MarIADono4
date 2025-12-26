@@ -1,15 +1,16 @@
-const fs = require("fs");
-const path = require("path");
-const { logicaMensajes } = require("../../mensajes/logica");
-const { sendChunksWithDelay } = require("../utils/sendChunksWithDelay");
-const MessageData = require("../utils/MessageData");
-const N8nWebhookListener = require("../Logica/N8nWebhookListener");
-const { isWithinRestrictedHours } = require("../utils/timeRestrictions");
-const botConfig = require("../config/botConfigManager"); // Import botConfig
-const { isAdmin, getAdmin } = require("./../utils/isAdmin");
-const HorarioManagerService = require("../services/HorarioManagerService");
-const SqliteManager = require("../database/SqliteManager");
-const DatabaseQueries = require("../database/DatabaseQueries");
+import fs from "fs";
+import path from "path";
+// mensajes/logica.js is an ESM module — import named exports directly
+import { logicaMensajes } from '../../mensajes/logica.js';
+import sendChunksWithDelay from "./sendChunksWithDelay.js";
+import MessageData from "./MessageData.js";
+import N8nWebhookListener from "../Logica/N8nWebhookListener.js";
+import { isWithinRestrictedHours } from "./timeRestrictions.js";
+import botConfig from "../config/botConfigManager.js"; // Import botConfig
+import { isAdmin, getAdmin } from "./isAdmin.js";
+import HorarioManagerService from "../services/HorarioManagerService.js";
+import SqliteManager from "../database/SqliteManager.js";
+import DatabaseQueries from "../database/DatabaseQueries.js";
 
 const TIPO_HORARIO_AUTO = 1; // Asume que el ID 1 corresponde al tipo 'Auto'
 const TIPO_HORARIO_BULK = 2; // Asume que el ID 2 corresponde al tipo 'bulk'
@@ -166,4 +167,4 @@ async function processMessage(messageData, provider) {
   }
 }
 
-module.exports = { processMessage };
+export { processMessage };

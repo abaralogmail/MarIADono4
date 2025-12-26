@@ -1,9 +1,9 @@
-const { addKeyword } = require('@builderbot/bot');
-const sendBulkMessages = require('../../mensajes/sendBulkMessages');
-const { isAdmin } = require('../utils/isAdmin');
-const { sendChunksWithDelay } = require('../utils/sendChunksWithDelay');
-//const flowPrincipal = require('./flowPrincipal');
-const { botFileMapping } = require('../utils/botFileMapping');
+import pkg from '@builderbot/bot';
+const { addKeyword } = pkg;
+import sendBulkMessages from '../../mensajes/sendBulkMessages';
+import { isAdmin } from '../utils/isAdmin';
+import { sendChunksWithDelay } from '../utils/sendChunksWithDelay';
+import { botFileMapping } from '../utils/botFileMapping';
 
 
 const flowEnviarMensaje = addKeyword(['enviar mensajes'])
@@ -35,5 +35,5 @@ const flowEnviarMensaje = addKeyword(['enviar mensajes'])
         }*/
     })
 
-    module.exports = flowEnviarMensaje;
+export default flowEnviarMensaje;
 

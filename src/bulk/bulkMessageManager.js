@@ -1,22 +1,16 @@
-const ExcelReader = require("./excelReader");
-const ExcelUpdater = require("./excelUpdater");
-const MessageFormatter = require("./messageFormatter");
-const MessageSender = require("./messageSender");
-const ReportSender = require("./reportSender");
-const MessageData = require("../../src/utils/MessageData");
-const {
-  getInstance: getBotConfigManager,
-} = require("../../src/config/botConfigManager");
-const { getUserConfig } = require("../../src/config/userConfig"); // Assuming userConfig exists
-const {
-  getDailyBulkMessageStats,
-  updateDailyBulkMessageStats,
-} = require("../../src/utils/getBulkMessageStats"); // Assuming stats tracking exists
-const { logMessage } = require("../utils/messageLogger"); // Adjust the path as needed
-const getMessageHistory = require("../utils/chatHistoryAggregator");
-const N8nWebhookListener = require("../Logica/N8nWebhookListener");
-//const { getOrCreateThread, addContextAssistant } = require('../Assistant'); // Assuming Assistant functions are needed
-const HorarioManagerService = require("../services/HorarioManagerService");
+import ExcelReader from './excelReader.js';
+import ExcelUpdater from './excelUpdater.js';
+import MessageFormatter from './messageFormatter.js';
+import MessageSender from './messageSender.js';
+import ReportSender from './reportSender.js';
+import MessageData from '../utils/MessageData.js';
+import { getInstance as getBotConfigManager } from '../config/botConfigManager.js';
+import { getUserConfig } from '../config/userConfig.js';
+import { getDailyBulkMessageStats, updateDailyBulkMessageStats } from '../utils/getBulkMessageStats.js';
+import { logMessage } from '../utils/messageLogger.js';
+import getMessageHistory from '../utils/chatHistoryAggregator.js';
+import N8nWebhookListener from '../Logica/N8nWebhookListener.js';
+import HorarioManagerService from '../services/HorarioManagerService.js';
 
 const TIPO_HORARIO_AUTO = 1; // Asume que el ID 1 corresponde al tipo 'Auto'
 const TIPO_HORARIO_BULK = 2; // Asume que el ID 2 corresponde al tipo 'bulk'
@@ -294,4 +288,4 @@ class BulkMessageManager {
   }
 }
 
-module.exports = BulkMessageManager;
+export default BulkMessageManager;

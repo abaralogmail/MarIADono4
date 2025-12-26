@@ -1,9 +1,10 @@
-const { downloadMediaMessage } = require("@builderbot/bot");
-const { checkTranscriptionEnabled } = require('../config/userConfig');
-const { writeMediaMessage } = require('./readWriteMediaMessage.js');
-const OpenAI = require('openai');
-const N8nWebhookListener = require('../Logica/N8nWebhookListener');
-const fs = require('fs');
+import pkg from "@builderbot/bot";
+const { downloadMediaMessage } = pkg;
+import { checkTranscriptionEnabled } from '../config/userConfig.js';
+import { writeMediaMessage } from './readWriteMediaMessage.js';
+import OpenAI from 'openai';
+import N8nWebhookListener from '../Logica/N8nWebhookListener.js';
+import fs from 'fs';
 
 /**
  * Handle media message processing and description
@@ -193,7 +194,7 @@ const summarizeDescription = async (description, ctx) => {
     }
 };
 
-module.exports = {
+export {
     handleMediaProcessing,
     describeMedia,
     describeImageOpenAi,

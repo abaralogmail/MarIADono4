@@ -1,8 +1,8 @@
-const path = require('path');
-const fs = require('fs');
-const archiver = require('archiver');
-const { parse } = require('json2csv');
-const iconv = require('iconv-lite');
+import path from 'path';
+import fs from 'fs';
+import archiver from 'archiver';
+import { parse } from 'json2csv';
+import iconv from 'iconv-lite';
 
 class BackupManager {
     constructor() {
@@ -73,4 +73,4 @@ class BackupManager {
     }
 }
 
-module.exports = BackupManager;
+export default BackupManager;

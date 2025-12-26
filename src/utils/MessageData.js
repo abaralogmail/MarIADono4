@@ -1,10 +1,9 @@
-const { downloadMediaMessage } = require("@builderbot/bot");
-const {
-    writeMediaMessage,
-    readMediaFromContext
-} = require('./readWriteMediaMessage');
-const fs = require('fs');
-const path = require('path');
+import pkg from '@builderbot/bot';
+// CommonJS package: destructure needed helpers from default
+const { downloadMediaMessage } = pkg;
+import { writeMediaMessage, readMediaFromContext } from './readWriteMediaMessage.js';
+import fs from 'fs';
+import path from 'path';
 
 
 
@@ -202,4 +201,4 @@ class MessageData {
     }*/
 }
 
-module.exports = MessageData;
+export default MessageData;

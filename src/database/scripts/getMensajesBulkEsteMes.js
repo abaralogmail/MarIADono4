@@ -1,4 +1,4 @@
-const DatabaseQueries = require("../DatabaseQueries.js");
+import DatabaseQueries from '../DatabaseQueries.js';
 
 async function getMensajesBulkEsteMes() {
   try {
@@ -20,4 +20,4 @@ async function getMensajesBulkEsteMes() {
   }
 }
 
-module.exports = { getMensajesBulkEsteMes };
+export default { getMensajesBulkEsteMes };

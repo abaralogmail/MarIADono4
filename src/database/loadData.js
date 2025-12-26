@@ -1,7 +1,6 @@
-// src/database/loadData.js
-const { init, query } = require('./db');
-const blockedUsersData = require('../mensajes/blocked_users.json');
-const userThreadsData = require('../mensajes/userThreads.json');
+import { init, query } from './db';
+import blockedUsersData from '../mensajes/blocked_users.json';
+import userThreadsData from '../mensajes/userThreads.json';
 
 async function loadData() {
   await init();

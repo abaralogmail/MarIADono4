@@ -1,10 +1,10 @@
 import { join } from 'path'
-import { createBot, createProvider, createFlow, addKeyword, utils } from '@builderbot/bot'
-import { MemoryDB as Database } from '@builderbot/bot'
+import pkg from '@builderbot/bot'
+const { createBot, createProvider, createFlow, addKeyword, utils, MemoryDB: Database, EVENTS } = pkg
 import { MetaProvider as Provider } from '@builderbot/provider-meta'
 import 'dotenv/config'
 import { spawn } from 'child_process'
-import { EVENTS } from '@builderbot/bot'
+import flowPrincipal from './src/flows/flowPrincipal.js';
 
 const PORT = process.env.PORT ?? 3000
 
@@ -83,17 +83,18 @@ const contactoFlow = addKeyword(['contacto', 'asesor', 'asesoria', 'asesoramient
 const samplesFlow = addKeyword(['samples', utils.setEvent('SAMPLES')])
     .addAnswer(`Te envío un ejemplo de catálogo y materiales de Ceridono.`)
     .addAnswer(`Visita nuestra tienda online o contactanos por WhatsApp al 381 590-8557.`)
-    .addAnswer(`Imagen de ejemplo`, { media: join(process.cwd(), 'assets', 'sample.png') })
+    .addAnswer(`Imagen de ejemplo`, { media: 'https://picsum.photos/seed/ceridono/600/400' })
 
 const main = async () => {
     const adapterFlow = createFlow([
+        flowPrincipal,
         welcomeFlow,
         infoFlow,
         repuestosFlow,
         cursosFlow,
         contactoFlow,
         registerFlow,
-        samplesFlow,
+        samplesFlow
     ])
     const adapterProvider = createProvider(Provider, {
         jwtToken: process.env.META_WHATSAPP_TOKEN,
@@ -152,7 +153,7 @@ const main = async () => {
 
     if (process.env.RUN_TESTS_ON_START ?? 'true' === 'true') {
         try {
-            const runner = spawn(process.execPath, ['tests/Testing_Webhook.js'], {
+            const runner = spawn(process.execPath, ['src/tests/Testing_Webhook.js'], {
                 env: Object.assign({}, process.env, { RUN_FROM_APP: 'true' }),
                 stdio: 'inherit',
             })

@@ -1,4 +1,4 @@
-const SqliteManager = require("../SqliteManager");
+import SqliteManager from '../SqliteManager.js';
 
 const seedConversationsLog = async () => {
   let sqliteManager;

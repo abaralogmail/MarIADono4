@@ -63,7 +63,8 @@ class Logger {
       return levels[level] <= levels[this.logLevel];
     }
   }
-  
-  const logger = new Logger();
-  module.exports = { logger };
+
+const logger = new Logger();
+export { logger };
+export default logger;
   

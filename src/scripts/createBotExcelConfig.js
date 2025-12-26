@@ -1,10 +1,4 @@
-// Script para generar archivo Excel de configuración para bots
-// Necesitamos usar las bibliotecas SheetJS para trabajar con Excel
-// Nota: Este código está diseñado para ejecutarse en un entorno que tenga las bibliotecas necesarias
-
-
-
-const XLSX = require('xlsx');
+import XLSX from 'xlsx';
 
 
 // Función para crear el archivo Excel de configuración de bots
@@ -108,11 +102,4 @@ function createBotConfigExcel() {
 // Ejecutar la función para crear el archivo
 createBotConfigExcel();
 
-module.exports = { createBotConfigExcel }; // Use CommonJS export syntax
-
-
-// Nota: Para utilizar este script necesitas:
-// 1. Tener Node.js instalado
-// 2. Instalar la biblioteca SheetJS con: npm install xlsx
-// 3. Guardar este código como un archivo .js
-// 4. Ejecutarlo con: node nombre_del_archivo.js
+export default { createBotConfigExcel };

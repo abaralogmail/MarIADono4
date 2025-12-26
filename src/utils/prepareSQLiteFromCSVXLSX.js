@@ -1,8 +1,9 @@
-const fs = require('fs');
-const path = require('path');
-const sqlite3 = require('sqlite3').verbose();
-const csv = require('csv-parser');
-const xlsx = require('xlsx');
+import fs from 'fs';
+import path from 'path';
+import sqlite3 from 'sqlite3';
+const sqlite3Verbose = sqlite3.verbose();
+import csv from 'csv-parser';
+import xlsx from 'xlsx';
 
 class PrepareSQLFromTabularData {
     constructor(storedCsvXlsxDirectory) {
@@ -11,7 +12,7 @@ class PrepareSQLFromTabularData {
     }
 
     async runPipeline() {
-        const db = new sqlite3.Database(this.dbPath);
+        const db = new sqlite3Verbose.Database(this.dbPath);
         //dbpath
         console.log('dbpath: ', this.dbPath);
 
@@ -94,4 +95,4 @@ class PrepareSQLFromTabularData {
     }
 }
 
-module.exports = PrepareSQLFromTabularData;
+export default PrepareSQLFromTabularData;

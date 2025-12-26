@@ -1,9 +1,9 @@
-const { addKeyword } = require('@builderbot/bot');
-const path = require('path');
-const fs = require('fs');
-const fsPromises = require('fs').promises;
-//const { chatWithAssistant } = require('./mensajes/Assistant.js');
-const { OpenAI } = require('openai');
+import pkg from '@builderbot/bot';
+const { addKeyword } = pkg;
+import path from 'path';
+import fs from 'fs';
+const fsPromises = fs.promises;
+import { OpenAI } from 'openai';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
@@ -62,62 +62,62 @@ const flowUpdateVectorStore = addKeyword(['updateVS', 'actualizar base de conoci
     }
   });
 
-  async function updateAssistantVectorStore(assistantId, files) {
-    try {
-        // 1. Validar y subir archivos
-        const uploadedFiles = await Promise.all(
-            files.map(async (file) => {
-                // Verificar que 'file' sea una cadena
-                if (typeof file !== 'string') {
-                    throw new TypeError(`La ruta del archivo debe ser una cadena. Se recibió: ${typeof file}`);
-                }
+async function updateAssistantVectorStore(assistantId, files) {
+  try {
+      // 1. Validar y subir archivos
+      const uploadedFiles = await Promise.all(
+          files.map(async (file) => {
+              // Verificar que 'file' sea una cadena
+              if (typeof file !== 'string') {
+                  throw new TypeError(`La ruta del archivo debe ser una cadena. Se recibió: ${typeof file}`);
+              }
 
-                // Resolver la ruta del archivo
+              // Resolver la ruta del archivo
 //                const filePath = path.resolve(file);
-                const filePath = typeof file === 'object' ? file.path : file;
-                // Verifica si la ruta es una cadena válida antes de pasarla a fs.createReadStream
-                if (typeof filePath !== 'string') {
-                    throw new TypeError(`Invalid file path: ${filePath}`);
-                }
+              const filePath = typeof file === 'object' ? file.path : file;
+              // Verifica si la ruta es una cadena válida antes de pasarla a fs.createReadStream
+              if (typeof filePath !== 'string') {
+                  throw new TypeError(`Invalid file path: ${filePath}`);
+              }
 
-                const fileStream = fs.createReadStream(filePath);
+              const fileStream = fs.createReadStream(filePath);
 
-                try {
-                    //const response = await openai.createFile(fileStream, 'assistants');
-                    const response = openai.files.create(fileStream, 'assistants');
+              try {
+                  //const response = await openai.createFile(fileStream, 'assistants');
+                  const response = openai.files.create(fileStream, 'assistants');
 
 
-                    if (response && response.data && response.data.id) {
-                        return response.data.id;
-                    } else {
-                        throw new Error('File upload failed, invalid response structure');
-                    }
-                } catch (uploadError) {
-                    console.error(`Error subiendo el archivo ${file}:`, uploadError);
-                    throw uploadError;
-                }
-            })
-        );
+                  if (response && response.data && response.data.id) {
+                      return response.data.id;
+                  } else {
+                      throw new Error('File upload failed, invalid response structure');
+                  }
+              } catch (uploadError) {
+                  console.error(`Error subiendo el archivo ${file}:`, uploadError);
+                  throw uploadError;
+              }
+          })
+      );
 
-        // 2. Verificar los archivos subidos
-        if (!uploadedFiles || uploadedFiles.length === 0) {
-            throw new Error('No se subieron archivos');
-        }
+      // 2. Verificar los archivos subidos
+      if (!uploadedFiles || uploadedFiles.length === 0) {
+          throw new Error('No se subieron archivos');
+      }
 
-        // 3. Actualizar el Asistente añadiendo los archivos subidos al vector store
-        const updatedAssistant = await openai.updateAssistant(assistantId, {
-            file_ids: uploadedFiles,
-            tools: [{ type: 'retrieval' }] // Habilita la herramienta de retrieval
-        });
+      // 3. Actualizar el Asistente añadiendo los archivos subidos al vector store
+      const updatedAssistant = await openai.updateAssistant(assistantId, {
+          file_ids: uploadedFiles,
+          tools: [{ type: 'retrieval' }] // Habilita la herramienta de retrieval
+      });
 
-        console.log('Asistente actualizado:', updatedAssistant.data);
-        return updatedAssistant.data;
+      console.log('Asistente actualizado:', updatedAssistant.data);
+      return updatedAssistant.data;
 
-    } catch (error) {
-        console.error('Error actualizando el vector store del Asistente:', error);
-        throw error;
-    }
+  } catch (error) {
+      console.error('Error actualizando el vector store del Asistente:', error);
+      throw error;
+  }
 }
-  
 
-module.exports = flowUpdateVectorStore;
+
+export default flowUpdateVectorStore;

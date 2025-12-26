@@ -1,5 +1,5 @@
-const SqliteManager = require("../SqliteManager");
-const { Op } = require("sequelize");
+import SqliteManager from '../SqliteManager.js';
+import { Op } from 'sequelize';
 
 const getStartOfWeek = () => {
   const today = new Date();

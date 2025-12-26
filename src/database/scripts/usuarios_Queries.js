@@ -46,4 +46,4 @@ class Usuarios_Queries {
   }
 }
 
-module.exports = Usuarios_Queries;
+export default Usuarios_Queries;

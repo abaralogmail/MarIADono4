@@ -1,4 +1,4 @@
-const SqliteManager = require('../database/SqliteManager');
+import SqliteManager from '../database/SqliteManager.js';
 //const PostgreSQLManager = require('../database/PostgreSQLManager');
 
 class HorarioManagerService {
@@ -132,4 +132,4 @@ class HorarioManagerService {
   }
 }
 
-module.exports = HorarioManagerService;
+export default HorarioManagerService;

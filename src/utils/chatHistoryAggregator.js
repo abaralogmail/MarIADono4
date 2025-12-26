@@ -1,7 +1,7 @@
-const fs = require('fs');
-const path = require('path');
-const { getHistoryConversation_log } = require('./clientHistoryFromJson');
-const getHistoryFromProvider = require('../utils/getHistoryFromProvider');
+import fs from 'fs';
+import path from 'path';
+import { getHistoryConversation_log } from './clientHistoryFromJson.js';
+import getHistoryFromProvider from './getHistoryFromProvider.js';
 
 
 const aggregateChatHistory = async (provider, messageData) => {
@@ -204,6 +204,4 @@ const processHistory = (history, limit = 15) => {
                   .join('\n');
 };
 
-// Función principal que agrega y formatea el historial de chat
-
-module.exports = aggregateChatHistory;
+export default aggregateChatHistory;

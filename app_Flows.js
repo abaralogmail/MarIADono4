@@ -1,25 +1,25 @@
-const { createBot, createProvider, createFlow, addKeyword, EVENTS, gotoFlow } = require('@builderbot/bot')
-const QRPortalWeb = require('@bot-whatsapp/portal')
-const BaileysProvider = require('@bot-whatsapp/provider/baileys')
-const JsonFileAdapter = require('@bot-whatsapp/database/json')
-const express = require('express')
-const { initializeServices, closeAllServices } = require('./src/services/initServices')
-const sendBulkMessages = require('./mensajes/sendBulkMessages.js')
-const { chatWithAssistant } = require('./mensajes/Assistant')
-const { loadBlockedUsers, saveBlockedUsers, sendChunksWithDelay, logMessage } = require('./src/utils/sendChunksWithDelay')
-const { logicaMensajes } = require('./mensajes/logica')
-const OllamaFunnelClassifier = require('./mensajes/OllamaFunnelClassifier')
+import { createBot, createProvider, createFlow } from '@builderbot/bot'
+import QRPortalWeb from '@bot-whatsapp/portal'
+import BaileysProvider from '@bot-whatsapp/provider/baileys'
+import JsonFileAdapter from '@bot-whatsapp/database/json'
+import express from 'express'
+import { initializeServices, closeAllServices } from './src/services/initServices.js'
+import sendBulkMessages from './mensajes/sendBulkMessages.js'
+import { chatWithAssistant } from './mensajes/Assistant.js'
+import sendChunksWithDelay from './src/utils/sendChunksWithDelay.js'
+import { logicaMensajes } from './mensajes/logica.js';
+import OllamaFunnelClassifier from './mensajes/OllamaFunnelClassifier.js';
 
 // Import flows
-const flowVoice = require('./src/flows/flowVoice')
-const flowMedia = require('./src/flows/flowMedia')
-const flowPrincipal = require('./src/flows/flowPrincipal')
-const flowEnviarMensaje = require('./src/flows/flowEnviarMensaje.js')
-const updateVectorStoreFlow = require('./src/flows/flowUpdateVectorStore.js')
-const flowAsistente = require('./src/flows/flowAsistente.js')
-const { flowDesactivar, flowActivar } = require('./src/flows/flowOperador.js')
-const flowTest = require('./src/flows/flowTest.js')
-const flowEnviarDeudas = require('./src/flows/flowEnviarDeudas')
+import flowVoice from './src/flows/flowVoice.js'
+import flowMedia from './src/flows/flowMedia.js'
+import flowPrincipal from './src/flows/flowPrincipal.js'
+import flowEnviarMensaje from './src/flows/flowEnviarMensaje.js'
+import updateVectorStoreFlow from './src/flows/flowUpdateVectorStore.js'
+import flowAsistente from './src/flows/flowAsistente.js'
+import { flowDesactivar, flowActivar } from './src/flows/flowOperador.js'
+import flowTest from './src/flows/flowTest.js'
+import flowEnviarDeudas from './src/flows/flowEnviarDeudas.js'
 //const flowFileUpdate = require('./src/flows/flowFileUpdate.js')
 
 
@@ -33,7 +33,10 @@ const main = async () => {
     serviceInitializer.initializeWebServer(app)*/
     initializeServices(app)
 
-    const path = require('path');
+    import path from 'path';
+    import { fileURLToPath } from 'url';
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
     app.use(express.static(path.join(__dirname, 'src', 'public')));
     
     // Start web server

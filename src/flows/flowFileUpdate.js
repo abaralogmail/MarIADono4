@@ -1,9 +1,10 @@
-const { addKeyword, EVENTS } = require('@builderbot/bot');
-const fs = require('fs');
-const path = require('path');
-const { botFileMapping } = require('../utils/botFileMapping.js');
-const { downloadMediaMessage } = require("@adiwajshing/baileys");
-const { writeMediaMessage } = require('../utils/readWriteMediaMessage.js');
+import pkg from '@builderbot/bot';
+const { addKeyword, EVENTS } = pkg;
+import fs from 'fs';
+import path from 'path';
+import { botFileMapping } from '../utils/botFileMapping.js';
+import { downloadMediaMessage } from "@adiwajshing/baileys";
+import { writeMediaMessage } from '../utils/readWriteMediaMessage.js';
 
 const flowFileUpdate = addKeyword(EVENTS.DOCUMENT)
     .addAction(async (ctx, { flowDynamic }) => {
@@ -75,4 +76,4 @@ const flowFileUpdate = addKeyword(EVENTS.DOCUMENT)
         }
     });
 
-module.exports = flowFileUpdate;
+export default flowFileUpdate;

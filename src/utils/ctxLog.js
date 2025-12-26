@@ -1,7 +1,5 @@
-// src/utils/ctxLog.js
-
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
 function ensureDirectoryExists(filePath) {
   const dir = path.dirname(filePath);
@@ -48,4 +46,7 @@ async function logCtx(ctx) {
   }
 }
 
-module.exports = { logCtx };
+export default { logCtx };
+
+// Named export for compatibility
+export { logCtx };

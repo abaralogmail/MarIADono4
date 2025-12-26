@@ -1,7 +1,7 @@
-const { getInstance } = require('../config/botConfigManager');
+import { getInstance } from '../config/botConfigManager.js';
 
 // This function dynamically gets the file path from the config
-function getBotFilePath(botName) {
+export function getBotFilePath(botName) {
   const configManager = getInstance();
   return configManager.getExcelFilePath(botName);
 }
@@ -22,7 +22,7 @@ const botFileMapping = {
 
 
 
-module.exports = {
+export default {
   botFileMapping,
   getBotFilePath
 };

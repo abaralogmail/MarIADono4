@@ -1,8 +1,7 @@
-const { exec } = require('child_process');
-const ExcelJS = require('exceljs');
-//const XLSX = require('xlsx');
-const xlsx = require('node-xlsx');
-const path = require('path'); // Import the path module
+import { exec } from 'child_process';
+import ExcelJS from 'exceljs';
+import xlsx from 'node-xlsx';
+import path from 'path';
 
 //const config = require('../config/config.json');
 
@@ -55,6 +54,6 @@ console.log("Resolved Path:", resolvedPath);
   }
 }
 
-module.exports = { runMacro }; // Export the function
+export default { runMacro };
 
 

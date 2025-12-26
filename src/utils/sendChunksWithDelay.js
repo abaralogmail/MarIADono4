@@ -1,9 +1,10 @@
-const fs = require("fs").promises;
+import fs from 'fs';
+const fsPromises = fs.promises;
 const BLOCKED_USERS_FILE = "mensajes/blocked_users.json";
-const path = require("path");
-const { logMessage } = require("./messageLogger");
-const { isUserBlocked, saveBlockedUsers } = require("./userBlockManager");
-const MessageData = require("./MessageData");
+import path from 'path';
+import { logMessage } from './messageLogger.js';
+import userBlockManager from './userBlockManager.js';
+import MessageData from './MessageData.js';
 
 const sendChunksWithDelay = async (
   largeResponse,
@@ -61,4 +62,4 @@ const sendChunksWithDelay = async (
     sendChunk();*/
 };
 
-module.exports = { sendChunksWithDelay, logMessage };
+export default { sendChunksWithDelay, logMessage };

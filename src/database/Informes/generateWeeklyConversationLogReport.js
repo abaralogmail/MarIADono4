@@ -1,8 +1,8 @@
-const fs = require("fs");
-const path = require("path");
-const { Parser } = require("json2csv");
-const SqliteManager = require("../SqliteManager");
-const { Sequelize } = require("sequelize");
+import fs from 'fs';
+import path from 'path';
+import { Parser } from 'json2csv';
+import SqliteManager from '../SqliteManager.js';
+import { Sequelize } from 'sequelize';
 
 /**
  * Genera un informe semanal del conversations_log.

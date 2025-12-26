@@ -1,12 +1,17 @@
-const fs = require('fs').promises;
-const path = require('path');
+import fs from 'fs';
+const fsPromises = fs.promises;
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 let blockedUsers = new Set();
 const blockedUsersFile = path.join(__dirname, '../../mensajes/blocked_users.json');
 
 async function loadBlockedUsers() {
     try {
-        const data = await fs.readFile(blockedUsersFile, 'utf8');
+        const data = await fsPromises.readFile(blockedUsersFile, 'utf8');
         blockedUsers = new Set(JSON.parse(data));
     } catch (error) {
         console.log('No existing blocked users file found. Starting with an empty set.');
@@ -14,7 +19,7 @@ async function loadBlockedUsers() {
 }
 
 async function saveBlockedUsers() {
-    await fs.writeFile(blockedUsersFile, JSON.stringify([...blockedUsers]));
+    await fsPromises.writeFile(blockedUsersFile, JSON.stringify([...blockedUsers]));
 }
 
 async function isUserBlocked(userId) {
@@ -40,7 +45,16 @@ async function unblockUser(userId) {
     await saveBlockedUsers();
 }
 
-module.exports = {
+export default {
+    loadBlockedUsers,
+    saveBlockedUsers,
+    isUserBlocked,
+    blockUser,
+    unblockUser
+};
+
+// Named exports for compatibility
+export {
     loadBlockedUsers,
     saveBlockedUsers,
     isUserBlocked,

@@ -1,4 +1,4 @@
-const axios = require('axios');
+import axios from 'axios';
 
 
 class AnythingLLM {
@@ -50,3 +50,5 @@ class AnythingLLM {
         }
 
 }
+
+export default AnythingLLM;

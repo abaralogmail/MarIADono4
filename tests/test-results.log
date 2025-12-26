@@ -1,22 +1,17 @@
-Test run: 2025-12-23T11:57:00.499Z
-Target: https://43h0tcgt-3000.brs.devtunnels.ms
+Test run: 2025-12-26T01:12:34.105Z
+Target: http://localhost:3008
 
 Detailed results:
-- /v1/messages: ok=false status=404 duration=45222ms size=0b
-- /v1/register: ok=false status=404 duration=60273ms size=0b
-- /v1/samples: ok=false status=404 duration=45249ms size=0b
-- /v1/blacklist: ok=false status=404 duration=45267ms size=0b
-
-Test run failure: 2025-12-23T11:57:00.531Z
-Target: https://43h0tcgt-3000.brs.devtunnels.ms
-
-Error: AssertionError [ERR_ASSERTION]: /v1/messages failed (status 404) body=""
-    at runTests (file:///F:/developer/MariaDono/MarIADono4/tests/Testing_Webhook.js:159:7)
-    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
-
-Results summary:
-- /v1/messages: ok=false status=404 duration=45222ms size=0b
-- /v1/register: ok=false status=404 duration=60273ms size=0b
-- /v1/samples: ok=false status=404 duration=45249ms size=0b
-- /v1/blacklist: ok=false status=404 duration=45267ms size=0b
+- /v1/messages: ok=true status=200 duration=733ms size=6b
+  preview: sended
+  body: sended
+- /v1/register: ok=true status=200 duration=9ms size=7b
+  preview: trigger
+  body: trigger
+- /v1/samples: ok=true status=200 duration=5ms size=7b
+  preview: trigger
+  body: trigger
+- /v1/blacklist: ok=true status=200 duration=4ms size=55b
+  preview: {"status":"ok","number":"5493815908557","intent":"add"}
+  body: {"status":"ok","number":"5493815908557","intent":"add"}
 

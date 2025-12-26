@@ -5,5 +5,6 @@
     "**/*.test.js",
     "**/*.spec.js"
 ],
-  "delay": "3"
+  "delay": "3",
+  "exec": "node --watch app.js"
 }

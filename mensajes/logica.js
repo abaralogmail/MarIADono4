@@ -1,11 +1,11 @@
+// ESM module — use import instead of require
 //const { NotionWorkspaceAssistant } = require('./Logica/NotionWorkspaceAssistant');
-const { ejecutarPrompt, listarModelos } = require('../src/Logica/AnythingLLM');
-const { chatWithAssistant, getOrCreateThread } = require('./Assistant');
-//const SalesFunnelClassifier = require('./Logica/salesFunnelClassifier');
-//const ExcelJS = require('exceljs');
-const OllamaFunnelClassifier = require('./OllamaFunnelClassifier');
-const n8nClassifier = require('../src/Logica/n8nClassifier');
+import AnythingLLM from '../src/Logica/AnythingLLM.js';
+import ExcelJS from 'exceljs';
+import OllamaFunnelClassifier from './OllamaFunnelClassifier.js';
+import n8nClassifier from '../src/Logica/n8nClassifier.js';
 
+import { chatWithAssistant, getOrCreateThread } from './Assistant.js';
 
 const classifierN8n = new n8nClassifier();
 const ollamaClassifier = new OllamaFunnelClassifier();
@@ -33,18 +33,18 @@ async function getClientHistory(clientId) {
 
 
 const run = async (ctx, history) => {
-
-    data = {
-        "question": history[history.length - 1].content,
-        //     "context": history,
-        "overrideConfig": {
-            "sessionId": ctx.from,
-            "returnSourceDocuments": true
-        }
+    const data = {
+        question: history[history.length - 1].content,
+        // context: history,
+        overrideConfig: {
+            sessionId: ctx.from,
+            returnSourceDocuments: true,
+        },
     };
-    console.log("chat_history:", history)
-    return queryResponse.text;
-}
+    console.log('chat_history:', history);
+    // Placeholder: implement query to LLM
+    return { text: 'ok', data };
+};
 
 
 async function logicaMensajes(ctx) {
@@ -58,7 +58,7 @@ async function logicaMensajes(ctx) {
    // let assistantResponse = await chatWithAssistant(ctx);
     //classifyMessageData SalesFunnelClassifier
     const conversationClassifier = new n8nClassifier('http://localhost:5678/webhook/Webhook');
-    //Direct call to classifier instance
+    // Direct call to classifier instance
     ctx.etapaEmbudo = await classifierN8n.classifyMessageData(ctx);
         
     
@@ -81,12 +81,30 @@ async function logicaMensajes(ctx) {
         //const textWithEmojis = await classifier.agregarEmojiText(summary);
       // textWithEmojis = summary;
        // console.log("textWithEmojis: ", textWithEmojis)
-        assistantResponse = "summary";
+        assistantResponse = 'summary';
    // }
     return assistantResponse;
   }
 
-module.exports = { run, getClientHistory, logicaMensajes };
+    // Expose helpers to flows
+    async function executeNotionAssistant(ctx) {
+        // Placeholder integration with Notion assistant — for now delegate to chatWithAssistant
+        return chatWithAssistant(ctx);
+    }
+
+    async function chatWithAnythingllm(ctx) {
+        const apiKey = process.env.ANYTHINGLLM_API_KEY;
+        const apiUrl = process.env.ANYTHINGLLM_API_URL ?? 'http://localhost:61575/api';
+        const anything = new AnythingLLM(apiKey, apiUrl);
+        // call instance method if exists
+        if (typeof anything.chatWithAnythingllm === 'function') {
+            return anything.chatWithAnythingllm(ctx);
+        }
+        // fallback: ejecutarPrompt
+        return anything.ejecutarPrompt(ctx.body ?? '');
+    }
+
+    export { run, getClientHistory, logicaMensajes, executeNotionAssistant, chatWithAnythingllm };
 
 
 

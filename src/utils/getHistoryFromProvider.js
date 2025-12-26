@@ -60,4 +60,4 @@ function removeJidSuffix(jid) {
   return id;
 }
 
-module.exports = getHistoryFromProvider
+export default getHistoryFromProvider;

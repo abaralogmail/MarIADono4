@@ -1,0 +1,45 @@
+Audit summary for F:\developer\MariaDono\MarIADono4\docs\audit-cjs.csv
+Total matches: 366
+Unique files: 99
+
+Top files by matches:
+- src\flows\flowPrincipal.js: 21
+- src\database\SqliteManager.js: 17
+- src\bulk\bulkMessageManager.js: 15
+- src\flows\flowMedia.js: 13
+- src\utils\messageProcessor.js: 13
+- src\services\initServices.js: 8
+- src\database\models\index.js: 7
+- src\database\sequelize\models\index.js: 7
+- src\flows\flowEnviarMensaje.js: 7
+- src\flows\flowFileUpdate.js: 7
+- src\flows\flowNotionAssistant.js: 7
+- src\flows\flowUpdateVectorStore.js: 7
+- src\scripts\refreshAllExcel.js: 7
+- src\utils\mediaHandler.js: 7
+- src\flows\flowEnviarDeudas.js: 6
+
+Top external packages by occurrences (non-relative requires):
+- fs: 23
+- path: 19
+- @builderbot/bot: 11
+- xlsx: 5
+- sequelize: 5
+- child_process: 4
+- openai: 4
+- axios: 4
+- express: 3
+- process: 2
+- dotenv: 2
+- exceljs: 2
+- openai-swarm-node: 1
+- node-fetch: 1
+- node-xlsx: 1
+- ejs: 1
+- archiver: 1
+- json2csv: 1
+- iconv-lite: 1
+- sqlite3: 1
+- csv-parser: 1
+
+Notes: consider converting files with many hits first; for external packages evaluate ESM alternatives or dynamic import.

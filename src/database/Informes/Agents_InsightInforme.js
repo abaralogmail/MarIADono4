@@ -1,11 +1,6 @@
-// Agents Insight Informe: Orchestrates the monthly and weekly report scripts and
-// consolidates their outputs into a single Markdown report.
-// This script assumes the existence of the following scripts:
-// - src/database/Informes/generateMonthlyBotMessageReport.js
-// - src/database/Informes/generateWeeklyBotMessageReport.js
-const { execSync } = require('child_process');
-const path = require('path');
-const fs = require('fs');
+import { execSync } from 'child_process';
+import path from 'path';
+import fs from 'fs';
 
 const runScript = (scriptPath) => {
   try {

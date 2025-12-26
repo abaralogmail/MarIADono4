@@ -2,19 +2,19 @@
 
 - **Proyecto:** MarIADonoMeta — plantilla de bot con BuilderBot y Provider Meta.
 - **Propósito:** Bot basado en `@builderbot/bot` usando `provider-meta` y `MemoryDB` para muestras y flujos de registro.
-- **Estado:** Código fuente en `src/`, `Dockerfile` presente; sin base de datos persistente.
+- **Estado:** Código fuente en `src/`, `Dockerfile` presente; ahora incluye base de datos SQLite persistente.
 
 ## **Arquitectura General**
 
 - **Core:** `@builderbot/bot` (gestiona flows, provider y DB).
 - **Proveedor:** `@builderbot/provider-meta` (adaptador para Meta).
-- **DB:** `MemoryDB` (memoria — no persistente).
-- **Entrypoint:** `src/src/y` crea bot, provider y expone endpoints HTTP.
+- **DB:** `SQLite` gestionada por `Sequelize` (persistente).
+- **Entrypoint:** `app.js` inicializa el bot, el provider y expone los endpoints HTTP pertinentes.
 - **Contenedorización:** `Dockerfile` preparado con `node:21-alpine` y `pnpm`.
 
 ## **Estructura del Proyecto**
 
-- `src/src/app.js` : (raíz) la entrada real.
+- `app.js` : punto de entrada principal en la raíz del proyecto.
 - `Dockerfile` : Docker multi-stage (Node 21, pnpm).
 - `nodemon.json` : configuración nodemon.
 - `.env` : presente (variables no detalladas).
@@ -39,14 +39,14 @@ pnpm run lint
 ## **Configuración**
 
 - **Archivos clave:** `.env`, `package.json`, `nodemon.json`, `.eslintrc.json`.
-- **Variables detectadas:** `PORT` (por defecto `3008`). En `src/app.js` se usan credenciales del provider (`jwtToken`, `numberId`, `verifyToken`, `version`) que no están externalizadas en el repo.
-- **Puertos:** `PORT` = `3008` por defecto.
+- **Variables detectadas:** `PORT` (por defecto `3000`). En `app.js` se usan credenciales del provider (`jwtToken`, `numberId`, `verifyToken`, `version`) que no están externalizadas en el repo.
+- **Puertos:** `PORT` = `3000` por defecto.
 
 ## **Scripts y Comandos**
 
 - `lint`: `eslint . --no-ignore`
-- `dev`: `npm run lint && nodemon --signal SIGKILL ./src/app.js`
-- `start`: `node ./src/app.js`
+- `dev`: `npm run lint && nodemon --signal SIGKILL ./app.js`
+- `start`: `node ./app.js`
 
 ## **Ejecución**
 
@@ -65,7 +65,7 @@ pnpm install; pnpm start
 - Docker (ejemplo):
 
 ```
-docker build -t base-bailey-json .; docker run -e PORT=3008 -p 3008:3008 base-bailey-json
+docker build -t base-bailey-json .; docker run -e PORT=3000 -p 3000:3000 base-bailey-json
 ```
 
 ## **Servicios y Dependencias**
@@ -76,12 +76,12 @@ docker build -t base-bailey-json .; docker run -e PORT=3008 -p 3008:3008 base-ba
 
 ## **Base de Datos**
 
-- **Tipo:** `MemoryDB` (in-memory) importado desde `@builderbot/bot`.
-- **Persistencia:** No persistente. Si se requiere, migrar a adaptador persistente (No especificado).
+- **Tipo:** `SQLite` utilizando `Sequelize` como ORM (`src/database/SqliteManager.js`).
+- **Persistencia:** Persistente en disco (por defecto `src/database/data/MarIADono3DB.sqlite`). Se pueden definir copias de seguridad y migraciones.
 
 ## **Flujos y Lógica**
 
-- **Flows principales (en `src/app.js`):**
+- **Flows principales (en `app.js`):**
   - `welcomeFlow` — saludo y enlace a `doc`.
   - `discordFlow` — respuesta con documentación y navegación a `registerFlow`.
   - `registerFlow` — captura `name` y `age`, confirma datos.
@@ -105,7 +105,7 @@ docker build -t base-bailey-json .; docker run -e PORT=3008 -p 3008:3008 base-ba
 ## **Pruebas y Calidad**
 
 - **Linting:** `eslint` configurado.
-- **Tests:** No especificado.
+- **Tests:** Pruebas de integración disponibles en `src/tests/Testing_Webhook.js`. El runner de pruebas se inicia desde `app.js` (la aplicación arranca y ejecuta el test runner), y verifica los endpoints `/v1/messages`, `/v1/register`, `/v1/samples` y `/v1/blacklist`. El resumen se guarda en `tests/test-results.log`. Para ejecución manual: iniciar la app con `node app.js`.
 
 ## **Seguridad y Logs**
 
@@ -117,7 +117,7 @@ docker build -t base-bailey-json .; docker run -e PORT=3008 -p 3008:3008 base-ba
 ## **Referencias (archivos clave)**
 
 - `package.json`
-- `src/app.js`
+- `app.js`
 - `Dockerfile`
 - `.env` (presente)
 - `nodemon.json`
@@ -162,15 +162,15 @@ curl -i -X POST "https://graph.facebook.com/v22.0/949297758255988/messages" \
 ```
 
 - **Relación con la app en este repositorio:**
-  - El provider Meta usado por la app (archivo `src/app.js`) gestiona internamente llamadas equivalentes a este `curl` mediante `@builderbot/provider-meta`.
+  - El provider Meta usado por la app (archivo `app.js`) gestiona internamente llamadas equivalentes a este `curl` mediante `@builderbot/provider-meta`.
   - Mapeo de valores:
     - **`Authorization: Bearer` →** token configurado en la app (p. ej. `jwtToken` o `access token`) que debe provenir de variables de entorno (`.env`).
-    - **`949297758255988` →** `numberId` usado en la configuración del provider en `src/src/app.js`.
+    - **`949297758255988` →** `numberId` usado en la configuración del provider en `app.js`.
     - **`to` →** número del usuario final; los flows de la app (por ejemplo `registerFlow`, `fullSamplesFlow`) usan números similares para enviar mensajes.
   - En vez de ejecutar `curl` manual, la app crea y envía mensajes llamando al provider; internamente el provider realiza una petición POST a `https://graph.facebook.com/v{version}/{numberId}/messages` con el mismo payload. 
 
 - **Buenas prácticas y advertencias:**
-  - No subir el `ACCESS_TOKEN` al repositorio; usar `.env` y `process.env` en `src/app.js`.
+  - No subir el `ACCESS_TOKEN` al repositorio; usar `.env` y `process.env` en `app.js`.
   - Asegurar que la plantilla (`template.name`) está aprobada en WhatsApp Business Manager.
   - Validar que el número `to` esté en formato internacional (E.164), sin el signo `+` si tu llamada lo requiere.
   - Comprobar la versión de la Graph API (`v22.0`) y actualizar si tu configuración usa otra versión (`version` en la configuración del provider).

@@ -1,20 +1,21 @@
-const { Sequelize, DataTypes, Op } = require("sequelize");
-const path = require("path");
+import { Sequelize, DataTypes, Op } from "sequelize";
+import path from "path";
+import fs from "fs";
 
 // Import models
-const ConversationsLogModel = require("./models/ConversationsLog");
-const ConversationMetricasModel = require("./models/ConversationMetricas");
-const MensajeEstadosModel = require("./models/MensajeEstados");
-const CtxLogsModel = require("./models/CtxLogs");
-const ProviderLogsModel = require("./models/ProviderLogs");
-const OfertasModel = require("./models/Ofertas");
-const PedidosModel = require("./models/Pedidos");
-const ProductosModel = require("./models/Productos");
-const UsuariosModel = require("./models/Usuarios");
-const HorariosModel = require("./models/Horarios");
-const ReglasHorarioModel = require("./models/ReglasHorario");
-const ExcepcionesHorarioModel = require("./models/ExcepcionesHorario");
-const N8nMetricModel = require("./models/N8nMetric");
+import ConversationsLogModel from "./models/ConversationsLog.js";
+import ConversationMetricasModel from "./models/ConversationMetricas.js";
+import MensajeEstadosModel from "./models/MensajeEstados.js";
+import CtxLogsModel from "./models/CtxLogs.js";
+import ProviderLogsModel from "./models/ProviderLogs.js";
+import OfertasModel from "./models/Ofertas.js";
+import PedidosModel from "./models/Pedidos.js";
+import ProductosModel from "./models/Productos.js";
+import UsuariosModel from "./models/Usuarios.js";
+import HorariosModel from "./models/Horarios.js";
+import ReglasHorarioModel from "./models/ReglasHorario.js";
+import ExcepcionesHorarioModel from "./models/ExcepcionesHorario.js";
+import N8nMetricModel from "./models/N8nMetric.js";
 
 class SqliteManager {
   static instance = null;
@@ -52,7 +53,7 @@ class SqliteManager {
       ];
       this.databasePath = candidates.find((p) => {
         try {
-          return require("fs").existsSync(p);
+          return fs.existsSync(p);
         } catch (_) {
           return false;
         }
@@ -526,4 +527,4 @@ class SqliteManager {
   }
 }
 
-module.exports = SqliteManager;
+export default SqliteManager;

@@ -1,7 +1,7 @@
-const fs = require("fs");
-const path = require("path");
-const SqliteManager = require("../SqliteManager");
-const { Op } = require("sequelize");
+import fs from 'fs';
+import path from 'path';
+import SqliteManager from '../SqliteManager.js';
+import { Op } from 'sequelize';
 
 /**
  * Obtiene el inicio del mes actual.

@@ -37,4 +37,4 @@ class Conversations_log_Queries {
   }
 }
 
-module.exports = Conversations_log_Queries;
+export default Conversations_log_Queries;

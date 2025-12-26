@@ -1,7 +1,7 @@
 // scripts/seed.js
-require('dotenv').config();
-const { seedHorarios } = require('../seeders/horariosSeeder');
-const SqliteManager = require('../SqliteManager');
+import 'dotenv/config';
+import { seedHorarios } from '../seeders/horariosSeeder.js';
+import SqliteManager from '../SqliteManager.js';
 
 async function runSeeders() {
   console.log('🚀 Iniciando proceso de sembrado de base de datos...');

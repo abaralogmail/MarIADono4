@@ -8,8 +8,10 @@ import sendBulkMessages from './mensajes/sendBulkMessages.js'
 import { chatWithAssistant } from './mensajes/Assistant.js'
 import sendChunksPkg from './src/utils/sendChunksWithDelay.js'
 const { loadBlockedUsers, saveBlockedUsers, sendChunksWithDelay, logMessage } = sendChunksPkg
-import { logicaMensajes } from './mensajes/logica.js'
-import OllamaFunnelClassifier from './mensajes/OllamaFunnelClassifier.js'
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const { logicaMensajes } = require('./mensajes/logica.js');
+const OllamaFunnelClassifier = require('./mensajes/OllamaFunnelClassifier.js');
 
 // Import flows
 import flowVoice from './src/flows/flowVoice.js'

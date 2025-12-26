@@ -1,4 +1,4 @@
-const { getAdmin } = require('../../src/utils/isAdmin');
+import { getAdmin } from '../utils/isAdmin.js';
 
 class 
 ReportSender {
@@ -36,4 +36,4 @@ ReportSender {
     }
 }
 
-module.exports = ReportSender;
+export default ReportSender;

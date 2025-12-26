@@ -1,4 +1,4 @@
-module.exports = (sequelize, DataTypes) => {
+export default (sequelize, DataTypes) => {
   const N8nMetric = sequelize.define(
     "N8nMetric",
     {

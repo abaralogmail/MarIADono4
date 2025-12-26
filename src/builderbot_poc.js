@@ -1,6 +1,7 @@
 'use strict';
 
-const { createBot, createProvider, createFlow, addKeyword, MemoryDB, BaileysProvider } = require('@builderbot/bot');
+import pkg from '@builderbot/bot';
+const { createBot, createProvider, createFlow, addKeyword, MemoryDB, BaileysProvider } = pkg;
 
 const adapterDB = new MemoryDB();
 

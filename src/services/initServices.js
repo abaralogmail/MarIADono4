@@ -1,11 +1,9 @@
-// Imports at the beginning of the file
-const express = require('express');
-const axios = require('axios');
-const BackupManager = require('../utils/backupManager');
-const { spawn } = require('child_process');
-//const PostgreSQLManager = require('../database/PostgreSQLManager');
-const SqliteManager = require('../database/SqliteManager');
-const WebServerService = require('./webServerService'); // 1. Importar el servicio
+import express from 'express';
+import axios from 'axios';
+import BackupManager from '../utils/backupManager';
+import { spawn } from 'child_process';
+import SqliteManager from '../database/SqliteManager.js';
+import WebServerService from './webServerService';
 
 let n8nProcess = null; // Variable to hold the n8n child process
 
@@ -171,4 +169,4 @@ async function initializeN8n() {
   });
 }
 
-module.exports = { initializeServices, closeAllServices };
+export default { initializeServices, closeAllServices };

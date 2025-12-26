@@ -1,4 +1,4 @@
-const axios = require('axios');
+import axios from 'axios';
 
 class N8nWebhookListener {
     constructor(n8nWebhookUrl) {
@@ -33,5 +33,5 @@ class N8nWebhookListener {
         throw error;
       }
     }
-  }    
-  module.exports = N8nWebhookListener;
+  }
+export default N8nWebhookListener;
