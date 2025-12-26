@@ -20,7 +20,7 @@ const infoFlow = addKeyword(['info', 'ceridono', 'empresa', 'quienes'])
     )
 
 const welcomeFlow = addKeyword(EVENTS.WELCOME)
-    .addAnswer(`🙌 ¡Hola! Bienvenido a *Ceridono Refrigeración*`) 
+    .addAnswer(`🙌 ¡Hola! Bienvenido a *Ceridono Refrigeración*`)
     .addAnswer(
         [
             '¿En qué podemos ayudarte? Escribe una de las opciones:',
@@ -30,10 +30,11 @@ const welcomeFlow = addKeyword(EVENTS.WELCOME)
             '👉 *info* - Conocer más sobre Ceridono',
         ].join('\n'),
         { delay: 600, capture: true },
-        async (ctx, { fallBack }) => {
+        async (ctx, { fallBack, gotoFlow }) => {
             const body = ctx.body.toLocaleLowerCase()
             if (!['repuestos', 'catalogo', 'cursos', 'contacto', 'info'].some(k => body.includes(k))) {
-                return fallBack('Por favor escribe *repuestos*, *cursos*, *contacto* o *info*.')
+                // Si no coincide con las opciones, redirigir al flujo principal para procesar el mensaje
+                return gotoFlow(flowPrincipal);
             }
             return
         }
@@ -84,9 +85,14 @@ const samplesFlow = addKeyword(['samples', utils.setEvent('SAMPLES')])
     .addAnswer(`Te envío un ejemplo de catálogo y materiales de Ceridono.`)
     .addAnswer(`Visita nuestra tienda online o contactanos por WhatsApp al 381 590-8557.`)
     .addAnswer(`Imagen de ejemplo`, { media: 'https://picsum.photos/seed/ceridono/600/400' })
+    .addAction(async (ctx, { gotoFlow }) => {
+        return gotoFlow(flowPrincipal);
+    })
+    
 
 const main = async () => {
     const adapterFlow = createFlow([
+        
         flowPrincipal,
         welcomeFlow,
         infoFlow,

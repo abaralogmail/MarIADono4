@@ -99,17 +99,22 @@ class MessageData {
         const now = new Date();
         now.setHours(now.getHours() - 3);
 
-        messageData.from = ctx.from;
-        messageData.role = ctx.role || 'incoming';
-        messageData.body = ctx.body;
+        // Fallbacks seguros para distintos shapes de ctx
+        messageData.from = ctx?.from || ctx?.message?.key?.remoteJid || '';
+        messageData.role = ctx?.role || 'incoming';
+        messageData.body = ctx?.body || ctx?.message?.conversation || '';
         messageData.date = now.toISOString().split('T')[0];
         messageData.time = now.toISOString().split('T')[1].split('.')[0];
-        messageData.messageId = ctx.key.id;
-        messageData.pushName = ctx.pushName;
-        messageData.etapaEmbudo = ctx.etapaEmbudo || '';
-        messageData.interesCliente = ctx.interesCliente || '';
 
-        if (ctx.message && ctx.message.imageMessage) {
+        // Extraer messageId de las ubicaciones posibles sin romper si no existe
+        const messageKeyId = ctx?.key?.id || ctx?.message?.key?.id || ctx?.id || ctx?.messageId || '';
+        messageData.messageId = messageKeyId;
+
+        messageData.pushName = ctx?.pushName || ctx?.notifyName || '';
+        messageData.etapaEmbudo = ctx?.etapaEmbudo || '';
+        messageData.interesCliente = ctx?.interesCliente || '';
+
+        if (ctx?.message && ctx.message.imageMessage) {
           //  await messageData.saveImageMessage(ctx);
         }
 

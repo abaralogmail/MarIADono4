@@ -119,6 +119,40 @@ async function runTests() {
       expectJson: true,
       check: ({ res, body }) => res.ok && body && body.status === 'ok',
     })
+    
+    // 5) /webhook (simular mensaje entrante para disparar flowPrincipal)
+    await doRequest('/webhook - incoming message', {
+      url: BASE + '/webhook',
+      options: {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          object: 'whatsapp_business_account',
+          entry: [
+            {
+              id: 'test',
+              changes: [
+                {
+                  value: {
+                    messages: [
+                      {
+                        from: '5493815908557',
+                        id: 'wamid.test.123',
+                        timestamp: Math.floor(Date.now()/1000),
+                        text: { body: 'hola' },
+                        type: 'text'
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        })
+      },
+      expectJson: false,
+      check: ({ res }) => res.ok,
+    })
 
     // Build a detailed results summary (always saved to file)
     const now = new Date().toISOString()
