@@ -79,11 +79,23 @@ async function runTests() {
         bodyText = `<unreadable: ${e.message}>`
       }
 
-      const size = Buffer.byteLength(bodyText || '', 'utf8')
-      const preview = (bodyText || '').slice(0, 1000)
+      // Normalize values to avoid nulls
+      body = body ?? {}
+      bodyText = bodyText ?? ''
+      const size = Buffer.byteLength(bodyText, 'utf8')
+      const preview = (bodyText).slice(0, 1000)
       const okChecks = input.check ? input.check({ res, body, bodyText }) : res.ok
 
-      const entry = { name, ok: !!okChecks, status: res.status, duration, size, body, bodyText, preview }
+      const entry = {
+        name,
+        ok: !!okChecks,
+        status: res.status ?? 0,
+        duration: duration ?? 0,
+        size: size ?? 0,
+        body: body,
+        bodyText: bodyText,
+        preview: preview
+      }
       results.push(entry)
       return entry
     }

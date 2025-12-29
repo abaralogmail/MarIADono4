@@ -2,7 +2,7 @@
   "master": {
     "tasks": [
       {
-        "id": 11,
+        "id": "11",
         "title": "Auditoría inicial de módulos CommonJS",
         "description": "Escanear el código para localizar cualquier uso de require/module.exports y generar un inventario.",
         "details": "1. Crear script audit-esm.mjs usando Node 20:\\n   import {glob} from 'glob';\\n   const files = await glob('**/*.js',{ignore:['node_modules/**']});\\n   for(const f of files){\\n       const txt=await fs.readFile(f,'utf8');\\n       if(/require\\(/.test(txt)||/module\\.exports/.test(txt))\\n           report.push(f);\\n   }\\n2. Emitir CSV con columnas: archivo, línea, patrón detectado.\\n3. Detectar packages en package.json con \"type\":\"commonjs\" o sin campo exports.\\n4. Guardar resultado en docs/audit-cjs.csv y abrir issue por cada dependencia CJS.",
@@ -12,141 +12,154 @@
         "status": "done",
         "subtasks": [
           {
-            "id": "13.1",
+            "id": 13.1,
             "title": "Run codemod jscodeshift cjs-to-esm on src",
             "details": "Executed `pnpm run codemod:cjs-to-esm` and applied manual fixes for files where the codemod failed (template literals, class fields, dynamic requires, add .js extensions). Verified ESLint and adjusted scripts. Remaining manual review: mensajes/ and root scripts.",
-            "status": "done"
+            "status": "done",
+            "parentId": "undefined"
           }
         ]
       },
       {
-        "id": 12,
+        "id": "12",
         "title": "Configuración del entorno ESM global",
         "description": "Ajustar package.json, ESLint, Nodemon y TS/JS configs para soportar 100 % ESM.",
         "details": "1. package.json:\\n   - Asegurar \"type\":\"module\".\\n   - Añadir \"exports\" y \"imports\" si corresponde.\\n2. ESLint:\\n   - Instalar eslint-plugin-import@latest y configurar parserOptions:{sourceType:'module'}.\\n3. nodemon.json -> \"exec\":\"node --watch app.js\".\\n4. ts-node / jest: cambiar \"extensions\":[\".js\"], \"transform\" usando babel-jest con presets [\"@babel/preset-env\", {\"targets\":{\"node\":\"20\"}}].\\n5. Crear archivo .nvmrc con \"20\".",
         "testStrategy": "• Correr `pnpm run lint` y asegurar 0 errores de parser.\\n• `node -e \"import('fs').then(()=>console.log('ok'))\"` debe funcionar.\\n• Scripts npm run dev/start deben levantar el server sin flags adicionales.",
         "priority": "high",
         "dependencies": [
-          11
+          "11"
         ],
         "status": "done",
         "subtasks": []
       },
       {
-        "id": 13,
+        "id": "13",
         "title": "Refactor del código fuente (carpeta src/) a import/export",
         "description": "Convertir todos los módulos de la carpeta src/ a sintaxis ESM y asegurar resolución de rutas relativa/absoluta.",
         "details": "1. Usar codemod con jscodeshift:\\n   jscodeshift -t tools/codemods/cjs-to-esm.js src/**/*.js\\n2. Patrón: require('x') → import x from 'x';\\n   module.exports = fn → export default fn;\\n3. Reemplazar __dirname/__filename con import.meta.url + fileURLToPath.\\n4. Donde haya exports múltiples usar `export const foo`/`export function`.\\n5. Ajustar rutas: agregar extensión .js en imports locales.\\n6. Ejecutar `node --check` por lote para validación sintáctica.",
         "testStrategy": "• Correr suite de unit tests: `pnpm test` debe seguir al 100 %.\\n• Lanzar `node src/index.js` localmente y verificar que no haya ERR_MODULE_NOT_FOUND.\\n• Revisión de código estática: ESLint sin errores \"no-undef\" para imports.",
         "priority": "high",
         "dependencies": [
-          12
+          "12"
         ],
-        "status": "in-progress",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2025-12-26T04:51:20.746Z"
       },
       {
-        "id": 14,
+        "id": "14",
         "title": "Migración de pruebas y scripts a ESM",
         "description": "Convertir archivos de test y scripts auxiliares a sintaxis ESM garantizando compatibilidad con Jest/Mocha.",
         "details": "1. Configurar jest.config.mjs:\\n   export default {testEnvironment:'node',extensionsToTreatAsEsm:['.js']};\\n2. Reescribir archivos *.spec.js a import.\\n3. Para mocks CJS usar `jest.unstable_mockModule`.\\n4. Actualizar scripts CLI en bin/*.js con #!/usr/bin/env node + import.\\n5. Añadir flag \"type\":\"module\" en paquetes internos de monorepo si existen.",
         "testStrategy": "• `pnpm test` en Node 20 y 18, asegurar cobertura ≥ 95 %.\\n• Introducir test con import assertion (e.g., JSON modules) y verificar que pasa.\\n• Timeouts de Jest < 30 s para toda la suite.",
         "priority": "high",
         "dependencies": [
-          12
+          "12"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2025-12-26T04:51:20.828Z"
       },
       {
-        "id": 15,
+        "id": "15",
         "title": "Gestión y sustitución de dependencias CommonJS-only",
         "description": "Detectar librerías sin soporte ESM, evaluar alternativas o usar import() dinámico con registro de deuda.",
         "details": "1. Leer docs/audit-cjs.csv y filtrar packages.\\n2. Para cada package:\\n   a) Verificar si existe release ESM (`pnpm view pkg module`).\\n   b) Si no, evaluar alternativas (p. ej., uuid→nanoid).\\n   c) Si irreemplazable, envolver con `const x = await import('pkg');`.\\n3. Documentar cambios en MIGRATION.md sección \"Dependencias\".\\n4. Actualizar package.json y ejecutar `pnpm dedupe && pnpm audit fix`.",
         "testStrategy": "• Ejecutar aplicación end-to-end y verificar que los puntos donde se sustituyó la librería funcionan.\\n• Añadir pruebas unitarias para wrappers dinámicos simulando error de carga.\\n• Revisar que `pnpm ls` no muestre duplicados legacy.",
         "priority": "medium",
         "dependencies": [
-          11,
-          12
+          "11",
+          "12"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2025-12-26T04:52:50.429Z"
       },
       {
-        "id": 16,
+        "id": "16",
         "title": "Actualización de scripts de ejecución y Docker a ESM",
         "description": "Modificar nodemon, PM2 y Dockerfile para inicializar el proyecto con import/export sin flags experimentales.",
         "details": "1. nodemon.json: \"exec\":\"node --enable-source-maps app.js\".\\n2. ecosystem.config.mjs (PM2) export default {apps:[{script:'app.js'}]};\\n3. Dockerfile:\\n   FROM node:20-alpine\\n   WORKDIR /app\\n   COPY package*.json .\\n   RUN pnpm ci --prod\\n   COPY . .\\n   CMD [\"node\",\"app.js\"]\\n4. Actualizar docker-compose.yml si aplica.\\n5. Verificar compatibilidad Windows: reemplazar rm por rimraf en scripts.",
         "testStrategy": "• `pnpm run dev` local debe recargar con nodemon.\\n• `docker build .` seguido de `docker run` arranca en <1 s.\\n• `pm2 start ecosystem.config.mjs` no debe mostrar warnings de CJS.",
         "priority": "medium",
         "dependencies": [
-          12,
-          15
+          "12",
+          "15"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2025-12-26T04:51:20.845Z"
       },
       {
-        "id": 17,
+        "id": "17",
         "title": "Actualización de CI/CD para matriz Node 18 & 20",
         "description": "Modificar workflows (GitHub Actions) y pipelines para correr tests y builds en entorno ESM.",
         "details": "1. .github/workflows/ci.yml:\\n   strategy.matrix.node: [18,20]\\n   steps:\\n     - uses: actions/setup-node@v4 with node-version: ${{matrix.node}}\\n     - run: pnpm ci\\n     - run: pnpm test -- --runInBand\\n2. Agregar paso `docker build` de verificación.\\n3. Artefacto de cobertura subido a Codecov.\\n4. Pipeline de CD: usar image node:20 para producción, dejar node:18 para staging opcional.",
         "testStrategy": "• Lanzar workflow en rama feature y verificar 2 jobs paralelos.\\n• Asegurar que fallo en cobertura <95 % bloquea merge.\\n• Simular tag release y comprobar despliegue a staging.",
         "priority": "medium",
         "dependencies": [
-          12,
-          16
+          "12",
+          "16"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2025-12-26T04:51:20.861Z"
       },
       {
-        "id": 18,
+        "id": "18",
         "title": "QA automatizada y pruebas de regresión en flujos WhatsApp",
         "description": "Ejecutar suites E2E y validar que no existan regresiones funcionales tras la migración.",
         "details": "1. Cypress/Playwright tests: actualizar imports.\\n2. Mock de proveedor WhatsApp via TestContainers.\\n3. Ejecutar `pnpm run e2e` en CI y local.\\n4. Medir tiempos de arranque (<1 s) registrando performance.mark en app.js.",
         "testStrategy": "• Todos los tests E2E deben pasar en Node 20.\\n• Comparar baseline de resultados pre-migración (0 fallos) y post (0 fallos).\\n• Reporte HTML con capturas de pantalla en caso de fallos.",
         "priority": "high",
         "dependencies": [
-          13,
-          14,
-          15
+          "13",
+          "14",
+          "15"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2025-12-26T04:52:50.949Z"
       },
       {
-        "id": 19,
+        "id": "19",
         "title": "Actualización de documentación y guías",
         "description": "Refrescar README, docs/migration-esm-plan.md y guía de despliegue con pasos ESM.",
         "details": "1. README: reemplazar secciones CJS. Ejemplos de import/export.\\n2. Añadir tabla compatibilidad Node 18/20.\\n3. MIGRATION.md: checklist de pasos automáticos, deudas técnicas identificadas.\\n4. Changelog vX.Y.0 incluyendo breaking change ESM.",
         "testStrategy": "• Ejecutar `pnpm run lint-md` y `markdown-link-check`.\\n• QA revisa que comandos copiados del README funcionen en una máquina limpia.",
         "priority": "low",
         "dependencies": [],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2025-12-26T04:52:50.966Z"
       },
       {
-        "id": 20,
+        "id": "20",
         "title": "Despliegue gradual y monitoreo post-migración",
         "description": "Realizar canary en staging y posterior rollout a producción asegurando cero downtime.",
         "details": "1. Configurar feature flag `USE_ESM=true`.\\n2. Deploy a 10 % de instancias en staging, monitorear logs (Elastic/Kibana) 24 h.\\n3. Escalar al 100 % si no hay errores.\\n4. Tag y release en Git, crear release notes.\\n5. Post-mortem ligero con métricas de arranque y memoria.",
         "testStrategy": "• Comparar métricas A/B (CPU, latencia) entre nodos CJS vs ESM.\\n• Alertas Prometheus sin disparos.\\n• Rollback script `pm2 deploy revert` probado antes del rollout.",
         "priority": "medium",
         "dependencies": [
-          16,
-          17,
-          18,
-          19
+          "16",
+          "17",
+          "18",
+          "19"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2025-12-26T04:52:50.980Z"
       }
     ],
     "metadata": {
-      "created": "2025-12-23T16:42:06.182Z",
-      "updated": "2025-12-23T17:00:00.000Z",
-      "description": "Tasks for master context"
+      "version": "1.0.0",
+      "lastModified": "2025-12-26T04:52:50.981Z",
+      "taskCount": 10,
+      "completedCount": 10,
+      "tags": [
+        "master"
+      ]
     }
   }
 }

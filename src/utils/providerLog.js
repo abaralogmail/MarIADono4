@@ -1,7 +1,10 @@
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import getHistoryFromProvider from './getHistoryFromProvider.js';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 function ensureDirectoryExists(filePath) {
   const dir = path.dirname(filePath);
