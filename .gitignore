@@ -12,7 +12,6 @@ BotRamiro()_sessions
 BotJujuy_sessions
 
 
-
 # Environment and configuration
 .env
 bot.qr.png
@@ -62,7 +61,7 @@ tmp
 # Specific files to ignore
 /Logs/conversations_log.xlsx
 /Logs/Conexion-Logs-Powerquery.xlsx
-/mensajes/Conexion - sendBulkMessages.xlsx
+/mesajes/Conexion - sendBulkMessages.xlsx
 src/config/userConfig.js
 
 BotAugustoTucuman_sessions/app-state-sync-version-critical_unblock_low.json
@@ -136,3 +135,11 @@ node_modules/
 .kilo/
 .opencode/
 whatsapp-business-jaspers-market
+
+# Storage for client files (created by storageManager)
+# Do not commit storage contents. On servers, ensure directories are created with permissions 700.
+# Ignore storage root and all subpaths.
+storage/
+storage/**
+/storage/
+/storage/**
