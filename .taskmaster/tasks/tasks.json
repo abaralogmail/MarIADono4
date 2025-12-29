@@ -2,161 +2,171 @@
   "master": {
     "tasks": [
       {
-        "id": "11",
-        "title": "Auditoría inicial de módulos CommonJS",
-        "description": "Escanear el código para localizar cualquier uso de require/module.exports y generar un inventario.",
-        "details": "1. Crear script audit-esm.mjs usando Node 20:\\n   import {glob} from 'glob';\\n   const files = await glob('**/*.js',{ignore:['node_modules/**']});\\n   for(const f of files){\\n       const txt=await fs.readFile(f,'utf8');\\n       if(/require\\(/.test(txt)||/module\\.exports/.test(txt))\\n           report.push(f);\\n   }\\n2. Emitir CSV con columnas: archivo, línea, patrón detectado.\\n3. Detectar packages en package.json con \"type\":\"commonjs\" o sin campo exports.\\n4. Guardar resultado en docs/audit-cjs.csv y abrir issue por cada dependencia CJS.",
-        "testStrategy": "• Ejecutar `node audit-esm.mjs` y verificar que el CSV se genera.\\n• Incluir un archivo de prueba con require y comprobar que aparece en el reporte.\\n• Revisar que no se reporten falsos positivos en archivos .spec.js que ya usan import.",
+        "id": "21",
+        "title": "Migraciones Sequelize para Roles, Permisos y Canales",
+        "description": "Crear migraciones para tablas user_roles, user_permissions, role_permissions, message_channels y alterar usuarios/conversations_log según PRD.",
+        "details": "- Usar Sequelize v6.36.x CLI.\n- Generar migraciones: \n  1) create-user-roles\n  2) create-user-permissions\n  3) create-role-permissions\n  4) alter-usuarios-add-role-fields\n  5) create-message-channels\n  6) alter-conversations-log-add-channel\n- Incluir índices y enums según PRD.\n- Seeds: insertar roles y permisos predefinidos, y los registros de message_channels.\n- Asegurar columnas nuevas en usuarios: role_id (FK), user_type (enum), last_login, login_count, password_hash, is_active, account_status.\nPseudo-código migración (up):\n```js\nawait queryInterface.createTable('user_roles', {...});\nawait queryInterface.bulkInsert('user_roles', [ {role_name:'super_admin', permission_level:100, is_system_role:true}, ... ]);\n// similar para permissions\nawait queryInterface.addColumn('usuarios','role_id',{type:Sequelize.INTEGER, references:{model:'user_roles',key:'role_id'}});\n```\n- Respetar nombres reales de tablas en el código base (ver models actuales) y ajustar snake_case/camelCase consistentemente.\n- Si SQLite, usar CHECK para enums o TEXT con validaciones a nivel app.",
+        "testStrategy": "- Ejecutar `npx sequelize-cli db:migrate` en entorno de prueba.\n- Verificar con `db:migrate:undo` reversibilidad.\n- Consultar esquemas y FK con PRAGMA (SQLite) para asegurar creación.\n- Tests unitarios con Jest: validar que modelos sincronizan sin errores y seeds existen.",
         "priority": "high",
         "dependencies": [],
         "status": "done",
-        "subtasks": [
-          {
-            "id": 13.1,
-            "title": "Run codemod jscodeshift cjs-to-esm on src",
-            "details": "Executed `pnpm run codemod:cjs-to-esm` and applied manual fixes for files where the codemod failed (template literals, class fields, dynamic requires, add .js extensions). Verified ESLint and adjusted scripts. Remaining manual review: mensajes/ and root scripts.",
-            "status": "done",
-            "parentId": "undefined"
-          }
-        ]
+        "subtasks": [],
+        "updatedAt": "2025-12-29T06:53:18.066Z"
       },
       {
-        "id": "12",
-        "title": "Configuración del entorno ESM global",
-        "description": "Ajustar package.json, ESLint, Nodemon y TS/JS configs para soportar 100 % ESM.",
-        "details": "1. package.json:\\n   - Asegurar \"type\":\"module\".\\n   - Añadir \"exports\" y \"imports\" si corresponde.\\n2. ESLint:\\n   - Instalar eslint-plugin-import@latest y configurar parserOptions:{sourceType:'module'}.\\n3. nodemon.json -> \"exec\":\"node --watch app.js\".\\n4. ts-node / jest: cambiar \"extensions\":[\".js\"], \"transform\" usando babel-jest con presets [\"@babel/preset-env\", {\"targets\":{\"node\":\"20\"}}].\\n5. Crear archivo .nvmrc con \"20\".",
-        "testStrategy": "• Correr `pnpm run lint` y asegurar 0 errores de parser.\\n• `node -e \"import('fs').then(()=>console.log('ok'))\"` debe funcionar.\\n• Scripts npm run dev/start deben levantar el server sin flags adicionales.",
+        "id": "22",
+        "title": "Modelos Sequelize y Seed Data para RBAC y Canales",
+        "description": "Definir modelos Sequelize correspondientes y cargar datos iniciales de roles, permisos y canales.",
+        "details": "- Crear/actualizar modelos: UserRole, UserPermission, RolePermission, MessageChannel; actualizar modelo Usuario para campos nuevos.\n- Definir asociaciones: Usuario.belongsTo(UserRole); RolePermission.belongsTo(UserRole/UserPermission).\n- Seeds: roles y permisos del PRD, message_channels por defecto.\n- Usar TypeScript si ya está en repo; si no, JS con JSDoc.\n- Añadir scopes/virtuals para facilitar joins (e.g., Usuario.include(Role)).\n- Mantener consistencia con naming en carpeta `models/` existente.\n- Validar enums con `validate` de Sequelize.\nPseudo-code seed:\n```js\nawait UserRole.bulkCreate([...], {ignoreDuplicates:true});\nawait UserPermission.bulkCreate([...]);\nawait RolePermission.bulkCreate(mapRolePermissions);\nawait MessageChannel.bulkCreate(defaultChannels, {ignoreDuplicates:true});\n```\n- Configurar hooks para actualizar updated_at.",
+        "testStrategy": "- Test de modelos: crear instancias y verificar FK (using SQLite memory).\n- Probar que seeds no duplican (ignoreDuplicates / ON CONFLICT DO NOTHING).\n- Lint + type checks.\n- Query simple join Usuario->UserRole para asegurar asociación.",
         "priority": "high",
         "dependencies": [
-          "11"
+          "21"
         ],
-        "status": "done",
+        "status": "pending",
         "subtasks": []
       },
       {
-        "id": "13",
-        "title": "Refactor del código fuente (carpeta src/) a import/export",
-        "description": "Convertir todos los módulos de la carpeta src/ a sintaxis ESM y asegurar resolución de rutas relativa/absoluta.",
-        "details": "1. Usar codemod con jscodeshift:\\n   jscodeshift -t tools/codemods/cjs-to-esm.js src/**/*.js\\n2. Patrón: require('x') → import x from 'x';\\n   module.exports = fn → export default fn;\\n3. Reemplazar __dirname/__filename con import.meta.url + fileURLToPath.\\n4. Donde haya exports múltiples usar `export const foo`/`export function`.\\n5. Ajustar rutas: agregar extensión .js en imports locales.\\n6. Ejecutar `node --check` por lote para validación sintáctica.",
-        "testStrategy": "• Correr suite de unit tests: `pnpm test` debe seguir al 100 %.\\n• Lanzar `node src/index.js` localmente y verificar que no haya ERR_MODULE_NOT_FOUND.\\n• Revisión de código estática: ESLint sin errores \"no-undef\" para imports.",
+        "id": "23",
+        "title": "Middleware de Autenticación JWT y Autorización RBAC",
+        "description": "Implementar middleware para validar JWT y permisos por rol en endpoints sensibles.",
+        "details": "- Paquetes recomendados: jsonwebtoken v9.0.2, bcrypt v5.1.1, express v4/5 según stack.\n- Middleware auth: extraer token Bearer, verificar firma y expiración; añadir `req.user` con role_id y permisos.\n- Middleware RBAC: recibe `requiredPermissions` y valida contra permisos agregados del rol o del usuario.\n- Incluir MFA placeholder para admins (flag en usuario) si PRD lo exige; al menos preparar campo.\n- Considerar caché de roles/permisos en memoria (L1) con TTL corto.\n- Manejar errores con códigos 401/403.\nPseudo-code:\n```js\nfunction rbac(required){\n return async (req,res,next)=>{\n   const user = req.user;\n   const perms = await getPermissionsForRole(user.role_id);\n   if(required.every(p=>perms.includes(p))) return next();\n   return res.status(403).json({error:'forbidden'});\n };\n}\n```\n- Integrar en rutas de campañas, archivos, templates.\n- Usar bcrypt para password_hash en creación/login de usuarios.",
+        "testStrategy": "- Tests de integración con supertest: rutas protegidas sin token -> 401; con token inválido -> 401; sin permisos -> 403; con permisos -> 200.\n- Mock de permisos para cubrir paths.\n- Validar expiración del token.\n- QA manual con curl/postman.",
         "priority": "high",
         "dependencies": [
-          "12"
+          "22"
         ],
-        "status": "done",
-        "subtasks": [],
-        "updatedAt": "2025-12-26T04:51:20.746Z"
+        "status": "pending",
+        "subtasks": []
       },
       {
-        "id": "14",
-        "title": "Migración de pruebas y scripts a ESM",
-        "description": "Convertir archivos de test y scripts auxiliares a sintaxis ESM garantizando compatibilidad con Jest/Mocha.",
-        "details": "1. Configurar jest.config.mjs:\\n   export default {testEnvironment:'node',extensionsToTreatAsEsm:['.js']};\\n2. Reescribir archivos *.spec.js a import.\\n3. Para mocks CJS usar `jest.unstable_mockModule`.\\n4. Actualizar scripts CLI en bin/*.js con #!/usr/bin/env node + import.\\n5. Añadir flag \"type\":\"module\" en paquetes internos de monorepo si existen.",
-        "testStrategy": "• `pnpm test` en Node 20 y 18, asegurar cobertura ≥ 95 %.\\n• Introducir test con import assertion (e.g., JSON modules) y verificar que pasa.\\n• Timeouts de Jest < 30 s para toda la suite.",
+        "id": "24",
+        "title": "Migraciones y Folder Structure para Gestión de Archivos y Conversaciones",
+        "description": "Crear tablas client_file_storage y client_conversation_archive y preparar estructura de carpetas por cliente.",
+        "details": "- Migraciones Sequelize para ambas tablas con índices definidos.\n- Definir rutas físicas: `storage/clients/client_${id}/{conversations,media/{images,videos,audio},documents,archives}`.\n- Considerar almacenamiento S3/Azure/GCS: guardar bucket_name/object_key opcional.\n- Añadir checksum_sha256 (usar crypto) y triggers de timestamps (Sequelize hooks).\n- Configurar permisos de carpeta (700) y validación de path traversal.\n- Actualizar `.gitignore` para excluir storage.\n- Preparar función util `getClientStoragePath(clienteId)`.\nPseudo-code folder creation:\n```js\nconst dirs = [...];\ndirs.forEach(d=>fs.mkdirSync(d,{recursive:true}));\n```\n",
+        "testStrategy": "- Ejecutar migraciones y verificar creación de índices.\n- Test unitario de util de paths: crea estructura en tmp dir y valida existencia.\n- Verificar que fs.mkdirSync/async no lanza al existir (recursive:true).\n- Test de inserción en tablas con datos de ejemplo.",
         "priority": "high",
         "dependencies": [
-          "12"
+          "21"
         ],
-        "status": "done",
-        "subtasks": [],
-        "updatedAt": "2025-12-26T04:51:20.828Z"
+        "status": "pending",
+        "subtasks": []
       },
       {
-        "id": "15",
-        "title": "Gestión y sustitución de dependencias CommonJS-only",
-        "description": "Detectar librerías sin soporte ESM, evaluar alternativas o usar import() dinámico con registro de deuda.",
-        "details": "1. Leer docs/audit-cjs.csv y filtrar packages.\\n2. Para cada package:\\n   a) Verificar si existe release ESM (`pnpm view pkg module`).\\n   b) Si no, evaluar alternativas (p. ej., uuid→nanoid).\\n   c) Si irreemplazable, envolver con `const x = await import('pkg');`.\\n3. Documentar cambios en MIGRATION.md sección \"Dependencias\".\\n4. Actualizar package.json y ejecutar `pnpm dedupe && pnpm audit fix`.",
-        "testStrategy": "• Ejecutar aplicación end-to-end y verificar que los puntos donde se sustituyó la librería funcionan.\\n• Añadir pruebas unitarias para wrappers dinámicos simulando error de carga.\\n• Revisar que `pnpm ls` no muestre duplicados legacy.",
+        "id": "25",
+        "title": "Métodos SqliteManager/Service para Archivos y Endpoints de Descarga/Auditoría",
+        "description": "Implementar métodos saveClientFile, getClientFiles, archiveConversation y endpoint de descarga con auditoría de acceso.",
+        "details": "- En `SqliteManager` o repositorio equivalente, implementar CRUD:\n  - `saveClientFile(cliente_id, file_data)` guardando metadata en DB y archivo físico; calcular checksum SHA-256; incrementar accessed_count cuando aplique.\n  - `getClientFiles(cliente_id, filter)` con filtros por tipo/fecha.\n  - `archiveConversation(cliente_id, date_range)` generando archivo JSON/PDF/HTML/TXT en `archives/` y registro en client_conversation_archive.\n- Endpoint GET `/clients/:id/files/:fileId/download` protegido con RBAC (`files.download`).\n- Auditoría: log access (Winston u otro) con user_id, timestamp, ip; opcional tabla si existe logger central.\n- Manejar stream seguro (set headers, mime_type, content-length) y 404 si no existe.\n- Sanitizar paths para evitar traversal.\nPseudo-code download:\n```js\napp.get('/clients/:id/files/:fileId/download', rbac(['files.download']), async (req,res)=>{\n const file = await ClientFile.findByPk(fileId);\n if(!file || file.cliente_id!==req.params.id) return res.status(404);\n const absPath = path.resolve(storageRoot, file.file_path);\n res.download(absPath, file.original_filename);\n logAccess(...);\n});\n```\n",
+        "testStrategy": "- Tests de integración con supertest: upload stub -> download -> checksum matches.\n- Verificar 403 sin permiso y 404 con cliente incorrecto.\n- Mock fs para unit tests (memfs).\n- Validar auditoría llamada (spy en logger).",
         "priority": "medium",
         "dependencies": [
-          "11",
-          "12"
+          "24",
+          "23"
         ],
-        "status": "done",
-        "subtasks": [],
-        "updatedAt": "2025-12-26T04:52:50.429Z"
+        "status": "pending",
+        "subtasks": []
       },
       {
-        "id": "16",
-        "title": "Actualización de scripts de ejecución y Docker a ESM",
-        "description": "Modificar nodemon, PM2 y Dockerfile para inicializar el proyecto con import/export sin flags experimentales.",
-        "details": "1. nodemon.json: \"exec\":\"node --enable-source-maps app.js\".\\n2. ecosystem.config.mjs (PM2) export default {apps:[{script:'app.js'}]};\\n3. Dockerfile:\\n   FROM node:20-alpine\\n   WORKDIR /app\\n   COPY package*.json .\\n   RUN pnpm ci --prod\\n   COPY . .\\n   CMD [\"node\",\"app.js\"]\\n4. Actualizar docker-compose.yml si aplica.\\n5. Verificar compatibilidad Windows: reemplazar rm por rimraf en scripts.",
-        "testStrategy": "• `pnpm run dev` local debe recargar con nodemon.\\n• `docker build .` seguido de `docker run` arranca en <1 s.\\n• `pm2 start ecosystem.config.mjs` no debe mostrar warnings de CJS.",
-        "priority": "medium",
-        "dependencies": [
-          "12",
-          "15"
-        ],
-        "status": "done",
-        "subtasks": [],
-        "updatedAt": "2025-12-26T04:51:20.845Z"
-      },
-      {
-        "id": "17",
-        "title": "Actualización de CI/CD para matriz Node 18 & 20",
-        "description": "Modificar workflows (GitHub Actions) y pipelines para correr tests y builds en entorno ESM.",
-        "details": "1. .github/workflows/ci.yml:\\n   strategy.matrix.node: [18,20]\\n   steps:\\n     - uses: actions/setup-node@v4 with node-version: ${{matrix.node}}\\n     - run: pnpm ci\\n     - run: pnpm test -- --runInBand\\n2. Agregar paso `docker build` de verificación.\\n3. Artefacto de cobertura subido a Codecov.\\n4. Pipeline de CD: usar image node:20 para producción, dejar node:18 para staging opcional.",
-        "testStrategy": "• Lanzar workflow en rama feature y verificar 2 jobs paralelos.\\n• Asegurar que fallo en cobertura <95 % bloquea merge.\\n• Simular tag release y comprobar despliegue a staging.",
-        "priority": "medium",
-        "dependencies": [
-          "12",
-          "16"
-        ],
-        "status": "done",
-        "subtasks": [],
-        "updatedAt": "2025-12-26T04:51:20.861Z"
-      },
-      {
-        "id": "18",
-        "title": "QA automatizada y pruebas de regresión en flujos WhatsApp",
-        "description": "Ejecutar suites E2E y validar que no existan regresiones funcionales tras la migración.",
-        "details": "1. Cypress/Playwright tests: actualizar imports.\\n2. Mock de proveedor WhatsApp via TestContainers.\\n3. Ejecutar `pnpm run e2e` en CI y local.\\n4. Medir tiempos de arranque (<1 s) registrando performance.mark en app.js.",
-        "testStrategy": "• Todos los tests E2E deben pasar en Node 20.\\n• Comparar baseline de resultados pre-migración (0 fallos) y post (0 fallos).\\n• Reporte HTML con capturas de pantalla en caso de fallos.",
+        "id": "26",
+        "title": "Migraciones para Grupos de WhatsApp y Logs",
+        "description": "Crear tablas whatsapp_groups, whatsapp_group_members, whatsapp_group_cliente_mapping y whatsapp_group_messages_log con índices.",
+        "details": "- Migraciones Sequelize con PK/UK/FK y enums.\n- Índices: idx_group_client, idx_group_active, idx_member_group, idx_member_status, idx_client_groups, idx_group_messages.\n- Asegurar UNIQUE (group_id, member_phone_number) y (cliente_id, group_id).\n- Campos de estado (sync_status) y timestamps.\n- Verificar tipos compatibles SQLite (usar TEXT para enums).\nPseudo-code migration snippet:\n```js\nawait queryInterface.createTable('whatsapp_groups', { group_id: {type:Sequelize.STRING, primaryKey:true}, ...});\n```\n- Actualizar modelos correspondientes y asociaciones (Group hasMany Members, etc.).",
+        "testStrategy": "- Ejecutar migraciones; verificar con PRAGMA table_info.\n- Tests de modelos: crear grupo, miembros y mapping; validar unique constraints lanzan error.\n- Consultar índices con PRAGMA index_list.",
         "priority": "high",
         "dependencies": [
-          "13",
-          "14",
-          "15"
+          "21"
         ],
-        "status": "done",
-        "subtasks": [],
-        "updatedAt": "2025-12-26T04:52:50.949Z"
+        "status": "pending",
+        "subtasks": []
       },
       {
-        "id": "19",
-        "title": "Actualización de documentación y guías",
-        "description": "Refrescar README, docs/migration-esm-plan.md y guía de despliegue con pasos ESM.",
-        "details": "1. README: reemplazar secciones CJS. Ejemplos de import/export.\\n2. Añadir tabla compatibilidad Node 18/20.\\n3. MIGRATION.md: checklist de pasos automáticos, deudas técnicas identificadas.\\n4. Changelog vX.Y.0 incluyendo breaking change ESM.",
-        "testStrategy": "• Ejecutar `pnpm run lint-md` y `markdown-link-check`.\\n• QA revisa que comandos copiados del README funcionen en una máquina limpia.",
-        "priority": "low",
-        "dependencies": [],
-        "status": "done",
-        "subtasks": [],
-        "updatedAt": "2025-12-26T04:52:50.966Z"
-      },
-      {
-        "id": "20",
-        "title": "Despliegue gradual y monitoreo post-migración",
-        "description": "Realizar canary en staging y posterior rollout a producción asegurando cero downtime.",
-        "details": "1. Configurar feature flag `USE_ESM=true`.\\n2. Deploy a 10 % de instancias en staging, monitorear logs (Elastic/Kibana) 24 h.\\n3. Escalar al 100 % si no hay errores.\\n4. Tag y release en Git, crear release notes.\\n5. Post-mortem ligero con métricas de arranque y memoria.",
-        "testStrategy": "• Comparar métricas A/B (CPU, latencia) entre nodos CJS vs ESM.\\n• Alertas Prometheus sin disparos.\\n• Rollback script `pm2 deploy revert` probado antes del rollout.",
+        "id": "27",
+        "title": "Servicio de Sincronización de Grupos con Baileys",
+        "description": "Integrar Baileys para sincronizar grupos, mapear a clientes y exponer métodos en SqliteManager.",
+        "details": "- Usar Baileys @adiwajshing/baileys v6.x (actual estable) con multi-device.\n- Implementar en servicio existente (ej. WhatsAppService):\n  - `syncWhatsAppGroups()`: obtiene lista de grupos, inserta/actualiza whatsapp_groups y members; set sync_status y last_sync.\n  - `mapGroupToClient(group_id, cliente_id)` y `getClientGroups(cliente_id)` usando mapping table.\n  - Persistir mensajes grupales en whatsapp_group_messages_log (message_type, media_url, is_bot_message).\n- Manejar rate limits y reconexiones Baileys.\n- Normalizar phone numbers (E.164) antes de guardar.\n- Usar transacciones Sequelize para sync atomic.\nPseudo-code sync:\n```js\nconst groups = await sock.groupFetchAllParticipating();\nfor(const g of Object.values(groups)){\n  await WhatsAppGroup.upsert({...});\n  for(const m of g.participants){ await Member.upsert({...}); }\n}\n```\n- RBAC: limitar sync a roles admin/super_admin.\n",
+        "testStrategy": "- Mock Baileys in unit tests y simular payloads de grupos.\n- Test de upsert: sync dos veces no duplica.\n- Test de mapping: asignar cliente y recuperar.\n- QA manual: ejecutar sync en sandbox number y validar DB.",
         "priority": "medium",
         "dependencies": [
-          "16",
-          "17",
-          "18",
-          "19"
+          "26",
+          "23"
         ],
-        "status": "done",
-        "subtasks": [],
-        "updatedAt": "2025-12-26T04:52:50.980Z"
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "28",
+        "title": "Migraciones para Campañas, Reportes y Métricas",
+        "description": "Crear tablas campaigns, campaign_messages, campaign_recipient_log, campaign_analytics, customer_reports, campaign_goals con índices.",
+        "details": "- Sequelize migraciones con UUID PK (usar `Sequelize.UUID` + defaultValue: UUIDV4).\n- Definir FK a usuarios, message_channels, customer_segments.\n- Índices de estado y fechas según PRD.\n- Asegurar campos numéricos para métricas y enums de estado.\n- Actualizar modelos y asociaciones (Campaign hasMany Messages/Recipients/Analytics/Goals).\n- Considerar ON DELETE SET NULL/ CASCADE donde aplica (mensajes al borrar campaña: cascade).",
+        "testStrategy": "- Ejecutar migraciones y validar estructura.\n- Tests de modelos: crear campaña con relaciones y verificar constraints.\n- Verificar índices con PRAGMA.\n- Seed opcional de campaña demo para QA.",
+        "priority": "high",
+        "dependencies": [
+          "21"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "29",
+        "title": "Servicio de Campañas y Scheduler de Envíos",
+        "description": "Implementar CampaignService con creación, programación y tracking de campañas usando node-cron o bull/bullmq.",
+        "details": "- Librerías: node-cron v3.0.3 para simplicidad; si ya usan Redis, considerar bullmq v5.x para fiabilidad.\n- CampaignService funciones:\n  - createCampaign(payload) valida permisos, guarda campaña y mensajes en secuencia.\n  - scheduleCampaign(campaign_id, start_date) programa job; soportar estados draft/scheduled/active.\n  - sendBatch(campaign_id, batchSize=1000) procesa recipients, registra en campaign_recipient_log y actualiza métricas.\n  - updateMetrics: escribir en campaign_analytics.\n- Integrar con canales (WhatsApp/SMS/email) existentes; usar channel_id para ruta de envío.\n- Manejar reintentos y marcar failed con failure_reason.\nPseudo-code scheduler:\n```js\ncron.schedule('*/1 * * * *', async ()=>{\n const toSend = await Campaign.findAll({where:{status:'scheduled', start_date <= now}});\n for(const c of toSend){ await sendBatch(c.id); }\n});\n```\n- RBAC: `campaigns.create`, `campaigns.send`.\n",
+        "testStrategy": "- Unit tests con mocks de transporte (WhatsApp/SMS) y DB transacciones.\n- Test de scheduler en modo fast-forward (usar fake timers) para validar cambio de estado y logs.\n- Validar límites de lote y actualización de métricas.\n- QA manual: crear campaña demo y enviar a segmento pequeño.",
+        "priority": "medium",
+        "dependencies": [
+          "28",
+          "23"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "30",
+        "title": "Migraciones para Templates de Meta y Versionado",
+        "description": "Crear tablas message_templates, template_buttons, template_variables, template_usage_log, template_versions con índices.",
+        "details": "- Migraciones Sequelize con UUID PK.\n- Índices en status, meta_template_name, template_usage.\n- Definir FKs a usuarios y campaigns donde aplique.\n- Soportar header_type/body/footer fields y approval_status_meta.\n- Añadir UNIQUE template_name.\n- Modelos y asociaciones: Template hasMany Buttons/Variables/Versions/UsageLogs.\n- Considerar JSON column meta_response_data (SQLite: TEXT + manual JSON parse).",
+        "testStrategy": "- Ejecutar migraciones y validar unique/index.\n- Tests de modelos: crear template con botones/variables y version.\n- Verificar que usage log FK acepta null en campaign_id.",
+        "priority": "high",
+        "dependencies": [
+          "21"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "31",
+        "title": "Integración con Meta Graph API para Gestión de Templates",
+        "description": "Implementar servicio para sincronizar, enviar a aprobación y consultar estado de templates de WhatsApp/Meta.",
+        "details": "- Usar Meta Graph API v19.0+ (revisar versión actual) con app tokens/WTAs.\n- Endpoints clave: POST /whatsapp_business_accounts/{wba_id}/message_templates (crear), GET /{template_id} (estado), GET list.\n- Servicio TemplateService:\n  - submitTemplate(template) -> envía a Meta, guarda meta_template_id/respuesta.\n  - syncApprovedTemplates() -> trae aprobados y actualiza status/approval_status_meta.\n  - trackApprovalStatus() -> cron cada 6h, actualiza estados pending_approval.\n- Manejar rate limits (Retry-After) y errores; log con Winston.\n- RBAC: `templates.manage` requerido.\n- Actualizar template_versions en cada cambio de cuerpo/header/footer.\nPseudo-code:\n```js\nconst resp = await axios.post(`https://graph.facebook.com/v19.0/${WBA_ID}/message_templates`, payload, {headers:{Authorization:`Bearer ${token}`}});\nawait MessageTemplate.update({meta_template_id: resp.data.id, status:'pending_approval'}, {where:{id}});\n```\n",
+        "testStrategy": "- Tests unitarios con nock para simular Graph API.\n- Validar cambio de estado según respuesta (approved/rejected).\n- Test de cron de sincronización con fake timers.\n- QA manual en sandbox WABA si disponible.",
+        "priority": "medium",
+        "dependencies": [
+          "30",
+          "23"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "32",
+        "title": "Migraciones y Motor de Segmentación y Scoring",
+        "description": "Crear tablas de segmentación (segmentation_rules, customer_segments, segment_members, segment_performance, customer_scores) e implementar motor de reglas y scores.",
+        "details": "- Migraciones con UUID PK y FKs a usuarios/segments.\n- Índices en is_active y FK según PRD.\n- Motor de segmentación (SegmentService):\n  - evaluar reglas en criteria_json (usar JSON parse) sobre datos de usuarios/conversaciones/pedidos.\n  - soportar tipos: demographic, behavioral, engagement, transactional, custom.\n  - `recalculateSegments()` programado (cron 1h) para segmentos dinámicos/híbridos.\n  - insert/update en segment_members y actualizar contadores en customer_segments.\n- Scoring: calcular engagement/loyalty/churn_risk/lifetime_value; almacenar en customer_scores.\n- Optimizar con consultas agregadas y caché opcional (Redis) para resultados frecuentes.\nPseudo-code rule eval:\n```js\nfunction matches(user, rule){ const c = rule.criteria_json; /* aplicar filtros */ }\n```\n- Integrar con CampaignService: filtrar recipients por segment_id (JOIN segment_members).\n",
+        "testStrategy": "- Unit tests de motor con reglas de ejemplo y datos mock.\n- Test de cron recalculando y actualizando miembros.\n- Validar unique constraint (segment_id, cliente_id) no duplica miembros.\n- Verificar scores se recalculan y guardan correctamente.",
+        "priority": "medium",
+        "dependencies": [
+          "21",
+          "23"
+        ],
+        "status": "pending",
+        "subtasks": []
       }
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2025-12-26T04:52:50.981Z",
-      "taskCount": 10,
-      "completedCount": 10,
+      "lastModified": "2025-12-29T06:53:18.066Z",
+      "taskCount": 12,
+      "completedCount": 1,
       "tags": [
         "master"
       ]
