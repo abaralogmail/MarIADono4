@@ -123,7 +123,7 @@
           "28",
           "23"
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -151,7 +151,7 @@
           "30",
           "23"
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -165,15 +165,16 @@
           "21",
           "23"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2025-12-30T05:45:24.966Z"
       }
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2025-12-30T04:56:51.911Z",
+      "lastModified": "2025-12-30T05:45:24.966Z",
       "taskCount": 12,
-      "completedCount": 9,
+      "completedCount": 12,
       "tags": [
         "master"
       ]

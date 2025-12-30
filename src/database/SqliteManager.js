@@ -18,6 +18,13 @@ import fs from "fs";
  import N8nMetricModel from "./models/N8nMetric.js";
  import ClientFileModel from "./models/ClientFile.js";
  
+ // Segmentación / Scoring models
+ import SegmentationRuleModel from "./models/SegmentationRule.js";
+ import CustomerSegmentModel from "./models/CustomerSegment.js";
+ import SegmentMemberModel from "./models/SegmentMember.js";
+ import SegmentPerformanceModel from "./models/SegmentPerformance.js";
+ import CustomerScoreModel from "./models/CustomerScore.js";
+ 
  // Auxiliares
  import storageManager from "../auxiliares/storageManager.js";
 
@@ -125,7 +132,14 @@ class SqliteManager {
     this.models.ReglasHorario = ReglasHorarioModel(this.sequelize, DataTypes);
     this.models.ExcepcionesHorario = ExcepcionesHorarioModel(this.sequelize, DataTypes);
     this.models.ClientFile = ClientFileModel(this.sequelize, DataTypes);
- 
+  
+    // Segmentación / Scoring models
+    this.models.SegmentationRule = SegmentationRuleModel(this.sequelize, DataTypes);
+    this.models.CustomerSegment = CustomerSegmentModel(this.sequelize, DataTypes);
+    this.models.SegmentMember = SegmentMemberModel(this.sequelize, DataTypes);
+    this.models.SegmentPerformance = SegmentPerformanceModel(this.sequelize, DataTypes);
+    this.models.CustomerScore = CustomerScoreModel(this.sequelize, DataTypes);
+  
     // Define associations
     this.defineAssociations();
   }
