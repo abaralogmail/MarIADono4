@@ -1,9 +1,7 @@
-'use strict';
-
-const fs = require('fs');
+import fs from 'fs';
 const fsp = fs.promises;
-const path = require('path');
-const crypto = require('crypto');
+import path from 'path';
+import crypto from 'crypto';
 
 const DEFAULT_STORAGE_ROOT = path.resolve(process.cwd(), 'storage');
 
@@ -80,7 +78,7 @@ async function ensureDir(dirPath) {
     }
   } catch (err) {
     // Si ya existe y no es directorio, propagar error
-    if (err.code === 'EEXIST') {
+    if (err && err.code === 'EEXIST') {
       const stat = await fsp.stat(dirPath);
       if (!stat.isDirectory()) throw err;
     } else {
@@ -133,7 +131,15 @@ async function saveBufferToPath(destPath, buffer, options = {}) {
   return { path: destPath, size: stat.size, checksum };
 }
 
-module.exports = {
+export {
+  getClientStoragePath,
+  createClientStorageDirs,
+  computeSha256,
+  saveBufferToPath,
+  getStorageRoot
+};
+
+export default {
   getClientStoragePath,
   createClientStorageDirs,
   computeSha256,

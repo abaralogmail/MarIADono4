@@ -1,8 +1,9 @@
 'use strict';
 
-const storageManager = require('../auxiliares/storageManager');
+import * as storageManager from '../../auxiliares/storageManager.js';
+const storage = storageManager.default || storageManager;
 
-module.exports = (sequelize, DataTypes) => {
+export default (sequelize, DataTypes) => {
   const ClientFile = sequelize.define(
     'ClientFile',
     {
@@ -70,7 +71,7 @@ module.exports = (sequelize, DataTypes) => {
   ClientFile.beforeCreate(async (instance) => {
     try {
       if (!instance.checksum_sha256 && instance._fileBuffer) {
-        instance.checksum_sha256 = await storageManager.computeSha256(instance._fileBuffer);
+        instance.checksum_sha256 = await storage.computeSha256(instance._fileBuffer);
         instance.file_size = instance._fileBuffer.length;
       }
       if (!instance.uploaded_at) instance.uploaded_at = new Date();
@@ -83,7 +84,7 @@ module.exports = (sequelize, DataTypes) => {
   ClientFile.beforeUpdate(async (instance) => {
     try {
       if (instance._fileBuffer) {
-        instance.checksum_sha256 = await storageManager.computeSha256(instance._fileBuffer);
+        instance.checksum_sha256 = await storage.computeSha256(instance._fileBuffer);
         instance.file_size = instance._fileBuffer.length;
       }
     } catch (err) {
