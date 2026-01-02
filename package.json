@@ -9,6 +9,7 @@
         "pre-copy": "cd .. && npm run  copy.lib base-baileys-memory",
         "dev": "npm run prestart && nodemon --signal SIGKILL ./app.js",
         "start": "node app.js",
+        "test": "jest",
         "n8n": "n8n",
         "report:weekly-conversations": "node src/database/Informes/generateWeeklyConversationLogReport.js true",
         "codemod:cjs-to-esm": "npx jscodeshift -t tools/codemods/cjs-to-esm.js src --extensions=js --parser=flow"
@@ -27,6 +28,7 @@
         "archiver": "^7.0.1",
         "axios": "^1.7.7",
         "base-bailey-memory": "file:",
+        "bcrypt": "5.1.1",
         "cache-manager": "5.2.4",
         "csv-parser": "^3.0.0",
         "dotenv": "^16.4.5",
@@ -40,6 +42,7 @@
         "iconv-lite": "^0.6.3",
         "jimp": "^0.22.10",
         "json2csv": "^6.0.0-alpha.2",
+        "jsonwebtoken": "9.0.2",
         "langchain": "^0.2.17",
         "mysql": "^2.18.1",
         "mysql2": "^3.14.2",
@@ -64,23 +67,13 @@
         "eslint": "^8.52.0",
         "eslint-plugin-bot-whatsapp": "latest",
         "eslint-plugin-import": "^2.28.0",
-        "sequelize-cli": "^6.6.3",
-        "jest": "^29.7.0"
+        "jest": "^29.7.0",
+        "sequelize-cli": "^6.6.3"
     },
     "jest": {
         "testEnvironment": "node",
         "verbose": false,
         "detectOpenHandles": true
-    },
-    "scripts": {
-        "prestart": "npx eslint . --no-ignore",
-        "pre-copy": "cd .. && npm run  copy.lib base-baileys-memory",
-        "dev": "npm run prestart && nodemon --signal SIGKILL ./app.js",
-        "start": "node app.js",
-        "test": "jest",
-        "n8n": "n8n",
-        "report:weekly-conversations": "node src/database/Informes/generateWeeklyConversationLogReport.js true",
-        "codemod:cjs-to-esm": "npx jscodeshift -t tools/codemods/cjs-to-esm.js src --extensions=js --parser=flow"
     },
     "author": "",
     "license": "ISC"
