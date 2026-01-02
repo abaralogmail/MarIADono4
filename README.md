@@ -1,3 +1,21 @@
+# MarIADono4
+
+MarIADono4 — Asistente conversacional listo para usar que facilita la interacción automatizada con clientes, centrado en experiencia y resultados medibles.
+
+## Resumen
+
+- Proyecto: MarIADono — sistema de bots WhatsApp con múltiples proveedores y persistencia SQLite.
+- Entrypoint: app.js
+- DB: SQLite (src/database)
+- Flujos: src/flows
+
+## Detalle
+
+Este repositorio agrupa la documentación y la implementación de un sistema de múltiples bots, con integración a proveedores (Baileys, BuilderBot/Meta), orquestación de flujos en `src/flows/` y persistencia en `src/database/`.
+
+Para más información vea los documentos en `docs/` y `Documentacion/`.
+
+<<<<<<< HEAD
 # AGENTS.md - MarIADono3 WhatsApp Bot System
 
 ## Comandos
@@ -153,3 +171,7 @@ Componentes de UI web para administración y monitoreo.
 - **ESLint**: Usa el plugin bot-whatsapp con la configuración recomendada
 
 ---
+=======
+# MarIADono4
+MarIADono4 — Asistente conversacional listo para usar que facilita la interacción automatizada con clientes, centrado en experiencia y resultados medibles.  Propuesta de valor: reduce el tiempo para poner en marcha un canal conversacional efectivo y coherente, mejorando la captación, el soporte y la entrega de material a los usuarios.
+>>>>>>> dbde175cdd51297fa0b4f195c228cbe5a05d30c6
