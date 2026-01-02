@@ -462,3 +462,151 @@
 [2025-12-17T19:00:19.509Z] Connection update: connecting
 [2025-12-17T19:00:20.189Z] Connection update: undefined
 [2025-12-17T19:00:20.189Z] QR Code received
+[2025-12-30T03:47:03.571Z] Connection update: connecting
+[2025-12-30T03:47:03.912Z] Unhandled Rejection at: Promise {
+  <rejected> TypeError: Cannot read properties of undefined (reading 'id')
+      at Object.sendMessage (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@leifermendez+baileys@6.8.6_31af2762c251e43ad8571ffba401b8a0\node_modules\@leifermendez\baileys\lib\Socket\messages-send.js:691:48)
+      at BaileysProvider.sendText (file:///F:/developer/MariaDono/MarIADono4/node_modules/.pnpm/@builderbot+provider-bailey_fb4e2121f81f5c7e6585354210962836/node_modules/@builderbot/provider-baileys/dist/index.mjs:31443:32)
+      at BaileysProvider.sendMessage (file:///F:/developer/MariaDono/MarIADono4/node_modules/.pnpm/@builderbot+provider-bailey_fb4e2121f81f5c7e6585354210962836/node_modules/@builderbot/provider-baileys/dist/index.mjs:31528:25)
+      at CoreClass.sendProviderAndSave (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14635:65)
+      at Object.promiseInFunc (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14340:36)
+      at Queue.processItem (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:804:30)
+      at F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:882:64
+      at Array.map (<anonymous>)
+      at Queue.processQueue (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:882:45)
+      at F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:872:22
+      at new Promise (<anonymous>)
+      at Queue.enqueue (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:856:16)
+      at enqueueMsg (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14339:47)
+      at sendFlow (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14317:27)
+      at async exportFunctionsSend (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14563:17),
+  [Symbol(async_id_symbol)]: 55425,
+  [Symbol(trigger_async_id_symbol)]: 55420
+} reason: TypeError: Cannot read properties of undefined (reading 'id')
+    at Object.sendMessage (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@leifermendez+baileys@6.8.6_31af2762c251e43ad8571ffba401b8a0\node_modules\@leifermendez\baileys\lib\Socket\messages-send.js:691:48)
+    at BaileysProvider.sendText (file:///F:/developer/MariaDono/MarIADono4/node_modules/.pnpm/@builderbot+provider-bailey_fb4e2121f81f5c7e6585354210962836/node_modules/@builderbot/provider-baileys/dist/index.mjs:31443:32)
+    at BaileysProvider.sendMessage (file:///F:/developer/MariaDono/MarIADono4/node_modules/.pnpm/@builderbot+provider-bailey_fb4e2121f81f5c7e6585354210962836/node_modules/@builderbot/provider-baileys/dist/index.mjs:31528:25)
+    at CoreClass.sendProviderAndSave (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14635:65)
+    at Object.promiseInFunc (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14340:36)
+    at Queue.processItem (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:804:30)
+    at F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:882:64
+    at Array.map (<anonymous>)
+    at Queue.processQueue (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:882:45)
+    at F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:872:22
+    at new Promise (<anonymous>)
+    at Queue.enqueue (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:856:16)
+    at enqueueMsg (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14339:47)
+    at sendFlow (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14317:27)
+    at async exportFunctionsSend (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14563:17)
+[2025-12-30T03:47:03.918Z] Unhandled Rejection at: Promise {
+  <rejected> TypeError: Cannot read properties of undefined (reading 'id')
+      at Object.sendMessage (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@leifermendez+baileys@6.8.6_31af2762c251e43ad8571ffba401b8a0\node_modules\@leifermendez\baileys\lib\Socket\messages-send.js:691:48)
+      at BaileysProvider.sendText (file:///F:/developer/MariaDono/MarIADono4/node_modules/.pnpm/@builderbot+provider-bailey_fb4e2121f81f5c7e6585354210962836/node_modules/@builderbot/provider-baileys/dist/index.mjs:31443:32)
+      at BaileysProvider.sendMessage (file:///F:/developer/MariaDono/MarIADono4/node_modules/.pnpm/@builderbot+provider-bailey_fb4e2121f81f5c7e6585354210962836/node_modules/@builderbot/provider-baileys/dist/index.mjs:31528:25)
+      at CoreClass.sendProviderAndSave (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14635:65)
+      at Object.promiseInFunc (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14340:36)
+      at Queue.processItem (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:804:30)
+      at F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:882:64
+      at Array.map (<anonymous>)
+      at Queue.processQueue (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:882:45)
+      at F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:872:22
+      at new Promise (<anonymous>)
+      at Queue.enqueue (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:856:16)
+      at enqueueMsg (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14339:47)
+      at sendFlow (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14317:27)
+      at async exportFunctionsSend (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14563:17),
+  [Symbol(async_id_symbol)]: 55490,
+  [Symbol(trigger_async_id_symbol)]: 55485
+} reason: TypeError: Cannot read properties of undefined (reading 'id')
+    at Object.sendMessage (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@leifermendez+baileys@6.8.6_31af2762c251e43ad8571ffba401b8a0\node_modules\@leifermendez\baileys\lib\Socket\messages-send.js:691:48)
+    at BaileysProvider.sendText (file:///F:/developer/MariaDono/MarIADono4/node_modules/.pnpm/@builderbot+provider-bailey_fb4e2121f81f5c7e6585354210962836/node_modules/@builderbot/provider-baileys/dist/index.mjs:31443:32)
+    at BaileysProvider.sendMessage (file:///F:/developer/MariaDono/MarIADono4/node_modules/.pnpm/@builderbot+provider-bailey_fb4e2121f81f5c7e6585354210962836/node_modules/@builderbot/provider-baileys/dist/index.mjs:31528:25)
+    at CoreClass.sendProviderAndSave (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14635:65)
+    at Object.promiseInFunc (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14340:36)
+    at Queue.processItem (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:804:30)
+    at F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:882:64
+    at Array.map (<anonymous>)
+    at Queue.processQueue (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:882:45)
+    at F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:872:22
+    at new Promise (<anonymous>)
+    at Queue.enqueue (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:856:16)
+    at enqueueMsg (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14339:47)
+    at sendFlow (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14317:27)
+    at async exportFunctionsSend (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14563:17)
+[2025-12-30T03:47:05.805Z] Connection update: close
+[2025-12-30T03:47:05.805Z] Connection closed. Status: 405, Reason: Connection Failure
+[2025-12-30T03:47:05.805Z] Critical error, stopping reconnection attempts
+[2025-12-30T03:58:49.917Z] Connection update: connecting
+[2025-12-30T03:58:50.260Z] Unhandled Rejection at: Promise {
+  <rejected> TypeError: Cannot read properties of undefined (reading 'id')
+      at Object.sendMessage (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@leifermendez+baileys@6.8.6_31af2762c251e43ad8571ffba401b8a0\node_modules\@leifermendez\baileys\lib\Socket\messages-send.js:691:48)
+      at BaileysProvider.sendText (file:///F:/developer/MariaDono/MarIADono4/node_modules/.pnpm/@builderbot+provider-bailey_fb4e2121f81f5c7e6585354210962836/node_modules/@builderbot/provider-baileys/dist/index.mjs:31443:32)
+      at BaileysProvider.sendMessage (file:///F:/developer/MariaDono/MarIADono4/node_modules/.pnpm/@builderbot+provider-bailey_fb4e2121f81f5c7e6585354210962836/node_modules/@builderbot/provider-baileys/dist/index.mjs:31528:25)
+      at CoreClass.sendProviderAndSave (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14635:65)
+      at Object.promiseInFunc (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14340:36)
+      at Queue.processItem (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:804:30)
+      at F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:882:64
+      at Array.map (<anonymous>)
+      at Queue.processQueue (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:882:45)
+      at F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:872:22
+      at new Promise (<anonymous>)
+      at Queue.enqueue (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:856:16)
+      at enqueueMsg (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14339:47)
+      at sendFlow (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14317:27)
+      at async exportFunctionsSend (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14563:17),
+  [Symbol(async_id_symbol)]: 55425,
+  [Symbol(trigger_async_id_symbol)]: 55420
+} reason: TypeError: Cannot read properties of undefined (reading 'id')
+    at Object.sendMessage (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@leifermendez+baileys@6.8.6_31af2762c251e43ad8571ffba401b8a0\node_modules\@leifermendez\baileys\lib\Socket\messages-send.js:691:48)
+    at BaileysProvider.sendText (file:///F:/developer/MariaDono/MarIADono4/node_modules/.pnpm/@builderbot+provider-bailey_fb4e2121f81f5c7e6585354210962836/node_modules/@builderbot/provider-baileys/dist/index.mjs:31443:32)
+    at BaileysProvider.sendMessage (file:///F:/developer/MariaDono/MarIADono4/node_modules/.pnpm/@builderbot+provider-bailey_fb4e2121f81f5c7e6585354210962836/node_modules/@builderbot/provider-baileys/dist/index.mjs:31528:25)
+    at CoreClass.sendProviderAndSave (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14635:65)
+    at Object.promiseInFunc (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14340:36)
+    at Queue.processItem (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:804:30)
+    at F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:882:64
+    at Array.map (<anonymous>)
+    at Queue.processQueue (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:882:45)
+    at F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:872:22
+    at new Promise (<anonymous>)
+    at Queue.enqueue (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:856:16)
+    at enqueueMsg (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14339:47)
+    at sendFlow (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14317:27)
+    at async exportFunctionsSend (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14563:17)
+[2025-12-30T03:58:50.265Z] Unhandled Rejection at: Promise {
+  <rejected> TypeError: Cannot read properties of undefined (reading 'id')
+      at Object.sendMessage (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@leifermendez+baileys@6.8.6_31af2762c251e43ad8571ffba401b8a0\node_modules\@leifermendez\baileys\lib\Socket\messages-send.js:691:48)
+      at BaileysProvider.sendText (file:///F:/developer/MariaDono/MarIADono4/node_modules/.pnpm/@builderbot+provider-bailey_fb4e2121f81f5c7e6585354210962836/node_modules/@builderbot/provider-baileys/dist/index.mjs:31443:32)
+      at BaileysProvider.sendMessage (file:///F:/developer/MariaDono/MarIADono4/node_modules/.pnpm/@builderbot+provider-bailey_fb4e2121f81f5c7e6585354210962836/node_modules/@builderbot/provider-baileys/dist/index.mjs:31528:25)
+      at CoreClass.sendProviderAndSave (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14635:65)
+      at Object.promiseInFunc (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14340:36)
+      at Queue.processItem (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:804:30)
+      at F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:882:64
+      at Array.map (<anonymous>)
+      at Queue.processQueue (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:882:45)
+      at F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:872:22
+      at new Promise (<anonymous>)
+      at Queue.enqueue (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:856:16)
+      at enqueueMsg (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14339:47)
+      at sendFlow (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14317:27)
+      at async exportFunctionsSend (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14563:17),
+  [Symbol(async_id_symbol)]: 55491,
+  [Symbol(trigger_async_id_symbol)]: 55486
+} reason: TypeError: Cannot read properties of undefined (reading 'id')
+    at Object.sendMessage (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@leifermendez+baileys@6.8.6_31af2762c251e43ad8571ffba401b8a0\node_modules\@leifermendez\baileys\lib\Socket\messages-send.js:691:48)
+    at BaileysProvider.sendText (file:///F:/developer/MariaDono/MarIADono4/node_modules/.pnpm/@builderbot+provider-bailey_fb4e2121f81f5c7e6585354210962836/node_modules/@builderbot/provider-baileys/dist/index.mjs:31443:32)
+    at BaileysProvider.sendMessage (file:///F:/developer/MariaDono/MarIADono4/node_modules/.pnpm/@builderbot+provider-bailey_fb4e2121f81f5c7e6585354210962836/node_modules/@builderbot/provider-baileys/dist/index.mjs:31528:25)
+    at CoreClass.sendProviderAndSave (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14635:65)
+    at Object.promiseInFunc (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14340:36)
+    at Queue.processItem (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:804:30)
+    at F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:882:64
+    at Array.map (<anonymous>)
+    at Queue.processQueue (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:882:45)
+    at F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:872:22
+    at new Promise (<anonymous>)
+    at Queue.enqueue (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:856:16)
+    at enqueueMsg (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14339:47)
+    at sendFlow (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14317:27)
+    at async exportFunctionsSend (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14563:17)
+[2025-12-30T03:58:51.878Z] Connection update: close
+[2025-12-30T03:58:51.878Z] Connection closed. Status: 405, Reason: Connection Failure
+[2025-12-30T03:58:51.878Z] Critical error, stopping reconnection attempts

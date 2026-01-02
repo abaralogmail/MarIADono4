@@ -2,20 +2,31 @@ import { Sequelize, DataTypes, Op } from "sequelize";
 import path from "path";
 import fs from "fs";
 
-// Import models
-import ConversationsLogModel from "./models/ConversationsLog.js";
-import ConversationMetricasModel from "./models/ConversationMetricas.js";
-import MensajeEstadosModel from "./models/MensajeEstados.js";
-import CtxLogsModel from "./models/CtxLogs.js";
-import ProviderLogsModel from "./models/ProviderLogs.js";
-import OfertasModel from "./models/Ofertas.js";
-import PedidosModel from "./models/Pedidos.js";
-import ProductosModel from "./models/Productos.js";
-import UsuariosModel from "./models/Usuarios.js";
-import HorariosModel from "./models/Horarios.js";
-import ReglasHorarioModel from "./models/ReglasHorario.js";
-import ExcepcionesHorarioModel from "./models/ExcepcionesHorario.js";
-import N8nMetricModel from "./models/N8nMetric.js";
+ // Import models
+ import ConversationsLogModel from "./models/ConversationsLog.js";
+ import ConversationMetricasModel from "./models/ConversationMetricas.js";
+ import MensajeEstadosModel from "./models/MensajeEstados.js";
+ import CtxLogsModel from "./models/CtxLogs.js";
+ import ProviderLogsModel from "./models/ProviderLogs.js";
+ import OfertasModel from "./models/Ofertas.js";
+ import PedidosModel from "./models/Pedidos.js";
+ import ProductosModel from "./models/Productos.js";
+ import UsuariosModel from "./models/Usuarios.js";
+ import HorariosModel from "./models/Horarios.js";
+ import ReglasHorarioModel from "./models/ReglasHorario.js";
+ import ExcepcionesHorarioModel from "./models/ExcepcionesHorario.js";
+ import N8nMetricModel from "./models/N8nMetric.js";
+ import ClientFileModel from "./models/ClientFile.js";
+ 
+ // Segmentación / Scoring models
+ import SegmentationRuleModel from "./models/SegmentationRule.js";
+ import CustomerSegmentModel from "./models/CustomerSegment.js";
+ import SegmentMemberModel from "./models/SegmentMember.js";
+ import SegmentPerformanceModel from "./models/SegmentPerformance.js";
+ import CustomerScoreModel from "./models/CustomerScore.js";
+ 
+ // Auxiliares
+ import storageManager from "../auxiliares/storageManager.js";
 
 class SqliteManager {
   static instance = null;
@@ -120,7 +131,15 @@ class SqliteManager {
     this.models.Horarios = HorariosModel(this.sequelize, DataTypes);
     this.models.ReglasHorario = ReglasHorarioModel(this.sequelize, DataTypes);
     this.models.ExcepcionesHorario = ExcepcionesHorarioModel(this.sequelize, DataTypes);
-
+    this.models.ClientFile = ClientFileModel(this.sequelize, DataTypes);
+  
+    // Segmentación / Scoring models
+    this.models.SegmentationRule = SegmentationRuleModel(this.sequelize, DataTypes);
+    this.models.CustomerSegment = CustomerSegmentModel(this.sequelize, DataTypes);
+    this.models.SegmentMember = SegmentMemberModel(this.sequelize, DataTypes);
+    this.models.SegmentPerformance = SegmentPerformanceModel(this.sequelize, DataTypes);
+    this.models.CustomerScore = CustomerScoreModel(this.sequelize, DataTypes);
+  
     // Define associations
     this.defineAssociations();
   }
@@ -239,9 +258,112 @@ class SqliteManager {
   async saveContextLog(contextData) {
     return await this.models.CtxLogs.create(contextData);
   }
-
+ 
   async saveProviderLog(providerData) {
     return await this.models.ProviderLogs.create(providerData);
+  }
+ 
+  //
+  // Client file storage methods (Task 25)
+  //
+  async saveClientFile(clienteId, { originalFilename = null, mimeType = null, buffer, subPath = 'documents', uploadedBy = null } = {}) {
+    if (!buffer || !Buffer.isBuffer(buffer)) throw new Error('buffer missing or not a Buffer');
+    const id = Number(clienteId);
+    if (!Number.isFinite(id) || id <= 0) throw new Error('invalid clienteId');
+
+    // Ensure client dirs exist
+    await storageManager.createClientStorageDirs(id);
+
+    const clientBase = storageManager.getClientStoragePath(id);
+    const destDir = path.join(clientBase, subPath || 'documents');
+
+    // Safe filename
+    const sanitizedOriginal = (originalFilename || 'file').replace(/[^a-zA-Z0-9._-]/g, '_');
+    const filename = `${Date.now()}_${Math.random().toString(36).slice(2,10)}_${sanitizedOriginal}`;
+    const absPath = path.join(destDir, filename);
+
+    // Save buffer to disk
+    const { path: savedPath, size, checksum } = await storageManager.saveBufferToPath(absPath, buffer);
+
+    // Persist metadata in DB via model
+    const relativePath = path.relative(storageManager.getStorageRoot(), savedPath);
+    const instance = await this.models.ClientFile.create({
+      cliente_id: id,
+      file_path: relativePath,
+      original_filename: originalFilename || filename,
+      mime_type: mimeType || 'application/octet-stream',
+      checksum_sha256: checksum,
+      file_size: size,
+      uploaded_by: uploadedBy || null,
+      uploaded_at: new Date(),
+      accessed_count: 0,
+      is_deleted: false
+    });
+
+    return instance;
+  }
+
+  async getClientFiles(clienteId, filters = {}) {
+    const id = Number(clienteId);
+    if (!Number.isFinite(id) || id <= 0) throw new Error('invalid clienteId');
+
+    const where = { cliente_id: id, is_deleted: false };
+    if (filters.mime_type) where.mime_type = filters.mime_type;
+    if (filters.after || filters.before) {
+      where.uploaded_at = {};
+      if (filters.after) where.uploaded_at[Op.gte] = filters.after;
+      if (filters.before) where.uploaded_at[Op.lte] = filters.before;
+    }
+
+    const limit = Number(filters.limit) || 100;
+    const offset = Number(filters.offset) || 0;
+
+    return await this.models.ClientFile.findAll({
+      where,
+      order: [['uploaded_at', 'DESC']],
+      limit,
+      offset,
+    });
+  }
+
+  async archiveConversation(clienteId, { fromDate = null, toDate = null, format = 'json' } = {}) {
+    const id = Number(clienteId);
+    if (!Number.isFinite(id) || id <= 0) throw new Error('invalid clienteId');
+
+    // Prepare date range
+    const start = fromDate || '1970-01-01';
+    const end = toDate || new Date().toISOString().slice(0,10);
+
+    // Attempt to read conversations_log entries for date range
+    let rows = [];
+    try {
+      const sql = 'SELECT * FROM conversations_log WHERE date BETWEEN ? AND ?';
+      rows = await this.sequelize.query(sql, { replacements: [start, end], type: Sequelize.QueryTypes.SELECT });
+    } catch (e) {
+      // If table not present or error, rethrow
+      throw e;
+    }
+
+    // Ensure dirs
+    await storageManager.createClientStorageDirs(id);
+    const archivesDir = path.join(storageManager.getClientStoragePath(id), 'archives');
+    const filename = `conversations_${start}_to_${end}_${Date.now()}.${format === 'json' ? 'json' : 'txt'}`;
+    const absPath = path.join(archivesDir, filename);
+    const payloadBuffer = Buffer.from(format === 'json' ? JSON.stringify(rows, null, 2) : rows.map(r => JSON.stringify(r)).join('\n'), 'utf8');
+
+    const { path: savedPath, size, checksum } = await storageManager.saveBufferToPath(absPath, payloadBuffer);
+
+    // Try to insert record into client_conversation_archive (if table exists)
+    try {
+      await this.sequelize.query(
+        'INSERT INTO client_conversation_archive (cliente_id, archive_path, checksum_sha256, file_size, created_at) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)',
+        { replacements: [id, path.relative(storageManager.getStorageRoot(), savedPath), checksum, size], type: Sequelize.QueryTypes.INSERT }
+      );
+    } catch (e) {
+      // Table may not exist yet; ignore silently
+    }
+
+    return { path: savedPath, size, checksum, exportedCount: Array.isArray(rows) ? rows.length : 0 };
   }
 
   // Métodos para el sistema de horarios polimórfico
