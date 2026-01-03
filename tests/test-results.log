@@ -1,34 +1,20 @@
-Test run: 2025-12-30T03:58:50.278Z
+Test run: 2026-01-02T19:55:05.928Z
 Target: http://localhost:3008
 
 Detailed results:
-- /v1/messages: ok=false status=400 duration=19ms size=154b
-  preview: {"error":"You must first log in by scanning the qr code to be able to use this functionality.","docs":"https://builderbot.vercel.app/errors","code":"100"}
-  body: {"error":"You must first log in by scanning the qr code to be able to use this functionality.","docs":"https://builderbot.vercel.app/errors","code":"100"}
-- /v1/register: ok=true status=200 duration=7ms size=7b
+- /v1/messages: ok=true status=200 duration=546ms size=6b
+  preview: sended
+  body: sended
+- /v1/register: ok=true status=200 duration=9ms size=7b
   preview: trigger
   body: trigger
 - /v1/samples: ok=true status=200 duration=8ms size=7b
   preview: trigger
   body: trigger
-- /v1/blacklist: ok=true status=200 duration=4ms size=55b
+- /v1/blacklist: ok=true status=200 duration=6ms size=55b
   preview: {"status":"ok","number":"5493815908557","intent":"add"}
   body: {"status":"ok","number":"5493815908557","intent":"add"}
-- /webhook - incoming message: ok=false status=404 duration=4ms size=9b
-  preview: Not Found
-  body: Not Found
-
-Test run failure: 2025-12-30T03:58:50.288Z
-Target: http://localhost:3008
-
-Error: AssertionError [ERR_ASSERTION]: /v1/messages failed (status 400) body={"error":"You must first log in by scanning the qr code to be able to use this functionality.","docs":"https://builderbot.vercel.app/errors","code":"100"}
-    at runTests (file:///F:/developer/MariaDono/MarIADono4/src/tests/Testing_Webhook.js:205:7)
-    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
-
-Results summary:
-- /v1/messages: ok=false status=400 duration=19ms size=154b
-- /v1/register: ok=true status=200 duration=7ms size=7b
-- /v1/samples: ok=true status=200 duration=8ms size=7b
-- /v1/blacklist: ok=true status=200 duration=4ms size=55b
-- /webhook - incoming message: ok=false status=404 duration=4ms size=9b
+- /webhook - incoming message: ok=true status=200 duration=6ms size=17b
+  preview: Messages enqueued
+  body: Messages enqueued
 
