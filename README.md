@@ -262,6 +262,9 @@ Para detalles de arquitectura, estructura de carpetas y guías de contribución 
 - [docs/audit-summary.txt](docs/audit-summary.txt)
 - [AGENTS.md](AGENTS.md)
 
+## Navegador Grupo Google
+
+
 ## Comunidad y soporte
 
 ¿Preguntas? Únete al Discord de la comunidad o abre un issue.

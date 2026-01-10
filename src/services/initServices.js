@@ -1,9 +1,9 @@
 import express from 'express';
 import axios from 'axios';
-import BackupManager from '../utils/backupManager';
+import BackupManager from '../utils/backupManager.js';
 import { spawn } from 'child_process';
 import SqliteManager from '../database/SqliteManager.js';
-import WebServerService from './webServerService';
+import WebServerService from './webServerService.js';
 
 let n8nProcess = null; // Variable to hold the n8n child process
 
@@ -45,14 +45,39 @@ async function closeAllServices() {
 async function initializeServices(app) {
   // 2. Usar el WebServerService para configurar todo lo relacionado al servidor web
   const webServer = new WebServerService();
-  webServer.initializeWebServer(app);
+  //webServer.initializeWebServer(app);
   initializeBackupManager();
   //await initializeN8n();
   
-  await initializeDatabases(); // Initialize both databases
+  //await initializeDatabases(); // Initialize both databases
   
 
   console.log('Web server and backup system initialized');
+  // Auto-invoke local activation endpoint if configured
+  await InvokeRegister()
+}
+
+// Separated function to call the local /v1/register endpoint using env vars
+async function InvokeRegister() {
+  try {
+    const port = process.env.PORT ?? 3000
+    const registerUrl = `https://graph.facebook.com/v24.0/996890080166943/register`
+    const token = process.env.META_WHATSAPP_TOKEN ?? 'TU_ACCESS_TOKEN'
+    const pin = process.env.INIT_PIN ?? '123456'
+
+    console.log('[initServices] InvokeRegister ->', { registerUrl, pin: pin ? '***' : null, tokenPresent: !!token })
+
+    // small delay to allow server to start accepting connections
+    await new Promise((r) => setTimeout(r, 300))
+
+    const resp = await axios.post(registerUrl, { messaging_product: 'whatsapp', pin }, {
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      timeout: 5000,
+    })
+    console.log('[initServices] auto-register status=', resp.status, 'data=', resp.data)
+  } catch (err) {
+    console.error('[initServices] auto-register failed:', err.message || err)
+  }
 }
 
 // Function to initialize both databases in parallel

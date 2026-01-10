@@ -1,20 +1,20 @@
-Test run: 2026-01-02T19:55:05.928Z
+Test run: 2026-01-10T18:49:31.771Z
 Target: http://localhost:3008
 
 Detailed results:
-- /v1/messages: ok=true status=200 duration=546ms size=6b
+- /v1/messages: ok=true status=200 duration=805ms size=6b
   preview: sended
   body: sended
-- /v1/register: ok=true status=200 duration=9ms size=7b
+- /v1/register: ok=true status=200 duration=7ms size=7b
   preview: trigger
   body: trigger
-- /v1/samples: ok=true status=200 duration=8ms size=7b
+- /v1/samples: ok=true status=200 duration=7ms size=7b
   preview: trigger
   body: trigger
-- /v1/blacklist: ok=true status=200 duration=6ms size=55b
+- /v1/blacklist: ok=true status=200 duration=4ms size=55b
   preview: {"status":"ok","number":"5493815908557","intent":"add"}
   body: {"status":"ok","number":"5493815908557","intent":"add"}
-- /webhook - incoming message: ok=true status=200 duration=6ms size=17b
+- /webhook - incoming message: ok=true status=200 duration=4ms size=17b
   preview: Messages enqueued
   body: Messages enqueued
 

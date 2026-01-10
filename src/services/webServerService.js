@@ -1,7 +1,7 @@
 import express from 'express';
 import path from 'path';
 import ejs from 'ejs';
-import scheduleRoutes from '../routes/scheduleRoutes';
+import scheduleRoutes from '../routes/scheduleRoutes.js';
 
 class WebServerService {
     constructor() {}

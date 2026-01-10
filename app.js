@@ -5,6 +5,7 @@ import { MetaProvider as Provider } from '@builderbot/provider-meta'
 import 'dotenv/config'
 import { spawn } from 'child_process'
 import flowPrincipal from './src/flows/flowPrincipal.js';
+import initServices from './src/services/initServices.js'
 
 const PORT = process.env.PORT ?? 3000
 
@@ -156,6 +157,13 @@ const main = async () => {
     )
 
     httpServer(+PORT)
+
+    // Initialize auxiliary services (databases, backups, optional n8n, auto-register)
+    try {
+        await initServices.initializeServices(adapterProvider.server)
+    } catch (err) {
+        console.error('initializeServices failed:', err)
+    }
 
     if (process.env.RUN_TESTS_ON_START ?? 'true' === 'true') {
         try {

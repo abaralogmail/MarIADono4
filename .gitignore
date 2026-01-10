@@ -144,3 +144,6 @@ storage/**
 /storage/
 /storage/**
 whatsapp-business-jaspers-market
+src/.tmp.driveupload/
+src/services/desktop.ini
+desktop.ini
