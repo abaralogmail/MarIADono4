@@ -63,17 +63,27 @@ async function InvokeRegister() {
     const port = process.env.PORT ?? 3000
     const registerUrl = `https://graph.facebook.com/v24.0/996890080166943/register`
     const token = process.env.META_WHATSAPP_TOKEN ?? 'TU_ACCESS_TOKEN'
-    const pin = process.env.INIT_PIN ?? '123456'
+    const pin = process.env.INIT_PIN ?? '000000'
 
-    console.log('[initServices] InvokeRegister ->', { registerUrl, pin: pin ? '***' : null, tokenPresent: !!token })
+    console.log('[initServices] InvokeRegister ->', { registerUrl, tokenPresent: !!token })
 
     // small delay to allow server to start accepting connections
     await new Promise((r) => setTimeout(r, 300))
 
-    const resp = await axios.post(registerUrl, { messaging_product: 'whatsapp', pin }, {
-      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-      timeout: 5000,
-    })
+    const payload = { messaging_product: 'whatsapp', pin }
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    }
+
+    // Show assembled POST (mask sensitive values)
+    const safeHeaders = Object.assign({}, headers)
+    if (safeHeaders.Authorization) safeHeaders.Authorization = safeHeaders.Authorization.replace(/Bearer\s+(.{4}).*/, 'Bearer $1...')
+    const safePayload = Object.assign({}, payload)
+    if (safePayload.pin) safePayload.pin = '***'
+    console.log('[initServices] Prepared POST ->', { url: registerUrl, headers: safeHeaders, body: safePayload })
+
+    const resp = await axios.post(registerUrl, payload, { headers, timeout: 5000 })
     console.log('[initServices] auto-register status=', resp.status, 'data=', resp.data)
   } catch (err) {
     console.error('[initServices] auto-register failed:', err.message || err)

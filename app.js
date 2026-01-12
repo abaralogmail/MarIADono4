@@ -117,6 +117,12 @@ const main = async () => {
         database: adapterDB,
     })
 
+    // Simple request logger to help debug 404s during tests
+    adapterProvider.server.use((req, res, next) => {
+        console.log(`[REQ] ${req.method} ${req.originalUrl} from ${req.ip}`)
+        next()
+    })
+
     adapterProvider.server.post(
         '/v1/messages',
         handleCtx(async (bot, req, res) => {
@@ -155,6 +161,23 @@ const main = async () => {
             return res.end(JSON.stringify({ status: 'ok', number, intent }))
         })
     )
+
+    // Dump registered routes to help debug missing handlers
+    try {
+        const routes = []
+        const router = adapterProvider.server._router
+        if (router && router.stack) {
+            router.stack.forEach((layer) => {
+                if (layer.route && layer.route.path) {
+                    const methods = Object.keys(layer.route.methods).join(',').toUpperCase()
+                    routes.push(`${methods} ${layer.route.path}`)
+                }
+            })
+        }
+        console.log('[ROUTES] Registered server routes:\n' + (routes.length ? routes.join('\n') : '<none>'))
+    } catch (e) {
+        console.log('[ROUTES] Failed to inspect routes:', e && e.message)
+    }
 
     httpServer(+PORT)
 

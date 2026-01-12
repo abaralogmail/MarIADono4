@@ -1,20 +1,86 @@
-Test run: 2026-01-10T18:49:31.771Z
-Target: http://localhost:3008
+Test run: 2026-01-11T08:35:01.528Z
+Target: http://localhost:3000
 
 Detailed results:
-- /v1/messages: ok=true status=200 duration=805ms size=6b
-  preview: sended
-  body: sended
-- /v1/register: ok=true status=200 duration=7ms size=7b
-  preview: trigger
-  body: trigger
-- /v1/samples: ok=true status=200 duration=7ms size=7b
-  preview: trigger
-  body: trigger
-- /v1/blacklist: ok=true status=200 duration=4ms size=55b
-  preview: {"status":"ok","number":"5493815908557","intent":"add"}
-  body: {"status":"ok","number":"5493815908557","intent":"add"}
-- /webhook - incoming message: ok=true status=200 duration=4ms size=17b
-  preview: Messages enqueued
-  body: Messages enqueued
+- /v1/messages: ok=false status=404 duration=17ms size=151b
+  preview: <!DOCTYPE html> <html lang="en"> <head> <meta charset="utf-8"> <title>Error</title> </head> <body> <pre>Cannot POST /v1/messages</pre> </body> </html> 
+  body: <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot POST /v1/messages</pre>
+</body>
+</html>
+
+- /v1/register: ok=false status=404 duration=8ms size=151b
+  preview: <!DOCTYPE html> <html lang="en"> <head> <meta charset="utf-8"> <title>Error</title> </head> <body> <pre>Cannot POST /v1/register</pre> </body> </html> 
+  body: <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot POST /v1/register</pre>
+</body>
+</html>
+
+- /v1/registerMeta: ok=false status=404 duration=9ms size=151b
+  preview: <!DOCTYPE html> <html lang="en"> <head> <meta charset="utf-8"> <title>Error</title> </head> <body> <pre>Cannot POST /v1/register</pre> </body> </html> 
+  body: <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot POST /v1/register</pre>
+</body>
+</html>
+
+- /v1/samples: ok=false status=404 duration=9ms size=150b
+  preview: <!DOCTYPE html> <html lang="en"> <head> <meta charset="utf-8"> <title>Error</title> </head> <body> <pre>Cannot POST /v1/samples</pre> </body> </html> 
+  body: <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot POST /v1/samples</pre>
+</body>
+</html>
+
+- /v1/blacklist: ok=false status=404 duration=9ms size=0b
+- /webhook - incoming message: ok=false status=404 duration=7ms size=147b
+  preview: <!DOCTYPE html> <html lang="en"> <head> <meta charset="utf-8"> <title>Error</title> </head> <body> <pre>Cannot POST /webhook</pre> </body> </html> 
+  body: <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot POST /webhook</pre>
+</body>
+</html>
+
+
+Test run failure: 2026-01-11T08:35:01.602Z
+Target: http://localhost:3000
+
+Error: AssertionError [ERR_ASSERTION]: /v1/messages failed (status 404) body="<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot POST /v1/messages</pre>\n</body>\n</html>\n"
+    at runTests (file:///F:/developer/MariaDono/MarIADono4/src/tests/Testing_Webhook.js:223:7)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+Results summary:
+- /v1/messages: ok=false status=404 duration=17ms size=151b
+- /v1/register: ok=false status=404 duration=8ms size=151b
+- /v1/registerMeta: ok=false status=404 duration=9ms size=151b
+- /v1/samples: ok=false status=404 duration=9ms size=150b
+- /v1/blacklist: ok=false status=404 duration=9ms size=0b
+- /webhook - incoming message: ok=false status=404 duration=7ms size=147b
 
