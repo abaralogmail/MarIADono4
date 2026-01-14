@@ -54,16 +54,16 @@ async function initializeServices(app) {
 
   console.log('Web server and backup system initialized');
   // Auto-invoke local activation endpoint if configured
-  await InvokeRegister()
+  //await InvokeRegister()
 }
 
 // Separated function to call the local /v1/register endpoint using env vars
 async function InvokeRegister() {
   try {
     const port = process.env.PORT ?? 3000
-    const registerUrl = `https://graph.facebook.com/v24.0/996890080166943/register`
+    const registerUrl = `https://graph.facebook.com/v24.0/1620051129409684/register`
     const token = process.env.META_WHATSAPP_TOKEN ?? 'TU_ACCESS_TOKEN'
-    const pin = process.env.INIT_PIN ?? '000000'
+    const pin = process.env.INIT_PIN ?? '123456'
 
     console.log('[initServices] InvokeRegister ->', { registerUrl, tokenPresent: !!token })
 
