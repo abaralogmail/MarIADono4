@@ -201,4 +201,15 @@ const main = async () => {
     }
 }
 
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+    // Optionally log to a file or monitoring service
+});
+
+process.on('uncaughtException', (err) => {
+    console.error('Uncaught Exception:', err);
+    // Depending on the severity, you might want to exit:
+    // process.exit(1);
+});
+
 main()

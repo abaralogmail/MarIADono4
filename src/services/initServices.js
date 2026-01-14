@@ -149,7 +149,9 @@ async function gracefulShutdown() {
 // Backup manager initialization remains unchanged
 function initializeBackupManager() {
   const backupManager = new BackupManager();
-  backupManager.createWeeklyBackup();
+  backupManager.createWeeklyBackup().catch(err => {
+    console.error('Failed to create weekly backup:', err);
+  });
 }
 
 // n8n initialization function remains unchanged

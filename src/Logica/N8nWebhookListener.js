@@ -29,7 +29,13 @@ class N8nWebhookListener {
         //console.log('Webhook response:', result.data);
         return result.data;
       } catch (error) {
-        //console.error('Full error details:', {          status: error.response?.status,          data: error.response?.data,          message: error.message        });
+        console.error('N8nWebhookListener Error Details:', {
+          status: error.response?.status,
+          statusText: error.response?.statusText,
+          data: error.response?.data,
+          message: error.message,
+          url: this.n8nWebhookUrl
+        });
         throw error;
       }
     }

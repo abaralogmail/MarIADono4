@@ -95,14 +95,12 @@ const flowPrincipal = addKeyword(EVENTS.WELCOME).addAction(
         // Use Promise.resolve().then() to avoid blocking the main flow
         // This starts the bulk sending process in the background
         Promise.resolve()
-          .then(() => {
-          //sendBulkMessages(botName, provider); // Pass botName and provider
-          const bulkManager = new BulkMessageManager(provider);
-          bulkManager.startSending(); // Iniciar envío
-            
-            
+          .then(async () => {
+            //sendBulkMessages(botName, provider); // Pass botName and provider
+            const bulkManager = new BulkMessageManager(provider);
+            await bulkManager.startSending(); // Iniciar envío
           })
-          .catch(console.error);
+          .catch(err => console.error(`[CRITICAL] Bulk sending failed for ${botName}:`, err));
       } else {
         console.warn(
           `Bulk message file path not configured for bot: ${botName}. Cannot send bulk messages.`

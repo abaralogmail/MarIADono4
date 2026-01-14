@@ -1,11 +1,11 @@
-Test run: 2026-01-14T11:32:22.067Z
+Test run: 2026-01-14T12:20:47.119Z
 Target: http://localhost:3000
 
 Detailed results:
-- /v1/messages: ok=true status=200 duration=241ms size=6b
+- /v1/messages: ok=true status=200 duration=292ms size=6b
   preview: sended
   body: sended
-- /v1/register: ok=true status=200 duration=9ms size=7b
+- /v1/register: ok=true status=200 duration=10ms size=7b
   preview: trigger
   body: trigger
 - /v1/registerMeta: ok=true status=200 duration=7ms size=7b

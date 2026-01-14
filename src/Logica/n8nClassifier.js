@@ -10,9 +10,7 @@ class N8nClassifier {
     // Constructor que inicializa con un límite máximo de clasificaciones
     constructor(maxClassifications = 50) {
         this.maxClassifications = maxClassifications;
-        this.webhookListener = new N8nWebhookListener('http://localhost:5678/webhook/WebhookAuth',
-        process.env.N8N_WEBHOOK_USERNAME, 
-        process.env.N8N_WEBHOOK_PASSWORD);
+        this.webhookListener = new N8nWebhookListener('http://localhost:5678/webhook/WebhookAuth');
 
         //this.webhookListener = new N8nWebhookListener('',process.env.N8N_WEBHOOK_TOKEN);
     }
