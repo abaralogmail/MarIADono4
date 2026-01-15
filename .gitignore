@@ -107,3 +107,8 @@ BotMetan.qr.png
 BotRamiro.qr.png
 BotFranco.qr.png
 .vscode/settings.json
+.gemini/
+.kilo/
+.opencode/
+src/.tmp.driveupload/
+desktop.ini
