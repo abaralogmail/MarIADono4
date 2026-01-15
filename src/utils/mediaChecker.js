@@ -86,7 +86,17 @@ const getMediaInfo = (ctx) => {
     };
 };
 
-module.exports = {
+export default {
+    isMediaMessage,
+    isVoiceMessage,
+    isAudioMessage,
+    getMediaType,
+    hasMediaOrVoice,
+    getMediaInfo
+};
+
+// Named exports for compatibility with import { ... } usage
+export {
     isMediaMessage,
     isVoiceMessage,
     isAudioMessage,

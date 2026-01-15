@@ -1,5 +1,4 @@
-// src/database/seeders/horariosSeeder.js
-const SqliteManager = require('../SqliteManager');
+import SqliteManager from '../SqliteManager.js';
 
 async function seedHorarios() {
   const dbManager = await SqliteManager.getInstance();
@@ -68,4 +67,4 @@ async function seedHorarios() {
   }
 }
 
-module.exports = { seedHorarios };
+export default { seedHorarios };

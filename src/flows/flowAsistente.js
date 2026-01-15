@@ -1,6 +1,7 @@
-const { createBot, createProvider, createFlow, addKeyword, EVENTS } = require('@bot-whatsapp/bot')
-const { getUserConfig, updateUserConfig } = require('../config/userConfig');
-const { sendChunksWithDelay } = require('../utils/sendChunksWithDelay');
+import pkg from '@builderbot/bot';
+const { createBot, createProvider, createFlow, addKeyword, EVENTS } = pkg;
+import { getUserConfig, updateUserConfig } from '../config/userConfig';
+import { sendChunksWithDelay } from '../utils/sendChunksWithDelay';
 
 
 const flowAsistente = addKeyword(['testNotificaciones'])
@@ -51,4 +52,4 @@ const flowAsistente = addKeyword(['testNotificaciones'])
         }
     });
 
-module.exports = flowAsistente;
+export default flowAsistente;

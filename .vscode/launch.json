@@ -1,6 +1,7 @@
 {
   "version": "0.2.0",
   "configurations": [
+    
     {
       "type": "node",
       "request": "launch",
@@ -9,7 +10,20 @@
       "env": {
         "BOT_DEBUG": "true"
       },
-      "args": ["BotRoly", "debug"],
+      "args": ["BotAugustoTucuman", "debug"],
+      "outFiles": []
+    }
+    ,
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Baileys",
+      "program": "${workspaceFolder}/app_Baileys.js",
+      "env": {
+        "BOT_DEBUG": "true",
+        "BAILEYS_DEBUG": "true"
+      },
+      "args": ["BotAugustoTucuman", "debug"],
       "outFiles": []
     }
   ]

@@ -1,0 +1,13 @@
+ignoredBuiltDependencies:
+  - '@leifermendez/baileys'
+  - '@parcel/watcher'
+  - '@scarf/scarf'
+  - '@sentry-internal/node-native-stacktrace'
+  - cpu-features
+  - duckdb
+  - msgpackr-extract
+  - oracledb
+  - protobufjs
+  - sharp
+  - sqlite3
+  - ssh2

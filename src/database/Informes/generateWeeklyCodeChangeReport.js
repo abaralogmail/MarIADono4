@@ -1,6 +1,6 @@
-const fs = require('fs');
-const path = require('path');
-const { execSync } = require('child_process');
+import fs from 'fs';
+import path from 'path';
+import { execSync } from 'child_process';
 
 // Genera un informe semanal de cambios en el código (últimos 7 días)
 // Salidas: JSON, CSV y Markdown en src/database/Informes/outputs

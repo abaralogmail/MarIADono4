@@ -1,7 +1,10 @@
-const fs = require('fs');
-const path = require('path');
-const getHistoryFromProvider = require('../utils/getHistoryFromProvider');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import getHistoryFromProvider from './getHistoryFromProvider.js';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 function ensureDirectoryExists(filePath) {
   const dir = path.dirname(filePath);
@@ -75,13 +78,19 @@ async function logMessageProvider(provider) {
     }
   }
 
-  getHistoryFromProvider(provider, message)
-  // Create log messages array from provider store messages
+  // Retrieve messages from provider
+  let messages = [];
+  try {
+    messages = await getHistoryFromProvider(provider) || [];
+  } catch (err) {
+    console.error('Error getting history from provider:', err);
+  }
 
-  const messageLogs = message.map((message, index) => ({
+  // Create log messages array from provider store messages
+  const messageLogs = messages.map((msg, index) => ({
     id: index,
-    content: message.message,
-    providerName: provider.providerName,
+    content: msg.message || msg.content || JSON.stringify(msg),
+    providerName: provider.providerName || provider.name,
     state: provider.state,
     timestamp: now.toISOString()
   }));
@@ -95,4 +104,7 @@ async function logMessageProvider(provider) {
   }
 }
 
-module.exports = { logProvider, saveLastProvider, logMessageProvider };
+export default { logProvider, saveLastProvider, logMessageProvider };
+
+// Named exports for compatibility
+export { logProvider, saveLastProvider, logMessageProvider };

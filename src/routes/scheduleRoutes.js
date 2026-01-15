@@ -1,6 +1,6 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const SqliteManager = require('../database/SqliteManager');
+import SqliteManager from '../database/SqliteManager.js';
 
 // Helper to get database models
 async function getDbModels() {
@@ -297,4 +297,4 @@ router.delete('/exceptions/:id', async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;

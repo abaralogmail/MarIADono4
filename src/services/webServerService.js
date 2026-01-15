@@ -1,7 +1,7 @@
-const express = require('express');
-const path = require('path');
-const ejs = require('ejs');
-const scheduleRoutes = require('../routes/scheduleRoutes'); // Importar las nuevas rutas
+import express from 'express';
+import path from 'path';
+import ejs from 'ejs';
+import scheduleRoutes from '../routes/scheduleRoutes.js';
 
 class WebServerService {
     constructor() {}
@@ -36,4 +36,4 @@ class WebServerService {
     }
 }
 
-module.exports = WebServerService;
+export default WebServerService;

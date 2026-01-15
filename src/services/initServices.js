@@ -1,11 +1,9 @@
-// Imports at the beginning of the file
-const express = require('express');
-const axios = require('axios');
-const BackupManager = require('../utils/backupManager');
-const { spawn } = require('child_process');
-//const PostgreSQLManager = require('../database/PostgreSQLManager');
-const SqliteManager = require('../database/SqliteManager');
-const WebServerService = require('./webServerService'); // 1. Importar el servicio
+import express from 'express';
+import axios from 'axios';
+import BackupManager from '../utils/backupManager.js';
+import { spawn } from 'child_process';
+import SqliteManager from '../database/SqliteManager.js';
+import WebServerService from './webServerService.js';
 
 let n8nProcess = null; // Variable to hold the n8n child process
 
@@ -47,14 +45,49 @@ async function closeAllServices() {
 async function initializeServices(app) {
   // 2. Usar el WebServerService para configurar todo lo relacionado al servidor web
   const webServer = new WebServerService();
-  webServer.initializeWebServer(app);
+  //webServer.initializeWebServer(app);
   initializeBackupManager();
   //await initializeN8n();
   
-  await initializeDatabases(); // Initialize both databases
+  //await initializeDatabases(); // Initialize both databases
   
 
   console.log('Web server and backup system initialized');
+  // Auto-invoke local activation endpoint if configured
+  //await InvokeRegister()
+}
+
+// Separated function to call the local /v1/register endpoint using env vars
+async function InvokeRegister() {
+  try {
+    const port = process.env.PORT ?? 3000
+    const registerUrl = `https://graph.facebook.com/v24.0/1620051129409684/register`
+    const token = process.env.META_WHATSAPP_TOKEN ?? 'TU_ACCESS_TOKEN'
+    const pin = process.env.INIT_PIN ?? '123456'
+
+    console.log('[initServices] InvokeRegister ->', { registerUrl, tokenPresent: !!token })
+
+    // small delay to allow server to start accepting connections
+    await new Promise((r) => setTimeout(r, 300))
+
+    const payload = { messaging_product: 'whatsapp', pin }
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    }
+
+    // Show assembled POST (mask sensitive values)
+    const safeHeaders = Object.assign({}, headers)
+    if (safeHeaders.Authorization) safeHeaders.Authorization = safeHeaders.Authorization.replace(/Bearer\s+(.{4}).*/, 'Bearer $1...')
+    const safePayload = Object.assign({}, payload)
+    if (safePayload.pin) safePayload.pin = '***'
+    console.log('[initServices] Prepared POST ->', { url: registerUrl, headers: safeHeaders, body: safePayload })
+
+    const resp = await axios.post(registerUrl, payload, { headers, timeout: 5000 })
+    console.log('[initServices] auto-register status=', resp.status, 'data=', resp.data)
+  } catch (err) {
+    console.error('[initServices] auto-register failed:', err.message || err)
+  }
 }
 
 // Function to initialize both databases in parallel
@@ -116,7 +149,9 @@ async function gracefulShutdown() {
 // Backup manager initialization remains unchanged
 function initializeBackupManager() {
   const backupManager = new BackupManager();
-  backupManager.createWeeklyBackup();
+  backupManager.createWeeklyBackup().catch(err => {
+    console.error('Failed to create weekly backup:', err);
+  });
 }
 
 // n8n initialization function remains unchanged
@@ -171,4 +206,4 @@ async function initializeN8n() {
   });
 }
 
-module.exports = { initializeServices, closeAllServices };
+export default { initializeServices, closeAllServices };

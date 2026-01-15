@@ -1,5 +1,5 @@
-const { handlerAI } = require("../../mensajes/whisper.js");
-const { checkTranscriptionEnabled } = require('../config/userConfig');
+import { handlerAI } from "../../mensajes/whisper.js";
+import { checkTranscriptionEnabled } from '../config/userConfig.js';
 
 /**
  * Handle voice message transcription
@@ -40,6 +40,4 @@ const handleVoiceTranscription = async (ctx, flowDynamic) => {
     }
 };
 
-module.exports = {
-    handleVoiceTranscription
-};
+export { handleVoiceTranscription };

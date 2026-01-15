@@ -1,4 +1,4 @@
-const MessageStatusChecker = require("../bulk/MessageStatusChecker");
+import MessageStatusChecker from '../bulk/MessageStatusChecker';
 
 
 async function testProviderVendor(provider, ctx) {
@@ -70,4 +70,4 @@ async function testProviderVendor(provider, ctx) {
   //}
 }
 
-module.exports = { testProviderVendor }; // Export the function
+export default { testProviderVendor };

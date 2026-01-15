@@ -1,16 +1,16 @@
-const ExcelJS = require('exceljs');
-const OllamaFunnelClassifier = require('../../mensajes/OllamaFunnelClassifier');
-const { getClientHistory } = require('../utils/clientHistoryFromExcel');
-const N8nWebhookListener = require('./N8nWebhookListener');
+import ExcelJS from 'exceljs';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const OllamaFunnelClassifier = require('../../mensajes/OllamaFunnelClassifier.js');
+import { getClientHistory } from '../utils/clientHistoryFromExcel.js';
+import N8nWebhookListener from './N8nWebhookListener.js';
 
 
 class N8nClassifier {
     // Constructor que inicializa con un límite máximo de clasificaciones
     constructor(maxClassifications = 50) {
         this.maxClassifications = maxClassifications;
-        this.webhookListener = new N8nWebhookListener('http://localhost:5678/webhook/WebhookAuth',
-        process.env.N8N_WEBHOOK_USERNAME, 
-        process.env.N8N_WEBHOOK_PASSWORD);
+        this.webhookListener = new N8nWebhookListener('http://localhost:5678/webhook/WebhookAuth');
 
         //this.webhookListener = new N8nWebhookListener('',process.env.N8N_WEBHOOK_TOKEN);
     }
@@ -194,4 +194,4 @@ class N8nClassifier {
     }
 }
 
-module.exports = N8nClassifier;
+export default N8nClassifier;

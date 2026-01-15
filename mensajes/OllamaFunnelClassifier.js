@@ -1,11 +1,9 @@
-const { LLMChain } = require("langchain/chains");
-const { PromptTemplate } = require("@langchain/core/prompts");
-const { Ollama } = require("@langchain/ollama");
-const { getClientHistory } = require('../src/utils/clientHistoryFromExcel');
+import { LLMChain } from "langchain/chains";
+import { PromptTemplate } from "@langchain/core/prompts";
+import { Ollama } from "@langchain/ollama";
+import { getClientHistory } from '../src/utils/clientHistoryFromExcel.js';
 
-
-
-class OllamaFunnelClassifier {
+export default class OllamaFunnelClassifier {
   constructor() {
     // No LLM initialization in constructor
   }
@@ -182,7 +180,6 @@ class OllamaFunnelClassifier {
 
     return result.text.trim();
   }
-}
 
-module.exports = OllamaFunnelClassifier;
+}
 

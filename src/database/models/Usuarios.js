@@ -1,4 +1,4 @@
-module.exports = (sequelize, DataTypes) => {
+export default (sequelize, DataTypes) => {
   const Usuarios = sequelize.define(
     "Usuarios",
     {
@@ -30,13 +30,31 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         defaultValue: true,
       },
+      role_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        field: "role_id",
+      },
     },
     {
       tableName: "usuarios",
       timestamps: true,
       createdAt: "created_at",
-      updatedAt: false,
+      updatedAt: "updated_at",
     }
   );
+
+  Usuarios.associate = (db) => {
+    if (db.UserRoles) {
+      Usuarios.belongsTo(db.UserRoles, {
+        foreignKey: "role_id",
+        targetKey: "role_id",
+        as: "role",
+      });
+    }
+
+    // placeholder for other associations if needed in future
+  };
+
   return Usuarios;
 };

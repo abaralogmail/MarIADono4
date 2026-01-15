@@ -1,15 +1,18 @@
-const { handlerAI } = require("../../mensajes/whisper.js");
-const { addKeyword, EVENTS } = require('@bot-whatsapp/bot');
-const flowPrincipal = require('./flowPrincipal.js');
-const { sendChunksWithDelay } = require('../utils/sendChunksWithDelay.js');
+import { handlerAI } from '../../mensajes/whisper.js';
+import pkg from '@builderbot/bot';
+const { addKeyword, EVENTS, downloadMediaMessage } = pkg;
+import flowPrincipal from './flowPrincipal.js';
+import { sendChunksWithDelay } from '../utils/sendChunksWithDelay.js';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
 const OllamaFunnelClassifier = require('../../mensajes/OllamaFunnelClassifier');
-const { downloadMediaMessage } = require("@adiwajshing/baileys");
-const { getUserConfig, checkTranscriptionEnabled } = require('../config/userConfig');
-const MessageData = require("../utils/MessageData.js");
-const { writeMediaMessage, readMediaFromContext } = require('../utils/readWriteMediaMessage.js');
-const OpenAI = require('openai');
-const N8nWebhookListener = require('../Logica/N8nWebhookListener');
-const fs = require('fs');
+// downloadMediaMessage is destructured above from pkg
+import { getUserConfig, checkTranscriptionEnabled } from '../config/userConfig';
+import MessageData from '../utils/MessageData.js';
+import { writeMediaMessage, readMediaFromContext } from '../utils/readWriteMediaMessage.js';
+import OpenAI from 'openai';
+import N8nWebhookListener from '../Logica/N8nWebhookListener';
+import fs from 'fs';
 
 
 
@@ -202,4 +205,4 @@ async function describeVideoOpenAi(videoBuffer) {
         throw error;
     }
 }
-module.exports = flowMedia;
+export default flowMedia;

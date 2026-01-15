@@ -1,6 +1,6 @@
 import { join } from 'path'
-import { createBot, createProvider, createFlow, addKeyword, utils } from '@builderbot/bot'
-import { MemoryDB as Database } from '@builderbot/bot'
+import pkg from '@builderbot/bot'
+const { createBot, createProvider, createFlow, addKeyword, utils, MemoryDB: Database } = pkg
 import { BaileysProvider as Provider } from '@builderbot/provider-baileys'
 
 const PORT = process.env.PORT ?? 3008

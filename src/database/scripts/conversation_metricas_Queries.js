@@ -52,4 +52,4 @@ class Conversation_Metricas_Queries {
   }
 }
 
-module.exports = Conversation_Metricas_Queries;
+export default Conversation_Metricas_Queries;

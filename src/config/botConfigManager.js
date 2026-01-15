@@ -1,13 +1,14 @@
-const XLSX = require("xlsx");
-const path = require("path");
-const fs = require("fs");
+import XLSX from 'xlsx';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
 
 class BotConfigManager {
   constructor() {
-    this.configPath = path.join(
-      __dirname,
-      "../../mensajes/Listas/BotConfig.xlsx"
-    );
+    // __dirname is not available in ES modules; derive it from import.meta.url
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+    this.configPath = path.join(__dirname, "../../mensajes/Listas/BotConfig.xlsx");
     this.configs = {};
     this.loadConfigs();
   }
@@ -409,11 +410,14 @@ class BotConfigManager {
 // Instancia singleton
 let instance = null;
 
-module.exports = {
-  getInstance: () => {
-    if (!instance) {
-      instance = new BotConfigManager();
-    }
-    return instance;
-  },
+export function getInstance() {
+  if (!instance) {
+    instance = new BotConfigManager();
+  }
+  return instance;
+}
+
+// Backwards-compatible default export
+export default {
+  getInstance,
 };

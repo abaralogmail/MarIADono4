@@ -1,8 +1,12 @@
-const fs = require("fs");
-const path = require("path");
-//const PostgreSQLManager = require("../database/PostgreSQLManager");
-const SqliteManager = require("../database/SqliteManager");
-const MessageData = require("./MessageData");
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+//const PostgreSQLManager = await import("../database/PostgreSQLManager.js");
+import SqliteManager from "../database/SqliteManager.js";
+import MessageData from "./MessageData.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 function ensureDirectoryExists(filePath) {
   const dir = path.dirname(filePath);
@@ -169,4 +173,4 @@ async function logMessage(messageData) {
 
   console.log(`📝 Mensaje loggueado correctamente: ${messageData.from}`);
 }
-module.exports = { logMessage };
+export { logMessage };

@@ -1,6 +1,5 @@
-// src/database/DatabaseQueries.js
-const SqliteManager = require("./SqliteManager");
-const { QueryTypes } = require("sequelize");
+import SqliteManager from './SqliteManager.js';
+import { QueryTypes } from 'sequelize';
 
 class DatabaseQueries {
   static async mensajesBulkEnviadosHoy() {
@@ -115,4 +114,4 @@ class DatabaseQueries {
     }
   }
 }
-module.exports = DatabaseQueries;
+export default DatabaseQueries;

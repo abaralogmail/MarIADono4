@@ -1,0 +1,613 @@
+[2025-12-17T01:42:24.221Z] Unhandled Rejection at: Promise {
+  <rejected> ReferenceError: QRPortalWeb is not defined
+      at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:111:5)
+      at startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:229:13)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5),
+  [Symbol(async_id_symbol)]: 27,
+  [Symbol(trigger_async_id_symbol)]: 1
+} reason: ReferenceError: QRPortalWeb is not defined
+    at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:111:5)
+    at startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:229:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[2025-12-17T01:42:51.370Z] Unhandled Rejection at: Promise {
+  <rejected> ReferenceError: QRPortalWeb is not defined
+      at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:111:5)
+      at startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:229:13)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+} reason: ReferenceError: QRPortalWeb is not defined
+    at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:111:5)
+    at startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:229:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[2025-12-17T01:43:28.959Z] Iniciando limpieza de recursos...
+[2025-12-17T02:26:50.440Z] Unhandled Rejection at: Promise {
+  <rejected> ReferenceError: QRPortalWeb is not defined
+      at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:111:5)
+      at startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:229:13)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5),
+  [Symbol(async_id_symbol)]: 27,
+  [Symbol(trigger_async_id_symbol)]: 1
+} reason: ReferenceError: QRPortalWeb is not defined
+    at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:111:5)
+    at startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:229:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[2025-12-17T02:29:35.849Z] Unhandled Rejection at: Promise {
+  <rejected> ReferenceError: QRPortalWeb is not defined
+      at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:111:5)
+      at startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:229:13)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5),
+  [Symbol(async_id_symbol)]: 27,
+  [Symbol(trigger_async_id_symbol)]: 1
+} reason: ReferenceError: QRPortalWeb is not defined
+    at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:111:5)
+    at startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:229:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[2025-12-17T02:30:19.390Z] Unhandled Rejection at: Promise {
+  <rejected> ReferenceError: QRPortalWeb is not defined
+      at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:111:5)
+      at startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:229:13)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+} reason: ReferenceError: QRPortalWeb is not defined
+    at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:111:5)
+    at startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:229:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[2025-12-17T02:31:13.996Z] Iniciando limpieza de recursos...
+[2025-12-17T02:48:40.543Z] Unhandled Rejection at: Promise {
+  <rejected> ReferenceError: QRPortalWeb is not defined
+      at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:111:5)
+      at startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:229:13)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+} reason: ReferenceError: QRPortalWeb is not defined
+    at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:111:5)
+    at startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:229:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[2025-12-17T02:53:15.691Z] Iniciando limpieza de recursos...
+[2025-12-17T03:12:47.359Z] Unhandled Rejection at: Promise {
+  <rejected> ReferenceError: QRPortalWeb is not defined
+      at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:111:5)
+      at startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:229:13)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5),
+  [Symbol(async_id_symbol)]: 27,
+  [Symbol(trigger_async_id_symbol)]: 1
+} reason: ReferenceError: QRPortalWeb is not defined
+    at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:111:5)
+    at startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:229:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[2025-12-17T03:23:10.118Z] Unhandled Rejection at: Promise {
+  <rejected> ReferenceError: QRPortalWeb is not defined
+      at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:111:5)
+      at startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:229:13)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5),
+  [Symbol(async_id_symbol)]: 27,
+  [Symbol(trigger_async_id_symbol)]: 1
+} reason: ReferenceError: QRPortalWeb is not defined
+    at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:111:5)
+    at startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:229:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[2025-12-17T03:24:59.880Z] Unhandled Rejection at: Promise {
+  <rejected> ReferenceError: QRPortalWeb is not defined
+      at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:111:5)
+      at startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:229:13)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5),
+  [Symbol(async_id_symbol)]: 28,
+  [Symbol(trigger_async_id_symbol)]: 1
+} reason: ReferenceError: QRPortalWeb is not defined
+    at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:111:5)
+    at startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:229:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[2025-12-17T03:26:45.296Z] Unhandled Rejection at: Promise {
+  <rejected> ReferenceError: QRPortalWeb is not defined
+      at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:111:5)
+      at startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:229:13)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5),
+  [Symbol(async_id_symbol)]: 28,
+  [Symbol(trigger_async_id_symbol)]: 1
+} reason: ReferenceError: QRPortalWeb is not defined
+    at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:111:5)
+    at startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:229:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[2025-12-17T03:28:19.248Z] Connection update: connecting
+[2025-12-17T03:28:20.055Z] Connection update: undefined
+[2025-12-17T03:28:20.055Z] QR Code received
+[2025-12-17T03:38:33.692Z] Connection update: connecting
+[2025-12-17T03:38:34.873Z] Connection update: undefined
+[2025-12-17T03:38:34.873Z] QR Code received
+[2025-12-17T03:39:50.685Z] Unhandled Rejection at: Promise {
+  <rejected> ReferenceError: QRPortalWeb is not defined
+      at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:116:5)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:239:7),
+  [Symbol(async_id_symbol)]: 28,
+  [Symbol(trigger_async_id_symbol)]: 1
+} reason: ReferenceError: QRPortalWeb is not defined
+    at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:116:5)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:239:7)
+[2025-12-17T03:39:50.823Z] Connection update: connecting
+[2025-12-17T03:39:53.100Z] Connection update: close
+[2025-12-17T03:39:53.100Z] Connection closed. Status: 405, Reason: Connection Failure
+[2025-12-17T03:39:53.100Z] Critical error, stopping reconnection attempts
+[2025-12-17T06:38:36.221Z] Unhandled Rejection at: Promise {
+  <rejected> TypeError: QRPortalWeb is not a function
+      at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:116:5)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:239:7),
+  [Symbol(async_id_symbol)]: 28,
+  [Symbol(trigger_async_id_symbol)]: 1
+} reason: TypeError: QRPortalWeb is not a function
+    at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:116:5)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:239:7)
+[2025-12-17T06:38:36.353Z] Connection update: connecting
+[2025-12-17T06:38:40.825Z] Connection update: close
+[2025-12-17T06:38:40.826Z] Connection closed. Status: 405, Reason: Connection Failure
+[2025-12-17T06:38:40.826Z] Critical error, stopping reconnection attempts
+[2025-12-17T06:41:41.773Z] Unhandled Rejection at: Promise {
+  <rejected> TypeError: QRPortalWeb is not a function
+      at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:127:5)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:250:7),
+  [Symbol(async_id_symbol)]: 28,
+  [Symbol(trigger_async_id_symbol)]: 1
+} reason: TypeError: QRPortalWeb is not a function
+    at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:127:5)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:250:7)
+[2025-12-17T06:41:41.894Z] Connection update: connecting
+[2025-12-17T06:41:43.983Z] Connection update: close
+[2025-12-17T06:41:43.983Z] Connection closed. Status: 405, Reason: Connection Failure
+[2025-12-17T06:41:43.983Z] Critical error, stopping reconnection attempts
+[2025-12-17T16:40:35.506Z] Connection update: connecting
+[2025-12-17T16:40:41.170Z] Connection update: close
+[2025-12-17T16:40:41.170Z] Connection closed. Status: 405, Reason: Connection Failure
+[2025-12-17T16:40:41.170Z] Critical error, stopping reconnection attempts
+[2025-12-17T16:45:22.741Z] Connection update: connecting
+[2025-12-17T16:45:28.343Z] Connection update: close
+[2025-12-17T16:45:28.343Z] Connection closed. Status: 405, Reason: Connection Failure
+[2025-12-17T16:45:28.343Z] Critical error, stopping reconnection attempts
+[2025-12-17T16:46:57.944Z] Connection update: connecting
+[2025-12-17T16:47:43.805Z] Connection update: close
+[2025-12-17T16:47:43.805Z] Connection closed. Status: 428, Reason: Connection Terminated
+[2025-12-17T16:47:43.805Z] Reconnection attempt 1/10 in 1000ms
+[2025-12-17T16:47:50.754Z] Connection update: connecting
+[2025-12-17T16:48:04.961Z] Connection update: close
+[2025-12-17T16:48:04.961Z] Connection closed. Status: 405, Reason: Connection Failure
+[2025-12-17T16:48:04.961Z] Critical error, stopping reconnection attempts
+[2025-12-17T16:49:03.220Z] Connection update: connecting
+[2025-12-17T16:49:23.312Z] Connection update: close
+[2025-12-17T16:49:23.313Z] Connection closed. Status: 428, Reason: Connection Terminated
+[2025-12-17T16:49:23.313Z] Reconnection attempt 1/10 in 1000ms
+[2025-12-17T16:49:38.719Z] Connection update: connecting
+[2025-12-17T16:49:49.930Z] Connection update: close
+[2025-12-17T16:49:49.930Z] Connection closed. Status: 405, Reason: Connection Failure
+[2025-12-17T16:49:49.930Z] Critical error, stopping reconnection attempts
+[2025-12-17T16:52:11.264Z] Unhandled Rejection at: Promise {
+  <rejected> TypeError: QRPortalWeb is not a function
+      at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:228:5)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:251:7),
+  [Symbol(async_id_symbol)]: 28,
+  [Symbol(trigger_async_id_symbol)]: 1
+} reason: TypeError: QRPortalWeb is not a function
+    at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:228:5)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:251:7)
+[2025-12-17T16:54:02.812Z] Connection update: connecting
+[2025-12-17T16:54:03.821Z] Connection update: undefined
+[2025-12-17T16:54:03.821Z] QR Code received
+[2025-12-17T16:55:33.510Z] Connection update: connecting
+[2025-12-17T16:55:34.181Z] Connection update: undefined
+[2025-12-17T16:55:34.181Z] QR Code received
+[2025-12-17T16:56:14.203Z] Connection update: undefined
+[2025-12-17T16:56:14.203Z] QR Code received
+[2025-12-17T16:56:54.211Z] Connection update: undefined
+[2025-12-17T16:56:54.211Z] QR Code received
+[2025-12-17T16:57:34.215Z] Connection update: undefined
+[2025-12-17T16:57:34.216Z] QR Code received
+[2025-12-17T16:58:14.221Z] Connection update: undefined
+[2025-12-17T16:58:14.221Z] QR Code received
+[2025-12-17T16:58:54.226Z] Connection update: undefined
+[2025-12-17T16:58:54.226Z] QR Code received
+[2025-12-17T16:59:05.067Z] Connection update: close
+[2025-12-17T16:59:05.067Z] Connection closed. Status: 428, Reason: Connection Terminated by Server
+[2025-12-17T16:59:05.068Z] Reconnection attempt 1/10 in 1000ms
+[2025-12-17T16:59:06.084Z] Connection update: connecting
+[2025-12-17T16:59:06.856Z] Connection update: undefined
+[2025-12-17T16:59:06.856Z] QR Code received
+[2025-12-17T17:08:44.835Z] Unhandled Rejection at: Promise {
+  <rejected> ReferenceError: PORT is not defined
+      at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:225:17)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:251:7),
+  [Symbol(async_id_symbol)]: 28,
+  [Symbol(trigger_async_id_symbol)]: 1
+} reason: ReferenceError: PORT is not defined
+    at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:225:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:251:7)
+[2025-12-17T17:09:31.312Z] Unhandled Rejection at: Promise {
+  <rejected> ReferenceError: PORT is not defined
+      at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:225:17)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:251:7),
+  [Symbol(async_id_symbol)]: 28,
+  [Symbol(trigger_async_id_symbol)]: 1
+} reason: ReferenceError: PORT is not defined
+    at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:225:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:251:7)
+[2025-12-17T17:10:16.848Z] Connection update: connecting
+[2025-12-17T17:10:20.943Z] Connection update: close
+[2025-12-17T17:10:20.943Z] Connection closed. Status: 405, Reason: Connection Failure
+[2025-12-17T17:10:20.943Z] Critical error, stopping reconnection attempts
+[2025-12-17T17:15:32.176Z] Unhandled Rejection at: Promise {
+  <rejected> TypeError: adapterProvider.initHttpServer is not a function
+      at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:218:21)
+      at startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:252:13)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5),
+  [Symbol(async_id_symbol)]: 28,
+  [Symbol(trigger_async_id_symbol)]: 1
+} reason: TypeError: adapterProvider.initHttpServer is not a function
+    at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:218:21)
+    at startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:252:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[2025-12-17T17:17:02.314Z] Unhandled Rejection at: Promise {
+  <rejected> TypeError: adapterProvider.initHttpServer is not a function
+      at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:218:21)
+      at startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:252:13)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5),
+  [Symbol(async_id_symbol)]: 28,
+  [Symbol(trigger_async_id_symbol)]: 1
+} reason: TypeError: adapterProvider.initHttpServer is not a function
+    at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:218:21)
+    at startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:252:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[2025-12-17T17:18:46.338Z] Unhandled Rejection at: Promise {
+  <rejected> TypeError: adapterProvider.initHttpServer is not a function
+      at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:218:21)
+      at startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:252:13)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5),
+  [Symbol(async_id_symbol)]: 28,
+  [Symbol(trigger_async_id_symbol)]: 1
+} reason: TypeError: adapterProvider.initHttpServer is not a function
+    at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:218:21)
+    at startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:252:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[2025-12-17T17:35:52.703Z] Unhandled Rejection at: Promise {
+  <rejected> TypeError: adapterProvider.initHttpServer is not a function
+      at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:218:21)
+      at startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:252:13)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5),
+  [Symbol(async_id_symbol)]: 28,
+  [Symbol(trigger_async_id_symbol)]: 1
+} reason: TypeError: adapterProvider.initHttpServer is not a function
+    at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:218:21)
+    at startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:252:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[2025-12-17T17:44:06.808Z] Unhandled Rejection at: Promise {
+  <rejected> ReferenceError: Database is not defined
+      at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:237:23)
+      at startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:318:13)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5),
+  [Symbol(async_id_symbol)]: 28,
+  [Symbol(trigger_async_id_symbol)]: 1
+} reason: ReferenceError: Database is not defined
+    at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:237:23)
+    at startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:318:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[2025-12-17T17:45:13.791Z] Unhandled Rejection at: Promise {
+  <rejected> ReferenceError: Database is not defined
+      at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:237:23)
+      at startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:318:13)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5),
+  [Symbol(async_id_symbol)]: 28,
+  [Symbol(trigger_async_id_symbol)]: 1
+} reason: ReferenceError: Database is not defined
+    at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:237:23)
+    at startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:318:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[2025-12-17T17:46:54.785Z] Unhandled Rejection at: Promise {
+  <rejected> ReferenceError: PORT is not defined
+      at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:293:17)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:318:7),
+  [Symbol(async_id_symbol)]: 28,
+  [Symbol(trigger_async_id_symbol)]: 1
+} reason: ReferenceError: PORT is not defined
+    at BotAugustoTucuman (F:\developer\MariaDono\MarIADono4\app_Old.js:293:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async startSingleBot (F:\developer\MariaDono\MarIADono4\app_Old.js:318:7)
+[2025-12-17T17:57:52.955Z] Unhandled Rejection at: Promise {
+  <rejected> ReferenceError: PORT is not defined
+      at BotAugustoTucuman (file:///F:/developer/MariaDono/MarIADono4/app_Old.js:297:17)
+      at async startSingleBot (file:///F:/developer/MariaDono/MarIADono4/app_Old.js:322:7),
+  [Symbol(async_id_symbol)]: 1724,
+  [Symbol(trigger_async_id_symbol)]: 36
+} reason: ReferenceError: PORT is not defined
+    at BotAugustoTucuman (file:///F:/developer/MariaDono/MarIADono4/app_Old.js:297:17)
+    at async startSingleBot (file:///F:/developer/MariaDono/MarIADono4/app_Old.js:322:7)
+[2025-12-17T18:22:06.744Z] Connection update: connecting
+[2025-12-17T18:22:08.284Z] Connection update: undefined
+[2025-12-17T18:22:08.284Z] QR Code received
+[2025-12-17T18:22:48.311Z] Connection update: undefined
+[2025-12-17T18:22:48.311Z] QR Code received
+[2025-12-17T18:23:28.320Z] Connection update: undefined
+[2025-12-17T18:23:28.320Z] QR Code received
+[2025-12-17T18:24:08.326Z] Connection update: undefined
+[2025-12-17T18:24:08.326Z] QR Code received
+[2025-12-17T18:24:48.332Z] Connection update: undefined
+[2025-12-17T18:24:48.333Z] QR Code received
+[2025-12-17T18:25:28.336Z] Connection update: undefined
+[2025-12-17T18:25:28.336Z] QR Code received
+[2025-12-17T18:25:37.919Z] Connection update: close
+[2025-12-17T18:25:37.919Z] Connection closed. Status: 428, Reason: Connection Terminated by Server
+[2025-12-17T18:25:37.919Z] Reconnection attempt 1/10 in 1000ms
+[2025-12-17T18:25:38.936Z] Connection update: connecting
+[2025-12-17T18:25:39.690Z] Connection update: undefined
+[2025-12-17T18:25:39.690Z] QR Code received
+[2025-12-17T18:26:19.694Z] Connection update: undefined
+[2025-12-17T18:26:19.694Z] QR Code received
+[2025-12-17T18:26:59.699Z] Connection update: undefined
+[2025-12-17T18:26:59.699Z] QR Code received
+[2025-12-17T18:27:39.703Z] Connection update: undefined
+[2025-12-17T18:27:39.703Z] QR Code received
+[2025-12-17T18:28:19.706Z] Connection update: undefined
+[2025-12-17T18:28:19.706Z] QR Code received
+[2025-12-17T18:28:59.711Z] Connection update: undefined
+[2025-12-17T18:28:59.711Z] QR Code received
+[2025-12-17T18:29:10.562Z] Connection update: close
+[2025-12-17T18:29:10.562Z] Connection closed. Status: 428, Reason: Connection Terminated by Server
+[2025-12-17T18:29:10.562Z] Reconnection attempt 2/10 in 2000ms
+[2025-12-17T18:29:12.577Z] Connection update: connecting
+[2025-12-17T18:29:13.448Z] Connection update: undefined
+[2025-12-17T18:29:13.448Z] QR Code received
+[2025-12-17T18:29:53.452Z] Connection update: undefined
+[2025-12-17T18:29:53.452Z] QR Code received
+[2025-12-17T18:30:33.456Z] Connection update: undefined
+[2025-12-17T18:30:33.457Z] QR Code received
+[2025-12-17T18:31:13.461Z] Connection update: undefined
+[2025-12-17T18:31:13.461Z] QR Code received
+[2025-12-17T18:31:53.466Z] Connection update: undefined
+[2025-12-17T18:31:53.466Z] QR Code received
+[2025-12-17T18:32:33.471Z] Connection update: undefined
+[2025-12-17T18:32:33.472Z] QR Code received
+[2025-12-17T18:32:44.313Z] Connection update: close
+[2025-12-17T18:32:44.313Z] Connection closed. Status: 428, Reason: Connection Terminated by Server
+[2025-12-17T18:32:44.313Z] Reconnection attempt 3/10 in 4000ms
+[2025-12-17T18:32:48.326Z] Connection update: connecting
+[2025-12-17T18:32:48.961Z] Connection update: undefined
+[2025-12-17T18:32:48.962Z] QR Code received
+[2025-12-17T18:33:28.965Z] Connection update: undefined
+[2025-12-17T18:33:28.965Z] QR Code received
+[2025-12-17T18:34:08.969Z] Connection update: undefined
+[2025-12-17T18:34:08.969Z] QR Code received
+[2025-12-17T18:34:48.975Z] Connection update: undefined
+[2025-12-17T18:34:48.975Z] QR Code received
+[2025-12-17T18:35:28.979Z] Connection update: undefined
+[2025-12-17T18:35:28.979Z] QR Code received
+[2025-12-17T18:36:08.983Z] Connection update: undefined
+[2025-12-17T18:36:08.984Z] QR Code received
+[2025-12-17T18:36:19.863Z] Connection update: close
+[2025-12-17T18:36:19.863Z] Connection closed. Status: 428, Reason: Connection Terminated by Server
+[2025-12-17T18:36:19.863Z] Reconnection attempt 4/10 in 8000ms
+[2025-12-17T18:36:27.878Z] Connection update: connecting
+[2025-12-17T18:36:28.732Z] Connection update: undefined
+[2025-12-17T18:36:28.732Z] QR Code received
+[2025-12-17T18:37:08.736Z] Connection update: undefined
+[2025-12-17T18:37:08.736Z] QR Code received
+[2025-12-17T18:37:48.741Z] Connection update: undefined
+[2025-12-17T18:37:48.741Z] QR Code received
+[2025-12-17T18:38:28.744Z] Connection update: undefined
+[2025-12-17T18:38:28.745Z] QR Code received
+[2025-12-17T18:39:08.748Z] Connection update: undefined
+[2025-12-17T18:39:08.749Z] QR Code received
+[2025-12-17T18:39:48.754Z] Connection update: undefined
+[2025-12-17T18:39:48.754Z] QR Code received
+[2025-12-17T18:39:59.616Z] Connection update: close
+[2025-12-17T18:39:59.616Z] Connection closed. Status: 428, Reason: Connection Terminated by Server
+[2025-12-17T18:39:59.617Z] Reconnection attempt 5/10 in 16000ms
+[2025-12-17T18:40:15.632Z] Connection update: connecting
+[2025-12-17T18:40:16.275Z] Connection update: undefined
+[2025-12-17T18:40:16.275Z] QR Code received
+[2025-12-17T18:40:56.281Z] Connection update: undefined
+[2025-12-17T18:40:56.282Z] QR Code received
+[2025-12-17T18:41:36.287Z] Connection update: undefined
+[2025-12-17T18:41:36.287Z] QR Code received
+[2025-12-17T18:42:16.291Z] Connection update: undefined
+[2025-12-17T18:42:16.291Z] QR Code received
+[2025-12-17T18:42:56.294Z] Connection update: undefined
+[2025-12-17T18:42:56.295Z] QR Code received
+[2025-12-17T18:43:36.300Z] Connection update: undefined
+[2025-12-17T18:43:36.300Z] QR Code received
+[2025-12-17T18:43:46.179Z] Connection update: close
+[2025-12-17T18:43:46.179Z] Connection closed. Status: 428, Reason: Connection Terminated by Server
+[2025-12-17T18:43:46.179Z] Reconnection attempt 6/10 in 30000ms
+[2025-12-17T18:44:16.193Z] Connection update: connecting
+[2025-12-17T18:44:17.003Z] Connection update: undefined
+[2025-12-17T18:44:17.003Z] QR Code received
+[2025-12-17T18:44:57.007Z] Connection update: undefined
+[2025-12-17T18:44:57.007Z] QR Code received
+[2025-12-17T18:45:37.011Z] Connection update: undefined
+[2025-12-17T18:45:37.011Z] QR Code received
+[2025-12-17T18:46:17.017Z] Connection update: undefined
+[2025-12-17T18:46:17.017Z] QR Code received
+[2025-12-17T18:46:57.022Z] Connection update: undefined
+[2025-12-17T18:46:57.022Z] QR Code received
+[2025-12-17T18:47:37.027Z] Connection update: undefined
+[2025-12-17T18:47:37.028Z] QR Code received
+[2025-12-17T18:47:47.867Z] Connection update: close
+[2025-12-17T18:47:47.867Z] Connection closed. Status: 428, Reason: Connection Terminated by Server
+[2025-12-17T18:47:47.867Z] Reconnection attempt 7/10 in 30000ms
+[2025-12-17T18:48:17.884Z] Connection update: connecting
+[2025-12-17T18:48:18.537Z] Connection update: undefined
+[2025-12-17T18:48:18.537Z] QR Code received
+[2025-12-17T18:48:58.541Z] Connection update: undefined
+[2025-12-17T18:48:58.542Z] QR Code received
+[2025-12-17T18:49:38.548Z] Connection update: undefined
+[2025-12-17T18:49:38.548Z] QR Code received
+[2025-12-17T18:50:18.552Z] Connection update: undefined
+[2025-12-17T18:50:18.552Z] QR Code received
+[2025-12-17T18:50:58.556Z] Connection update: undefined
+[2025-12-17T18:50:58.556Z] QR Code received
+[2025-12-17T18:51:38.559Z] Connection update: undefined
+[2025-12-17T18:51:38.560Z] QR Code received
+[2025-12-17T18:51:49.441Z] Connection update: close
+[2025-12-17T18:51:49.441Z] Connection closed. Status: 428, Reason: Connection Terminated by Server
+[2025-12-17T18:51:49.441Z] Reconnection attempt 8/10 in 30000ms
+[2025-12-17T18:52:19.457Z] Connection update: connecting
+[2025-12-17T18:52:20.395Z] Connection update: undefined
+[2025-12-17T18:52:20.395Z] QR Code received
+[2025-12-17T18:59:49.494Z] Connection update: close
+[2025-12-17T18:59:49.494Z] Connection closed. Status: 408, Reason: Connection was lost
+[2025-12-17T18:59:49.494Z] Reconnection attempt 9/10 in 30000ms
+[2025-12-17T19:00:19.509Z] Connection update: connecting
+[2025-12-17T19:00:20.189Z] Connection update: undefined
+[2025-12-17T19:00:20.189Z] QR Code received
+[2025-12-30T03:47:03.571Z] Connection update: connecting
+[2025-12-30T03:47:03.912Z] Unhandled Rejection at: Promise {
+  <rejected> TypeError: Cannot read properties of undefined (reading 'id')
+      at Object.sendMessage (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@leifermendez+baileys@6.8.6_31af2762c251e43ad8571ffba401b8a0\node_modules\@leifermendez\baileys\lib\Socket\messages-send.js:691:48)
+      at BaileysProvider.sendText (file:///F:/developer/MariaDono/MarIADono4/node_modules/.pnpm/@builderbot+provider-bailey_fb4e2121f81f5c7e6585354210962836/node_modules/@builderbot/provider-baileys/dist/index.mjs:31443:32)
+      at BaileysProvider.sendMessage (file:///F:/developer/MariaDono/MarIADono4/node_modules/.pnpm/@builderbot+provider-bailey_fb4e2121f81f5c7e6585354210962836/node_modules/@builderbot/provider-baileys/dist/index.mjs:31528:25)
+      at CoreClass.sendProviderAndSave (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14635:65)
+      at Object.promiseInFunc (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14340:36)
+      at Queue.processItem (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:804:30)
+      at F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:882:64
+      at Array.map (<anonymous>)
+      at Queue.processQueue (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:882:45)
+      at F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:872:22
+      at new Promise (<anonymous>)
+      at Queue.enqueue (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:856:16)
+      at enqueueMsg (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14339:47)
+      at sendFlow (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14317:27)
+      at async exportFunctionsSend (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14563:17),
+  [Symbol(async_id_symbol)]: 55425,
+  [Symbol(trigger_async_id_symbol)]: 55420
+} reason: TypeError: Cannot read properties of undefined (reading 'id')
+    at Object.sendMessage (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@leifermendez+baileys@6.8.6_31af2762c251e43ad8571ffba401b8a0\node_modules\@leifermendez\baileys\lib\Socket\messages-send.js:691:48)
+    at BaileysProvider.sendText (file:///F:/developer/MariaDono/MarIADono4/node_modules/.pnpm/@builderbot+provider-bailey_fb4e2121f81f5c7e6585354210962836/node_modules/@builderbot/provider-baileys/dist/index.mjs:31443:32)
+    at BaileysProvider.sendMessage (file:///F:/developer/MariaDono/MarIADono4/node_modules/.pnpm/@builderbot+provider-bailey_fb4e2121f81f5c7e6585354210962836/node_modules/@builderbot/provider-baileys/dist/index.mjs:31528:25)
+    at CoreClass.sendProviderAndSave (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14635:65)
+    at Object.promiseInFunc (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14340:36)
+    at Queue.processItem (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:804:30)
+    at F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:882:64
+    at Array.map (<anonymous>)
+    at Queue.processQueue (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:882:45)
+    at F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:872:22
+    at new Promise (<anonymous>)
+    at Queue.enqueue (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:856:16)
+    at enqueueMsg (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14339:47)
+    at sendFlow (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14317:27)
+    at async exportFunctionsSend (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14563:17)
+[2025-12-30T03:47:03.918Z] Unhandled Rejection at: Promise {
+  <rejected> TypeError: Cannot read properties of undefined (reading 'id')
+      at Object.sendMessage (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@leifermendez+baileys@6.8.6_31af2762c251e43ad8571ffba401b8a0\node_modules\@leifermendez\baileys\lib\Socket\messages-send.js:691:48)
+      at BaileysProvider.sendText (file:///F:/developer/MariaDono/MarIADono4/node_modules/.pnpm/@builderbot+provider-bailey_fb4e2121f81f5c7e6585354210962836/node_modules/@builderbot/provider-baileys/dist/index.mjs:31443:32)
+      at BaileysProvider.sendMessage (file:///F:/developer/MariaDono/MarIADono4/node_modules/.pnpm/@builderbot+provider-bailey_fb4e2121f81f5c7e6585354210962836/node_modules/@builderbot/provider-baileys/dist/index.mjs:31528:25)
+      at CoreClass.sendProviderAndSave (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14635:65)
+      at Object.promiseInFunc (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14340:36)
+      at Queue.processItem (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:804:30)
+      at F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:882:64
+      at Array.map (<anonymous>)
+      at Queue.processQueue (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:882:45)
+      at F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:872:22
+      at new Promise (<anonymous>)
+      at Queue.enqueue (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:856:16)
+      at enqueueMsg (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14339:47)
+      at sendFlow (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14317:27)
+      at async exportFunctionsSend (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14563:17),
+  [Symbol(async_id_symbol)]: 55490,
+  [Symbol(trigger_async_id_symbol)]: 55485
+} reason: TypeError: Cannot read properties of undefined (reading 'id')
+    at Object.sendMessage (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@leifermendez+baileys@6.8.6_31af2762c251e43ad8571ffba401b8a0\node_modules\@leifermendez\baileys\lib\Socket\messages-send.js:691:48)
+    at BaileysProvider.sendText (file:///F:/developer/MariaDono/MarIADono4/node_modules/.pnpm/@builderbot+provider-bailey_fb4e2121f81f5c7e6585354210962836/node_modules/@builderbot/provider-baileys/dist/index.mjs:31443:32)
+    at BaileysProvider.sendMessage (file:///F:/developer/MariaDono/MarIADono4/node_modules/.pnpm/@builderbot+provider-bailey_fb4e2121f81f5c7e6585354210962836/node_modules/@builderbot/provider-baileys/dist/index.mjs:31528:25)
+    at CoreClass.sendProviderAndSave (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14635:65)
+    at Object.promiseInFunc (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14340:36)
+    at Queue.processItem (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:804:30)
+    at F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:882:64
+    at Array.map (<anonymous>)
+    at Queue.processQueue (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:882:45)
+    at F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:872:22
+    at new Promise (<anonymous>)
+    at Queue.enqueue (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:856:16)
+    at enqueueMsg (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14339:47)
+    at sendFlow (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14317:27)
+    at async exportFunctionsSend (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14563:17)
+[2025-12-30T03:47:05.805Z] Connection update: close
+[2025-12-30T03:47:05.805Z] Connection closed. Status: 405, Reason: Connection Failure
+[2025-12-30T03:47:05.805Z] Critical error, stopping reconnection attempts
+[2025-12-30T03:58:49.917Z] Connection update: connecting
+[2025-12-30T03:58:50.260Z] Unhandled Rejection at: Promise {
+  <rejected> TypeError: Cannot read properties of undefined (reading 'id')
+      at Object.sendMessage (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@leifermendez+baileys@6.8.6_31af2762c251e43ad8571ffba401b8a0\node_modules\@leifermendez\baileys\lib\Socket\messages-send.js:691:48)
+      at BaileysProvider.sendText (file:///F:/developer/MariaDono/MarIADono4/node_modules/.pnpm/@builderbot+provider-bailey_fb4e2121f81f5c7e6585354210962836/node_modules/@builderbot/provider-baileys/dist/index.mjs:31443:32)
+      at BaileysProvider.sendMessage (file:///F:/developer/MariaDono/MarIADono4/node_modules/.pnpm/@builderbot+provider-bailey_fb4e2121f81f5c7e6585354210962836/node_modules/@builderbot/provider-baileys/dist/index.mjs:31528:25)
+      at CoreClass.sendProviderAndSave (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14635:65)
+      at Object.promiseInFunc (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14340:36)
+      at Queue.processItem (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:804:30)
+      at F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:882:64
+      at Array.map (<anonymous>)
+      at Queue.processQueue (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:882:45)
+      at F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:872:22
+      at new Promise (<anonymous>)
+      at Queue.enqueue (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:856:16)
+      at enqueueMsg (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14339:47)
+      at sendFlow (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14317:27)
+      at async exportFunctionsSend (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14563:17),
+  [Symbol(async_id_symbol)]: 55425,
+  [Symbol(trigger_async_id_symbol)]: 55420
+} reason: TypeError: Cannot read properties of undefined (reading 'id')
+    at Object.sendMessage (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@leifermendez+baileys@6.8.6_31af2762c251e43ad8571ffba401b8a0\node_modules\@leifermendez\baileys\lib\Socket\messages-send.js:691:48)
+    at BaileysProvider.sendText (file:///F:/developer/MariaDono/MarIADono4/node_modules/.pnpm/@builderbot+provider-bailey_fb4e2121f81f5c7e6585354210962836/node_modules/@builderbot/provider-baileys/dist/index.mjs:31443:32)
+    at BaileysProvider.sendMessage (file:///F:/developer/MariaDono/MarIADono4/node_modules/.pnpm/@builderbot+provider-bailey_fb4e2121f81f5c7e6585354210962836/node_modules/@builderbot/provider-baileys/dist/index.mjs:31528:25)
+    at CoreClass.sendProviderAndSave (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14635:65)
+    at Object.promiseInFunc (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14340:36)
+    at Queue.processItem (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:804:30)
+    at F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:882:64
+    at Array.map (<anonymous>)
+    at Queue.processQueue (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:882:45)
+    at F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:872:22
+    at new Promise (<anonymous>)
+    at Queue.enqueue (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:856:16)
+    at enqueueMsg (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14339:47)
+    at sendFlow (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14317:27)
+    at async exportFunctionsSend (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14563:17)
+[2025-12-30T03:58:50.265Z] Unhandled Rejection at: Promise {
+  <rejected> TypeError: Cannot read properties of undefined (reading 'id')
+      at Object.sendMessage (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@leifermendez+baileys@6.8.6_31af2762c251e43ad8571ffba401b8a0\node_modules\@leifermendez\baileys\lib\Socket\messages-send.js:691:48)
+      at BaileysProvider.sendText (file:///F:/developer/MariaDono/MarIADono4/node_modules/.pnpm/@builderbot+provider-bailey_fb4e2121f81f5c7e6585354210962836/node_modules/@builderbot/provider-baileys/dist/index.mjs:31443:32)
+      at BaileysProvider.sendMessage (file:///F:/developer/MariaDono/MarIADono4/node_modules/.pnpm/@builderbot+provider-bailey_fb4e2121f81f5c7e6585354210962836/node_modules/@builderbot/provider-baileys/dist/index.mjs:31528:25)
+      at CoreClass.sendProviderAndSave (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14635:65)
+      at Object.promiseInFunc (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14340:36)
+      at Queue.processItem (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:804:30)
+      at F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:882:64
+      at Array.map (<anonymous>)
+      at Queue.processQueue (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:882:45)
+      at F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:872:22
+      at new Promise (<anonymous>)
+      at Queue.enqueue (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:856:16)
+      at enqueueMsg (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14339:47)
+      at sendFlow (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14317:27)
+      at async exportFunctionsSend (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14563:17),
+  [Symbol(async_id_symbol)]: 55491,
+  [Symbol(trigger_async_id_symbol)]: 55486
+} reason: TypeError: Cannot read properties of undefined (reading 'id')
+    at Object.sendMessage (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@leifermendez+baileys@6.8.6_31af2762c251e43ad8571ffba401b8a0\node_modules\@leifermendez\baileys\lib\Socket\messages-send.js:691:48)
+    at BaileysProvider.sendText (file:///F:/developer/MariaDono/MarIADono4/node_modules/.pnpm/@builderbot+provider-bailey_fb4e2121f81f5c7e6585354210962836/node_modules/@builderbot/provider-baileys/dist/index.mjs:31443:32)
+    at BaileysProvider.sendMessage (file:///F:/developer/MariaDono/MarIADono4/node_modules/.pnpm/@builderbot+provider-bailey_fb4e2121f81f5c7e6585354210962836/node_modules/@builderbot/provider-baileys/dist/index.mjs:31528:25)
+    at CoreClass.sendProviderAndSave (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14635:65)
+    at Object.promiseInFunc (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14340:36)
+    at Queue.processItem (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:804:30)
+    at F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:882:64
+    at Array.map (<anonymous>)
+    at Queue.processQueue (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:882:45)
+    at F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:872:22
+    at new Promise (<anonymous>)
+    at Queue.enqueue (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:856:16)
+    at enqueueMsg (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14339:47)
+    at sendFlow (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14317:27)
+    at async exportFunctionsSend (F:\developer\MariaDono\MarIADono4\node_modules\.pnpm\@builderbot+bot@1.3.2-y.0\node_modules\@builderbot\bot\dist\index.cjs:14563:17)
+[2025-12-30T03:58:51.878Z] Connection update: close
+[2025-12-30T03:58:51.878Z] Connection closed. Status: 405, Reason: Connection Failure
+[2025-12-30T03:58:51.878Z] Critical error, stopping reconnection attempts
+[2026-01-11T07:20:56.715Z] Connection update: connecting

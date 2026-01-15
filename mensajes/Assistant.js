@@ -1,14 +1,12 @@
-const { Configuration, OpenAIApi, OpenAI } = require('openai');
-require('dotenv/config');
-const fs = require('fs').promises;
-const path = require('path');
-const { logger } = require('./../src/utils/logger');
+import 'dotenv/config';
+import OpenAI from 'openai';
+import { promises as fs } from 'fs';
+import path from 'path';
+import { logger } from '../src/utils/logger.js';
 
 
 // Reemplaza 'your-api-key' con tu clave API de OpenAI
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 // Mapeo para almacenar los hilos de conversación de los usuarios
 //const userThreads = {"5493812010781":"thread_tWAdefP1xDPko4qOoicTKhZj"};
@@ -192,7 +190,7 @@ async function waitForRunCompletion(threadId, runId, maxWaitTime = 40000) {
 }
 
 
-module.exports = { chatWithAssistant, getOrCreateThread, addContextAssistant };
+export { chatWithAssistant, getOrCreateThread, addContextAssistant };
 
 
 

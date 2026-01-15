@@ -1,5 +1,5 @@
-const DatabaseQueries = require("../database/DatabaseQueries");
-const SqliteManager = require("../database/SqliteManager");
+import DatabaseQueries from '../database/DatabaseQueries';
+import SqliteManager from '../database/SqliteManager.js';
 
 class MessageStatusChecker {
   constructor(provider) {
@@ -91,7 +91,7 @@ class MessageStatusChecker {
 // Obtiene estados de los mensajes enviados este mes
   async getAllMessageStatusesEsteMes() {
     try {
-      const { getMensajesBulkEsteMes } = require("../database/scripts/getMensajesBulkEsteMes");
+      const { getMensajesBulkEsteMes } = await import('../database/scripts/getMensajesBulkEsteMes.js');
       const mensajesEsteMes = await getMensajesBulkEsteMes();
       const detalles = mensajesEsteMes.map((m) => ({
         id: m.id,
@@ -160,4 +160,4 @@ class MessageStatusChecker {
   }
 }
 
-module.exports = MessageStatusChecker; // Use `module.exports`, not `exports`
+export default MessageStatusChecker;

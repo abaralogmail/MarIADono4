@@ -8,4 +8,8 @@ async function handleUserMessageCount(userId, flowDynamic) {
     }
 }
 
-module.exports = { handleUserMessageCount };
+// Named export for compatibility
+export { handleUserMessageCount };
+
+// Default export for backward compatibility
+export default { handleUserMessageCount };

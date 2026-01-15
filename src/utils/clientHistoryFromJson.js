@@ -1,11 +1,12 @@
-const fs = require('fs').promises;
+import fs from 'fs';
+const fsPromises = fs.promises;
 
-async function getHistoryConversation_log(clientId, botName) {
+export async function getHistoryConversation_log(clientId, botName) {
     const filePath = './Logs/conversations_log.json';
     
     try {
         // Read the JSON file
-        const fileContent = await fs.readFile(filePath, 'utf8');
+        const fileContent = await fsPromises.readFile(filePath, 'utf8');
         
         // Parse the JSON content
         const data = JSON.parse(fileContent);
@@ -36,4 +37,6 @@ async function getHistoryConversation_log(clientId, botName) {
         throw error;
     }
 }
-module.exports = { getHistoryConversation_log };
+
+// Named export for compatibility
+export default { getHistoryConversation_log };

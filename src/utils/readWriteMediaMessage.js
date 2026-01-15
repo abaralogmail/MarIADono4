@@ -1,5 +1,8 @@
-const { downloadMediaMessage } = require("@adiwajshing/baileys");
-const fs = require('fs');
+import pkg from '@builderbot/bot';
+import fs from 'fs';
+
+// '@builderbot/bot' is a CommonJS package; import its default and destructure the helpers we need
+const { downloadMediaMessage } = pkg;
 
 
 async function writeMediaMessage(ctx) {
@@ -87,8 +90,10 @@ async function readVideoFromContext(ctx) {
         return null; // Return null in case of error
     }
 }
+export { writeMediaMessage, readMediaFromContext };
 
-module.exports = {
+// Keep default export for backwards compatibility
+export default {
     writeMediaMessage,
     readMediaFromContext
 };

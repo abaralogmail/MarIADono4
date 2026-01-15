@@ -122,7 +122,7 @@ class NotionWorkspaceAssistant {
 
 }
 
-module.exports = { NotionWorkspaceAssistant };
+export default { NotionWorkspaceAssistant };
 
 
 

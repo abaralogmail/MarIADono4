@@ -1,5 +1,5 @@
-const { Swarm, Agent } = require('openai-swarm-node');
-require('dotenv').config();
+import { Swarm, Agent } from 'openai-swarm-node';
+import 'dotenv/config';
 
 const swarm = new Swarm(
     api_Key = process.env.OPENAI_API_KEY // Reemplaza con tu clave API realapi_Key: OPENAI_CONFIG.apiKey,

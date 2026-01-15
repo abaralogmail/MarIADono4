@@ -1,4 +1,4 @@
-const {Swarm} = require("openai-swarm-node");
+import { Swarm } from 'openai-swarm-node';
 /*
 // Define two agents
 const agentA = new Agent({

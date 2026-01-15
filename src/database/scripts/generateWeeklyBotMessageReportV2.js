@@ -1,5 +1,5 @@
-const SqliteManager = require("../SqliteManager");
-const { Op, Sequelize } = require("sequelize");
+import SqliteManager from '../SqliteManager.js';
+import { Op, Sequelize } from 'sequelize';
 
 const generateWeeklyBotMessageReport = async (groupByBotNameArg) => {
   const groupByBotName = groupByBotNameArg === undefined ? true : String(groupByBotNameArg).toLowerCase() === 'true';

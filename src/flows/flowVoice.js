@@ -1,8 +1,9 @@
-const { handlerAI } = require("../../mensajes/whisper.js")
-const { addKeyword, EVENTS } = require('@bot-whatsapp/bot');
-const flowPrincipal = require('./flowPrincipal');
-const { sendChunksWithDelay } = require('../utils/sendChunksWithDelay');
-const { getUserConfig, checkTranscriptionEnabled } = require('../config/userConfig');
+import { handlerAI } from '../../mensajes/whisper.js';
+import pkg from '@builderbot/bot';
+const { addKeyword, EVENTS } = pkg;
+import flowPrincipal from './flowPrincipal.js';
+import { sendChunksWithDelay } from '../utils/sendChunksWithDelay.js';
+import { getUserConfig, checkTranscriptionEnabled } from '../config/userConfig.js';
 
 
 const flowVoice = addKeyword(EVENTS.VOICE_NOTE)
@@ -30,4 +31,4 @@ const flowVoice = addKeyword(EVENTS.VOICE_NOTE)
     });
 
 
-module.exports = flowVoice;
+export default flowVoice;

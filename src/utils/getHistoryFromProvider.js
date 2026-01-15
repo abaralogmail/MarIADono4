@@ -1,10 +1,14 @@
 const getHistoryFromProvider = async (provider, chatId, limit = 10) => {
   try {
+    // Ensure provider.store.messages exists and is not empty before accessing chatId
+    if (!provider || !provider.store || !provider.store.messages || Object.keys(provider.store.messages).length === 0) {
+      return [];
+    }
+
     const messagesProvider = provider.store.messages[chatId];
 
     // Check if messageProvider exists and is not empty
     if (!messagesProvider || !messagesProvider.array || messagesProvider.array.length === 0) {
-      //console.log('No messages found for chatId:', chatId);
       return [];
     }
 
@@ -60,4 +64,4 @@ function removeJidSuffix(jid) {
   return id;
 }
 
-module.exports = getHistoryFromProvider
+export default getHistoryFromProvider;

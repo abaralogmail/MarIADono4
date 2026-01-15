@@ -1,5 +1,5 @@
-const BulkMessageManager = require('./bulk/bulkMessageManager');
-const { getBotFilePath } = require('../src/utils/botFileMapping'); // Use the new function to get path from config
+import BulkMessageManager from './bulkMessageManager.js';
+import { getBotFilePath } from '../utils/botFileMapping.js';
 
 // This function is the entry point called from flowPrincipal
 async function sendBulkMessages(botName, provider) {
@@ -23,4 +23,4 @@ async function sendBulkMessages(botName, provider) {
     }
 }
 
-module.exports = sendBulkMessages;
+export default sendBulkMessages;

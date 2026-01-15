@@ -1,5 +1,5 @@
-const { handleMediaProcessing } = require("./mediaHandler");
-const { handleVoiceTranscription } = require("./voiceHandler");
+import { handleMediaProcessing } from './mediaHandler.js';
+import { handleVoiceTranscription } from './voiceHandler.js';
 
 /**
  * Unified manager for voice and media message processing
@@ -286,12 +286,28 @@ class VoiceMediaManager {
 // Export singleton instance
 const voiceMediaManager = new VoiceMediaManager();
 
-module.exports = {
+// Helper wrappers for named exports
+const processVoiceOrMedia = (ctx, flowDynamic) =>
+  voiceMediaManager.processMessage(ctx, flowDynamic);
+const hasVoiceOrMedia = (ctx) => voiceMediaManager.hasVoiceOrMedia(ctx);
+const getMediaInfo = (ctx) => voiceMediaManager.getMediaInfo(ctx);
+
+export default {
   VoiceMediaManager,
   voiceMediaManager,
   // Export individual functions for backward compatibility
-  processVoiceOrMedia: (ctx, flowDynamic) =>
-    voiceMediaManager.processMessage(ctx, flowDynamic),
-  hasVoiceOrMedia: (ctx) => voiceMediaManager.hasVoiceOrMedia(ctx),
-  getMediaInfo: (ctx) => voiceMediaManager.getMediaInfo(ctx),
+  processVoiceOrMedia,
+  hasVoiceOrMedia,
+  getMediaInfo,
+};
+
+// Named exports for compatibility
+export {
+  VoiceMediaManager,
+  voiceMediaManager,
+  // Individual helper functions
+  // Note: these are thin wrappers around the singleton
+  processVoiceOrMedia,
+  hasVoiceOrMedia,
+  getMediaInfo
 };

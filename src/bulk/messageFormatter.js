@@ -1,6 +1,5 @@
-//const OllamaFunnelClassifier = require('../OllamaFunnelClassifier');
-const N8nWebhookListener = require('../../src/Logica/N8nWebhookListener');
-const { getInstance: getBotConfigManager } = require('../../src/config/botConfigManager');
+import N8nWebhookListener from '../Logica/N8nWebhookListener.js';
+import { getInstance as getBotConfigManager } from '../config/botConfigManager.js';
 
 class MessageFormatter {
     constructor(botName) {
@@ -50,4 +49,4 @@ Mensaje formateado:
     }
 }
 
-module.exports = MessageFormatter;
+export default MessageFormatter;

@@ -1,4 +1,4 @@
-const XLSX = require('xlsx');
+import XLSX from 'xlsx';
 
 class ExcelUpdater {
     constructor(workbook, sheet, excelFilePath) {
@@ -20,4 +20,4 @@ class ExcelUpdater {
     }
 }
 
-module.exports = ExcelUpdater;
+export default ExcelUpdater;

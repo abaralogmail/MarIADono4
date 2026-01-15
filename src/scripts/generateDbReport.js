@@ -1,6 +1,8 @@
-const fs = require('fs');
-const path = require('path');
-const { Sequelize } = require('sequelize');
+import fs from 'fs';
+import path from 'path';
+import { Sequelize } from 'sequelize';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
 
 // Setup a temporary Sequelize instance for SQLite to inspect models
 const sequelize = new Sequelize({
@@ -15,22 +17,21 @@ const models = {};
 let reportGenerated = false;
 
 try {
-  fs.readdirSync(modelsDir)
-    .filter(file => file.endsWith('.js'))
-    .forEach(file => {
-      try {
-        const modelDefinition = require(path.join(modelsDir, file));
-        // Check if it's a valid Sequelize model definition function
-        if (typeof modelDefinition === 'function') {
-            const model = modelDefinition(sequelize, Sequelize.DataTypes);
-            models[model.name] = model;
-        } else {
-            console.warn(`Advertencia: El archivo ${file} no exporta una función de modelo de Sequelize válida.`);
-        }
-      } catch (error) {
-        console.error(`Error al cargar el modelo desde ${file}:`, error);
+  const files = fs.readdirSync(modelsDir).filter(file => file.endsWith('.js'));
+  for (const file of files) {
+    try {
+      const modelDefinition = require(path.join(modelsDir, file));
+      // Check if it's a valid Sequelize model definition function
+      if (typeof modelDefinition === 'function') {
+        const model = modelDefinition(sequelize, Sequelize.DataTypes);
+        models[model.name] = model;
+      } else {
+        console.warn(`Advertencia: El archivo ${file} no exporta una función de modelo de Sequelize válida.`);
       }
-    });
+    } catch (error) {
+      console.error(`Error al cargar el modelo desde ${file}:`, error);
+    }
+  }
 
   if (Object.keys(models).length === 0) {
     throw new Error("No se encontraron o cargaron modelos de Sequelize válidos en el directorio 'database/Model'.");

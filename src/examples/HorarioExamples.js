@@ -1,4 +1,4 @@
-const HorarioManagerService = require('../services/HorarioManagerService');
+import HorarioManagerService from '../services/HorarioManagerService';
 
 // Ejemplo de uso del sistema de horarios polimórfico
 async function ejemplosDeUso() {
@@ -198,7 +198,7 @@ async function casosAvanzados() {
   };
 }
 
-module.exports = {
+export default {
   ejemplosDeUso,
   integrarConFlows,
   casosAvanzados
