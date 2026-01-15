@@ -5,7 +5,7 @@
  * Tabla: whatsapp_group_cliente_mapping
  */
 
-module.exports = (sequelize, DataTypes) => {
+export default (sequelize, DataTypes) => {
   const WhatsAppGroupClienteMapping = sequelize.define('WhatsAppGroupClienteMapping', {
     id: {
       type: DataTypes.INTEGER,

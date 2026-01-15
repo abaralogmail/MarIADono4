@@ -5,7 +5,7 @@
  * Tabla: whatsapp_group_members
  */
 
-module.exports = (sequelize, DataTypes) => {
+export default (sequelize, DataTypes) => {
   const WhatsAppGroupMember = sequelize.define('WhatsAppGroupMember', {
     id: {
       type: DataTypes.INTEGER,

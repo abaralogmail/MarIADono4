@@ -1,32 +1,10 @@
-import { Sequelize, DataTypes, Op } from "sequelize";
+import { Op, Sequelize } from "sequelize";
+import sequelize from "./sequelize.js";
+import dbModels from "./models/index.js";
 import path from "path";
-import fs from "fs";
 
- // Import models
- import ConversationsLogModel from "./models/ConversationsLog.js";
- import ConversationMetricasModel from "./models/ConversationMetricas.js";
- import MensajeEstadosModel from "./models/MensajeEstados.js";
- import CtxLogsModel from "./models/CtxLogs.js";
- import ProviderLogsModel from "./models/ProviderLogs.js";
- import OfertasModel from "./models/Ofertas.js";
- import PedidosModel from "./models/Pedidos.js";
- import ProductosModel from "./models/Productos.js";
- import UsuariosModel from "./models/Usuarios.js";
- import HorariosModel from "./models/Horarios.js";
- import ReglasHorarioModel from "./models/ReglasHorario.js";
- import ExcepcionesHorarioModel from "./models/ExcepcionesHorario.js";
- import N8nMetricModel from "./models/N8nMetric.js";
- import ClientFileModel from "./models/ClientFile.js";
- 
- // Segmentación / Scoring models
- import SegmentationRuleModel from "./models/SegmentationRule.js";
- import CustomerSegmentModel from "./models/CustomerSegment.js";
- import SegmentMemberModel from "./models/SegmentMember.js";
- import SegmentPerformanceModel from "./models/SegmentPerformance.js";
- import CustomerScoreModel from "./models/CustomerScore.js";
- 
- // Auxiliares
- import storageManager from "../auxiliares/storageManager.js";
+// Auxiliares
+import storageManager from "../auxiliares/storageManager.js";
 
 class SqliteManager {
   static instance = null;
@@ -49,62 +27,22 @@ class SqliteManager {
   }
 
   constructor() {
-    this.sequelize = null;
-    this.models = {};
+    this.sequelize = sequelize;
+    this.models = dbModels;
     this.isInitialized = false;
-
-    // SQLite database path: prefer env, otherwise resolve within src/database/(data|Data)
-    if (process.env.SQLITE_DB_PATH) {
-      this.databasePath = process.env.SQLITE_DB_PATH;
-    } else {
-      const candidates = [
-        path.join(process.cwd(), "src", "database", "data", "MarIADono3DB.sqlite"),
-        path.join(process.cwd(), "src", "database", "Data", "MarIADono3DB.sqlite"),
-        path.join(process.cwd(), "Data", "MarIADono3DB.sqlite"),
-      ];
-      this.databasePath = candidates.find((p) => {
-        try {
-          return fs.existsSync(p);
-        } catch (_) {
-          return false;
-        }
-      }) || candidates[0];
-    }
   }
 
   async initialize() {
     try {
-      console.log("🔄 Initializing SQLite connection with Sequelize...");
-
-      // Create Sequelize instance for SQLite
-      this.sequelize = new Sequelize({
-        dialect: "sqlite",
-        storage: this.databasePath,
-        logging: process.env.NODE_ENV === "development" ? console.log : false,
-        pool: {
-          max: 5,
-          min: 0,
-          acquire: 30000,
-          idle: 10000,
-        },
-        dialectOptions: {
-          // Enable foreign key support in SQLite
-          foreignKeys: true,
-        },
-      });
+      console.log("🔄 Initializing SQLite database...");
 
       // Test connection
       await this.testConnection();
 
-      // Define models
-      await this.defineModels();
-
       // Sync all defined models to the DB.
       console.log("🔄 Syncing models with the database...");
-      // Using a non-destructive sync. This will only create tables that do not exist.
-      // For schema changes, it is recommended to use migrations.
-      const syncOptions = {};
-      await this.sequelize.sync(syncOptions);
+      // Using a non-destructive sync.
+      await this.sequelize.sync();
       console.log("✅ Models synced successfully.");
 
       this.isInitialized = true;
@@ -117,63 +55,35 @@ class SqliteManager {
     }
   }
 
-  async defineModels() {
-    this.models.ConversationsLog = ConversationsLogModel(this.sequelize, DataTypes);
-    this.models.ConversationMetricas = ConversationMetricasModel(this.sequelize, DataTypes);
-    this.models.N8nMetric = N8nMetricModel(this.sequelize, DataTypes);
-    this.models.MensajeEstados = MensajeEstadosModel(this.sequelize, DataTypes);
-    this.models.CtxLogs = CtxLogsModel(this.sequelize, DataTypes);
-    this.models.ProviderLogs = ProviderLogsModel(this.sequelize, DataTypes);
-    this.models.Ofertas = OfertasModel(this.sequelize, DataTypes);
-    this.models.Pedidos = PedidosModel(this.sequelize, DataTypes);
-    this.models.Productos = ProductosModel(this.sequelize, DataTypes);
-    this.models.Usuarios = UsuariosModel(this.sequelize, DataTypes);
-    this.models.Horarios = HorariosModel(this.sequelize, DataTypes);
-    this.models.ReglasHorario = ReglasHorarioModel(this.sequelize, DataTypes);
-    this.models.ExcepcionesHorario = ExcepcionesHorarioModel(this.sequelize, DataTypes);
-    this.models.ClientFile = ClientFileModel(this.sequelize, DataTypes);
-  
-    // Segmentación / Scoring models
-    this.models.SegmentationRule = SegmentationRuleModel(this.sequelize, DataTypes);
-    this.models.CustomerSegment = CustomerSegmentModel(this.sequelize, DataTypes);
-    this.models.SegmentMember = SegmentMemberModel(this.sequelize, DataTypes);
-    this.models.SegmentPerformance = SegmentPerformanceModel(this.sequelize, DataTypes);
-    this.models.CustomerScore = CustomerScoreModel(this.sequelize, DataTypes);
-  
-    // Define associations
-    this.defineAssociations();
+  async testConnection() {
+    try {
+      await this.sequelize.authenticate();
+      console.log("✅ SQLite connection test successful");
+      return { now: new Date() };
+    } catch (error) {
+      console.error("❌ SQLite connection test failed:", error.message || error);
+      throw error;
+    }
   }
 
-  defineAssociations() {
-    // Disable associations for now to avoid foreign key issues in SQLite
-    // These can be enabled later with proper configuration
+  async query(sql, options = {}) {
+    if (!this.isInitialized) {
+      throw new Error("SQLite not initialized");
+    }
 
-    // Schedule associations
-    this.models.Horarios.hasMany(this.models.ReglasHorario, {
-      foreignKey: "horario_id",
-      as: "reglas",
-      onDelete: "CASCADE", // Eliminar reglas cuando se elimina el horario
-      hooks: true, // Asegura que los hooks de Sequelize se disparen
-    });
-
-    this.models.Horarios.hasMany(this.models.ExcepcionesHorario, {
-      foreignKey: "horario_id",
-      as: "excepciones",
-      onDelete: "CASCADE", // Eliminar excepciones cuando se elimina el horario
-      hooks: true,
-    });
-
-    this.models.ReglasHorario.belongsTo(this.models.Horarios, {
-      foreignKey: "horario_id",
-      as: "horario", // No se necesita onDelete aquí
-    });
-
-    this.models.ExcepcionesHorario.belongsTo(this.models.Horarios, {
-      foreignKey: "horario_id",
-      as: "horario",
-    });
+    try {
+      const results = await this.sequelize.query(sql, {
+        type: options.type || Sequelize.QueryTypes.SELECT,
+        ...options,
+      });
+      return results;
+    } catch (error) {
+      console.error("❌ Query error:", error);
+      throw error;
+    }
   }
 
+  // Utility methods for common operations
   async saveConversation(messageData) {
     try {
       await this.models.ConversationsLog.create({
@@ -188,58 +98,17 @@ class SqliteManager {
         interesCliente: messageData.interesCliente || "",
         botName: messageData.botName || "",
       });
-
-      console.log(
-        "✅ Conversacion guardada correctamente en SQLite conversations_log"
-      );
+      console.log("✅ Conversacion guardada correctamente en SQLite");
     } catch (error) {
-      console.error(
-        "❌ Error saving conversation in conversations_log:",
-        error
-      );
+      console.error("❌ Error saving conversation:", error);
       throw error;
     }
   }
 
-  async testConnection() {
-    try {
-      await this.sequelize.authenticate();
-      console.log("✅ SQLite connection test successful");
-      return { now: new Date() };
-    } catch (error) {
-      console.error(
-        "❌ SQLite connection test failed:",
-        error.message || error
-      );
-      throw error;
-    }
-  }
-
-  async query(sql, options = {}) {
-    if (!this.isInitialized) {
-      throw new Error("SQLite not initialized");
-    }
-
-    try {
-      const [results, metadata] = await this.sequelize.query(sql, {
-        type: Sequelize.QueryTypes.SELECT,
-        ...options,
-      });
-      return results;
-    } catch (error) {
-      console.error("❌ Query error:", error);
-      throw error;
-    }
-  }
-
-  // Utility methods for common operations
   async findConversationsByPhone(phoneNumber) {
     return await this.models.ConversationsLog.findAll({
       where: { from: phoneNumber },
-      order: [
-        ["date", "DESC"],
-        ["time", "DESC"],
-      ],
+      order: [["date", "DESC"], ["time", "DESC"]],
     });
   }
 
@@ -258,36 +127,28 @@ class SqliteManager {
   async saveContextLog(contextData) {
     return await this.models.CtxLogs.create(contextData);
   }
- 
+
   async saveProviderLog(providerData) {
     return await this.models.ProviderLogs.create(providerData);
   }
- 
-  //
-  // Client file storage methods (Task 25)
-  //
+
   async saveClientFile(clienteId, { originalFilename = null, mimeType = null, buffer, subPath = 'documents', uploadedBy = null } = {}) {
     if (!buffer || !Buffer.isBuffer(buffer)) throw new Error('buffer missing or not a Buffer');
     const id = Number(clienteId);
     if (!Number.isFinite(id) || id <= 0) throw new Error('invalid clienteId');
 
-    // Ensure client dirs exist
     await storageManager.createClientStorageDirs(id);
-
     const clientBase = storageManager.getClientStoragePath(id);
     const destDir = path.join(clientBase, subPath || 'documents');
 
-    // Safe filename
     const sanitizedOriginal = (originalFilename || 'file').replace(/[^a-zA-Z0-9._-]/g, '_');
     const filename = `${Date.now()}_${Math.random().toString(36).slice(2,10)}_${sanitizedOriginal}`;
     const absPath = path.join(destDir, filename);
 
-    // Save buffer to disk
     const { path: savedPath, size, checksum } = await storageManager.saveBufferToPath(absPath, buffer);
 
-    // Persist metadata in DB via model
     const relativePath = path.relative(storageManager.getStorageRoot(), savedPath);
-    const instance = await this.models.ClientFile.create({
+    return await this.models.ClientFile.create({
       cliente_id: id,
       file_path: relativePath,
       original_filename: originalFilename || filename,
@@ -299,8 +160,6 @@ class SqliteManager {
       accessed_count: 0,
       is_deleted: false
     });
-
-    return instance;
   }
 
   async getClientFiles(clienteId, filters = {}) {
@@ -315,14 +174,11 @@ class SqliteManager {
       if (filters.before) where.uploaded_at[Op.lte] = filters.before;
     }
 
-    const limit = Number(filters.limit) || 100;
-    const offset = Number(filters.offset) || 0;
-
     return await this.models.ClientFile.findAll({
       where,
       order: [['uploaded_at', 'DESC']],
-      limit,
-      offset,
+      limit: Number(filters.limit) || 100,
+      offset: Number(filters.offset) || 0,
     });
   }
 
@@ -330,21 +186,15 @@ class SqliteManager {
     const id = Number(clienteId);
     if (!Number.isFinite(id) || id <= 0) throw new Error('invalid clienteId');
 
-    // Prepare date range
     const start = fromDate || '1970-01-01';
     const end = toDate || new Date().toISOString().slice(0,10);
 
-    // Attempt to read conversations_log entries for date range
-    let rows = [];
-    try {
-      const sql = 'SELECT * FROM conversations_log WHERE date BETWEEN ? AND ?';
-      rows = await this.sequelize.query(sql, { replacements: [start, end], type: Sequelize.QueryTypes.SELECT });
-    } catch (e) {
-      // If table not present or error, rethrow
-      throw e;
-    }
+    const sql = 'SELECT * FROM conversations_log WHERE date BETWEEN :start AND :end';
+    const rows = await this.sequelize.query(sql, { 
+      replacements: { start, end }, 
+      type: Sequelize.QueryTypes.SELECT 
+    });
 
-    // Ensure dirs
     await storageManager.createClientStorageDirs(id);
     const archivesDir = path.join(storageManager.getClientStoragePath(id), 'archives');
     const filename = `conversations_${start}_to_${end}_${Date.now()}.${format === 'json' ? 'json' : 'txt'}`;
@@ -353,298 +203,57 @@ class SqliteManager {
 
     const { path: savedPath, size, checksum } = await storageManager.saveBufferToPath(absPath, payloadBuffer);
 
-    // Try to insert record into client_conversation_archive (if table exists)
     try {
       await this.sequelize.query(
         'INSERT INTO client_conversation_archive (cliente_id, archive_path, checksum_sha256, file_size, created_at) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)',
         { replacements: [id, path.relative(storageManager.getStorageRoot(), savedPath), checksum, size], type: Sequelize.QueryTypes.INSERT }
       );
-    } catch (e) {
-      // Table may not exist yet; ignore silently
-    }
+    } catch (e) { /* ignore */ }
 
-    return { path: savedPath, size, checksum, exportedCount: Array.isArray(rows) ? rows.length : 0 };
+    return { path: savedPath, size, checksum, exportedCount: rows.length };
   }
 
-  // Métodos para el sistema de horarios polimórfico
-  async crearHorario(horarioData) {
-    return await this.models.Horarios.create(horarioData);
-  }
+  // Schedule methods
+  async crearHorario(horarioData) { return await this.models.Horarios.create(horarioData); }
+  async crearReglaHorario(reglaData) { return await this.models.ReglasHorario.create(reglaData); }
+  async crearExcepcionHorario(excepcionData) { return await this.models.ExcepcionesHorario.create(excepcionData); }
 
-  async crearReglaHorario(reglaData) {
-    return await this.models.ReglasHorario.create(reglaData);
-  }
-
-  async crearExcepcionHorario(excepcionData) {
-    return await this.models.ExcepcionesHorario.create(excepcionData);
-  }
-
-  async obtenerHorarioCompleto(tipo_horario_id, botName) { // Cambiado de entidadId a botName
-  const tipoHorarioIdStr = String(tipo_horario_id); // Asegurar que sea string
-  return await this.models.Horarios.findOne({
-    where: {
-      tipo_horario_id: tipoHorarioIdStr, // Usar el valor como string
-      botName: botName,
-      activo: 1
-    },
-    include: [
-      {
-        model: this.models.ReglasHorario,
-        as: 'reglas',
-        where: { activo: 1 },
-        required: false
-      },
-      {
-        model: this.models.ExcepcionesHorario,
-        as: 'excepciones',
-        required: false
-      }
-    ]
-  });
-}
-
-  async verificarDisponibilidad(tipo_horario_id, botName, fechaHora = new Date()) {
-  console.debug(`[verificarDisponibilidad] 🕵️  Checking for: tipo_horario_id=${tipo_horario_id} botName="${botName}" at ${fechaHora}`);
-
-  const horario = await this.obtenerHorarioCompleto(tipo_horario_id, botName);
-  if (!horario) {
-    console.debug(`[verificarDisponibilidad] ❌ No active schedule found for tipo_horario_id=${tipo_horario_id} botName="${botName}". Returning false.`);
-    return false;
-  }
-  console.debug(`[verificarDisponibilidad] ✅ Found schedule: "${horario.nombre}" (ID: ${horario.horarioId})`);
-
-  const fecha = new Date(fechaHora);
-  const diaSemana = fecha.getDay();
-  const hora = fecha.toTimeString().slice(0, 8);
-  const fechaString = fecha.toISOString().slice(0, 10);
-  console.debug(`[verificarDisponibilidad] 🕒 Current check time: Day=${diaSemana}, Time=${hora}, Date=${fechaString}`);
-
-  // Verificar excepciones primero
-  const excepcion = horario.excepciones?.find(e => 
-    e.fechaExcepcion === fechaString
-  );
-
- if (excepcion) {
-    console.debug(`[verificarDisponibilidad] ❗ Exception found for today (ID: ${excepcion.excepcionId}):`, excepcion.toJSON());
-    if (excepcion.estado === 'cerrado') {
-      console.debug(`[verificarDisponibilidad] ❗ Exception (ID: ${excepcion.excepcionId}) state is 'cerrado'. Returning false.`);
-      return false;
-    }
-    if (excepcion.estado === 'horario_personalizado') {
-      const isAvailable = hora >= excepcion.horaInicio && hora <= excepcion.horaFin;      
-      console.debug(`[verificarDisponibilidad] ❗ Custom schedule exception (ID: ${excepcion.excepcionId}) from ${excepcion.horaInicio} to ${excepcion.horaFin}. Current time ${hora} is ${isAvailable ? 'AVAILABLE' : 'NOT AVAILABLE'}. Returning ${isAvailable}.`);
-      return isAvailable;
-    }
-  }
-
-  // Verificar reglas normales
-  const reglasDia = horario.reglas?.filter(r => r.diaSemana === diaSemana);
-  if (!reglasDia || reglasDia.length === 0) {
-    console.debug(`[verificarDisponibilidad]  नियम No rules found for day of week ${diaSemana} in schedule ID ${horario.horarioId}. Returning false.`);
-    return false;
-  }
-
-  const reglaCoincidente = reglasDia.find(regla => hora >= regla.horaInicio && hora <= regla.horaFin);
-
-  if (reglaCoincidente) {
-    console.debug(`[verificarDisponibilidad]  नियम Rule match found (ID: ${reglaCoincidente.reglaId}) from ${reglaCoincidente.horaInicio} to ${reglaCoincidente.horaFin}. Current time ${hora} is AVAILABLE. Returning true.`);
-    return true;
-  }
-  else {
-    console.debug(`[verificarDisponibilidad]  नियम No matching rule for current time ${hora}. Day rules are: ${reglasDia.map(r => `(ID: ${r.reglaId}) ${r.horaInicio}-${r.horaFin}`).join(', ')}. Returning false.`);
-    return false;
-  }
-}
-
-  async cleanup() {
-    if (this.sequelize) {
-      await this.sequelize.close();
-      this.sequelize = null;
-    }
-    this.models = {};
-    this.isInitialized = false;
-  }
-
-  async saveConversation(messageData) {
-    try {
-      await this.models.ConversationsLog.create({
-        date: new Date().toISOString().slice(0, 10),
-        time: new Date().toTimeString().slice(0, 8),
-        from: messageData.from || "",
-        role: messageData.role || "",
-        pushName: messageData.pushName || "",
-        body: messageData.body || "",
-        messageId: messageData.messageId || "",
-        etapaEmbudo: messageData.etapaEmbudo || "",
-        interesCliente: messageData.interesCliente || "",
-        botName: messageData.botName || "",
-      });
-
-      console.log(
-        "✅ Conversacion guardada correctamente en SQLite conversations_log"
-      );
-    } catch (error) {
-      console.error(
-        "❌ Error saving conversation in conversations_log:",
-        error
-      );
-      throw error;
-    }
-  }
-
-  async testConnection() {
-    try {
-      await this.sequelize.authenticate();
-      console.log("✅ SQLite connection test successful");
-      return { now: new Date() };
-    } catch (error) {
-      console.error(
-        "❌ SQLite connection test failed:",
-        error.message || error
-      );
-      throw error;
-    }
-  }
-
-  async query(sql, options = {}) {
-    if (!this.isInitialized) {
-      throw new Error("SQLite not initialized");
-    }
-
-    try {
-      const results = await this.sequelize.query(sql, {
-        type: Sequelize.QueryTypes.SELECT,
-        ...options,
-      });
-      return results;
-    } catch (error) {
-      console.error("❌ Query error:", error);
-      throw error;
-    }
-  }
-
-  // Utility methods for common operations
-  async findConversationsByPhone(phoneNumber) {
-    return await this.models.ConversationsLog.findAll({
-      where: { from: phoneNumber },
-      order: [
-        ["date", "DESC"],
-        ["time", "DESC"],
-      ],
+  async obtenerHorarioCompleto(tipo_horario_id, botName) {
+    return await this.models.Horarios.findOne({
+      where: { tipo_horario_id: String(tipo_horario_id), botName, activo: 1 },
+      include: [
+        { model: this.models.ReglasHorario, as: 'reglas', where: { activo: 1 }, required: false },
+        { model: this.models.ExcepcionesHorario, as: 'excepciones', required: false }
+      ]
     });
   }
 
-  async saveMetricas(metricasData) {
-    return await this.models.ConversationMetricas.create(metricasData);
-  }
-
-  async saveEstadoMensaje(estadoData) {
-    return await this.models.MensajeEstados.create(estadoData);
-  }
-
-  async saveContextLog(contextData) {
-    return await this.models.CtxLogs.create(contextData);
-  }
-
-  async saveProviderLog(providerData) {
-    return await this.models.ProviderLogs.create(providerData);
-  }
-
-  // Métodos para el sistema de horarios polimórfico
-  async crearHorario(horarioData) {
-    return await this.models.Horarios.create(horarioData);
-  }
-
-  async crearReglaHorario(reglaData) {
-    return await this.models.ReglasHorario.create(reglaData);
-  }
-
-  async crearExcepcionHorario(excepcionData) {
-    return await this.models.ExcepcionesHorario.create(excepcionData);
-  }
-
-  async obtenerHorarioCompleto(tipo_horario_id, botName) { // Cambiado de entidadId a botName
-  const tipoHorarioIdStr = String(tipo_horario_id); // Asegurar que sea string
-  return await this.models.Horarios.findOne({
-    where: {
-      tipo_horario_id: tipoHorarioIdStr, // Usar el valor como string
-      botName: botName,
-      activo: 1
-    },
-    include: [
-      {
-        model: this.models.ReglasHorario,
-        as: 'reglas',
-        where: { activo: 1 },
-        required: false
-      },
-      {
-        model: this.models.ExcepcionesHorario,
-        as: 'excepciones',
-        required: false
-      }
-    ]
-  });
-}
-
   async verificarDisponibilidad(tipo_horario_id, botName, fechaHora = new Date()) {
-  //console.debug(`[verificarDisponibilidad] 🕵️  Checking for: tipo_horario_id=${tipo_horario_id} botName="${botName}" at ${fechaHora}`);
+    const horario = await this.obtenerHorarioCompleto(tipo_horario_id, botName);
+    if (!horario) return false;
 
-  const horario = await this.obtenerHorarioCompleto(tipo_horario_id, botName);
-  if (!horario) {
-    //console.debug(`[verificarDisponibilidad] ❌ No active schedule found for tipo_horario_id=${tipo_horario_id} botName="${botName}". Returning false.`);
-    return false;
-  }
-  //console.debug(`[verificarDisponibilidad] ✅ Found schedule: "${horario.nombre}" (ID: ${horario.horarioId})`);
+    const fecha = new Date(fechaHora);
+    const diaSemana = fecha.getDay();
+    const hora = fecha.toTimeString().slice(0, 8);
+    const fechaString = fecha.toISOString().slice(0, 10);
 
-  const fecha = new Date(fechaHora);
-  const diaSemana = fecha.getDay();
-  const hora = fecha.toTimeString().slice(0, 8);
-  const fechaString = fecha.toISOString().slice(0, 10);
-  //console.debug(`[verificarDisponibilidad] 🕒 Current check time: Day=${diaSemana}, Time=${hora}, Date=${fechaString}`);
-
-  // Verificar excepciones primero
-  const excepcion = horario.excepciones?.find(e => 
-    e.fechaExcepcion === fechaString
-  );
-
- if (excepcion) {
-    console.debug(`[verificarDisponibilidad] ❗ Exception found for today (ID: ${excepcion.excepcionId}):`, excepcion.toJSON());
-    if (excepcion.estado === 'cerrado') {
-      console.debug(`[verificarDisponibilidad] ❗ Exception (ID: ${excepcion.excepcionId}) state is 'cerrado'. Returning false.`);
-      return false;
+    const excepcion = horario.excepciones?.find(e => e.fechaExcepcion === fechaString);
+    if (excepcion) {
+      if (excepcion.estado === 'cerrado') return false;
+      if (excepcion.estado === 'horario_personalizado') return hora >= excepcion.horaInicio && hora <= excepcion.horaFin;
     }
-    if (excepcion.estado === 'horario_personalizado') {
-      const isAvailable = hora >= excepcion.horaInicio && hora <= excepcion.horaFin;      
-      console.debug(`[verificarDisponibilidad] ❗ Custom schedule exception (ID: ${excepcion.excepcionId}) from ${excepcion.horaInicio} to ${excepcion.horaFin}. Current time ${hora} is ${isAvailable ? 'AVAILABLE' : 'NOT AVAILABLE'}. Returning ${isAvailable}.`);
-      return isAvailable;
-    }
-  }
 
-  // Verificar reglas normales
-  const reglasDia = horario.reglas?.filter(r => r.diaSemana === diaSemana);
-  if (!reglasDia || reglasDia.length === 0) {
-    //console.debug(`[verificarDisponibilidad]  नियम No rules found for day of week ${diaSemana} in schedule ID ${horario.horarioId}. Returning false.`);
-    return false;
-  }
+    const reglasDia = horario.reglas?.filter(r => r.diaSemana === diaSemana);
+    if (!reglasDia || reglasDia.length === 0) return false;
 
-  const reglaCoincidente = reglasDia.find(regla => hora >= regla.horaInicio && hora <= regla.horaFin);
-
-  if (reglaCoincidente) {
-    //console.debug(`[verificarDisponibilidad]  नियम Rule match found (ID: ${reglaCoincidente.reglaId}) from ${reglaCoincidente.horaInicio} to ${reglaCoincidente.horaFin}. Current time ${hora} is AVAILABLE. Returning true.`);
-    return true;
-  } else {
-    //console.debug(`[verificarDisponibilidad]  नियम No matching rule for current time ${hora}. Day rules are: ${reglasDia.map(r => `(ID: ${r.reglaId}) ${r.horaInicio}-${r.horaFin}`).join(', ')}. Returning false.`);
-    return false;
+    return reglasDia.some(regla => hora >= regla.horaInicio && hora <= regla.horaFin);
   }
-}
 
   async cleanup() {
     if (this.sequelize) {
       await this.sequelize.close();
       this.sequelize = null;
     }
-    this.models = {};
     this.isInitialized = false;
   }
 }

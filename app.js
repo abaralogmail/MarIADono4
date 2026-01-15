@@ -5,6 +5,7 @@ import { MetaProvider as Provider } from '@builderbot/provider-meta'
 import 'dotenv/config'
 import { spawn } from 'child_process'
 import flowPrincipal from './src/flows/flowPrincipal.js';
+import flowSolicitud from './src/flows/flowSolicitud.js';
 import initServices from './src/services/initServices.js'
 
 const PORT = process.env.PORT ?? 3000
@@ -101,7 +102,8 @@ const main = async () => {
         cursosFlow,
         contactoFlow,
         registerFlow,
-        samplesFlow
+        samplesFlow,
+        flowSolicitud
     ])
     const adapterProvider = createProvider(Provider, {
         jwtToken: process.env.META_WHATSAPP_TOKEN,
@@ -147,6 +149,36 @@ const main = async () => {
             const { number, name } = req.body
             await bot.dispatch('SAMPLES', { from: number, name })
             return res.end('trigger')
+        })
+    )
+
+    /**
+     * Endpoint para solicitudes externas
+     * Requiere: number, message, token.
+     */
+    adapterProvider.server.post(
+        '/v1/external-request',
+        handleCtx(async (bot, req, res) => {
+            const { number, message, token } = req.body
+            
+            // Comprobación de seguridad básica
+            const EXTERNAL_TOKEN = process.env.EXTERNAL_TOKEN || 'config_this_in_env';
+            if (token !== EXTERNAL_TOKEN) {
+                console.warn(`[SECURITY] Intento de acceso no autorizado desde ${req.ip}`);
+                res.writeHead(401, { 'Content-Type': 'application/json' });
+                return res.end(JSON.stringify({ error: 'unauthorized' }));
+            }
+
+            if (!number || !message) {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                return res.end(JSON.stringify({ error: 'missing_fields' }));
+            }
+
+            // Disparar el flujo de solicitud
+            await bot.dispatch('SOLICITUD_EVENT', { from: number, message })
+            
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            return res.end(JSON.stringify({ status: 'triggered', number }));
         })
     )
 
